@@ -3,7 +3,7 @@ from dotenv import load_dotenv
 from share import *
 import os
 import Football
-
+import reaction_role
 load_dotenv() 
 discord_token = os.getenv("discord_token")
 intents.message_content = True
