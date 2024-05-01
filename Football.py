@@ -27,7 +27,10 @@ async def scrape_matches():
         formatted_time = time.split(" ");
         matchtime = formatted_time[0] + " " + formatted_time[1]
         if(spiltted_date == matchtime):
-            matches_for_the_day.append(f"Teams: {teams}, Time: {matchtime}")
+            matches_for_the_day.clear()
+            matches_for_the_day.append(f"Teams:\t {teams}\t\t\t\t\t\t\tTime:\t{formatted_time[2]}")
+
+
             
 @client.event
 async def on_message(message):
@@ -37,8 +40,9 @@ async def on_message(message):
     if message.content.startswith('$matches'):
         await scrape_matches()  
         if matches_for_the_day:
-            matches_message = "\n".join(matches_for_the_day)
-            await message.channel.send(matches_message)
+            matches_message = "\n".join( matches_for_the_day)
+            matches_message_format = "**" + matches_message + "**"
+            await message.channel.send(matches_message_format)
         else:
             await message.channel.send("No matches for today.")
             
