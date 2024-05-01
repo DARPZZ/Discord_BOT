@@ -9,6 +9,7 @@ def add_and_remove_roles(guild,payload):
         role = discord.utils.get(guild.roles, name ="football")
     else:
         role = discord.utils.get(guild.roles, name=payload.emoji.name)
+    print("role added/deleted")
     
         
         
