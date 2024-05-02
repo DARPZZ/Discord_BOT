@@ -7,6 +7,17 @@ load_dotenv()
 discord_token = os.getenv("discord_token")
 intents.message_content = True
 
+
+
+
+
+
+@client.event
+async def on_message(message):
+    if message.author == client.user:
+        return
+    if message.content.startswith('!t'):
+        await message.channel.send('Hello!')
 @client.event
 async def on_ready():
     await Football.scrape_matches.start()
