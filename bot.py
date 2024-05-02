@@ -9,11 +9,12 @@ intents.message_content = True
 
 @client.event
 async def on_ready():
-    print(f'We have logged in as {client.user}')
+    await Football.scrape_matches.start()
 def main():
-    client.run(discord_token)
+    
     reaction_role
     Football
     F1
+    client.run(discord_token)
 if __name__=="__main__": 
     main() 

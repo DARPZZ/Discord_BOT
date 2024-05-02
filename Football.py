@@ -4,10 +4,13 @@ import aiohttp
 from share import *
 from bs4 import BeautifulSoup
 import locale
+from discord.ext import tasks
 load_dotenv() 
 fodbold_URL = os.getenv("fodbold_URL")
 matche = os.getenv("matches")
 matches_for_the_day =[]
+
+@tasks.loop(hours=24)
 async def scrape_matches():
     url = fodbold_URL
     async with aiohttp.ClientSession() as session:
@@ -23,28 +26,33 @@ async def scrape_matches():
     matches = soup.find_all('li', class_=matche)
     for match in matches:
         teams = match.find('div', class_='teams').text.strip()
+        split_teams = teams.split("  ")
+        formattted_teams = split_teams[0] + "\t VS \t" + split_teams[1]
         time = match.find('div', class_='date-time-wrapper').text.strip()
         formatted_time = time.split(" ");
         matchtime = formatted_time[0] + " " + formatted_time[1]
         if(spiltted_date == matchtime):
-            matches_for_the_day.clear()
-            matches_for_the_day.append(f"Teams:\t {teams}\t\t\t\t\t\t\tTime:\t{formatted_time[2]}")
-
-
+            matches_for_the_day.append(f"- ** Teams:\t {formattted_teams}\t\t\t\tTime:\t{formatted_time[2]} ** \n")
             
-@client.event
-async def on_message(message):
-    if message.author == client.user:
-        return
+    channel = client.get_channel(968019954597261335)
+    if matches_for_the_day:
+        matches_message = "\n".join( matches_for_the_day)
+        await channel.send("<@&1234890120029536297>")
+        await channel.send("**Todays matches:**")
+        await channel.send(matches_message)
+        matches_for_the_day.clear()
+    else:
+        await channel.send("No matches for today.")
+        
+        
+now = datetime.datetime.now()
+print(now.hour)
+if now.hour < 14:
+    hours_until_14 = 14 - now.hour
+else:
+    hours_until_14 = 24 - now.hour + 14
+minutes_until_14 = hours_until_14 * 60 - now.minute
+seconds_until_14 = minutes_until_14 * 60 - now.second
 
-    if message.content.startswith('$matches'):
-        await scrape_matches()  
-        if matches_for_the_day:
-            matches_message = "\n".join( matches_for_the_day)
-            matches_message_format = "**" + matches_message + "**"
-            await message.channel.send(matches_message_format)
-        else:
-            await message.channel.send("No matches for today.")
-            
-
-
+# Change the interval of the loop
+scrape_matches.change_interval(hours=24, minutes=0, seconds=0)
