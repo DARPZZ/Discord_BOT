@@ -44,7 +44,7 @@ async def scrape_matches():
     else:
         await channel.send("No matches for today.")
         
-        
+
 now = datetime.datetime.now()
 print(now.hour)
 if now.hour < 14:
@@ -53,6 +53,4 @@ else:
     hours_until_14 = 24 - now.hour + 14
 minutes_until_14 = hours_until_14 * 60 - now.minute
 seconds_until_14 = minutes_until_14 * 60 - now.second
-
-# Change the interval of the loop
 scrape_matches.change_interval(hours=24, minutes=0, seconds=0)

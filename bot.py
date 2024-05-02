@@ -17,6 +17,7 @@ async def on_message(message):
 @client.event
 async def on_ready():
     await Football.scrape_matches.start()
+    
 def main():
     
     reaction_role
