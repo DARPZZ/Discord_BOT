@@ -8,7 +8,6 @@ discord_token = os.getenv("discord_token")
 intents.message_content = True
 
 
-
 @client.event
 async def on_message(message):
     if message.author == client.user:
