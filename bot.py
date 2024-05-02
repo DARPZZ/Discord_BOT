@@ -9,9 +9,6 @@ intents.message_content = True
 
 
 
-
-
-
 @client.event
 async def on_message(message):
     if message.author == client.user:
