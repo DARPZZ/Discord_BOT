@@ -10,7 +10,7 @@ fodbold_URL = os.getenv("fodbold_URL")
 matche = os.getenv("matches")
 matches_for_the_day =[]
 
-@tasks.loop(hours=24)
+@tasks.loop(minutes=5)
 async def scrape_matches():
     url = fodbold_URL
     async with aiohttp.ClientSession() as session:
@@ -34,7 +34,7 @@ async def scrape_matches():
         if(spiltted_date == matchtime):
             matches_for_the_day.append(f"- ** Teams:\t {formattted_teams}\t\t\t\tTime:\t{formatted_time[2]} ** \n")
             
-    channel = client.get_channel(968019954597261335)
+    channel = client.get_channel(1234600317090529392)
     if matches_for_the_day:
         matches_message = "\n".join( matches_for_the_day)
         await channel.send("<@&1234890120029536297>")
@@ -47,10 +47,10 @@ async def scrape_matches():
 
 now = datetime.datetime.now()
 print(now.hour)
-if now.hour < 14:
-    hours_until_14 = 14 - now.hour
+if now.hour < 8:
+    hours_until_8 = 8 - now.hour
 else:
-    hours_until_14 = 24 - now.hour + 14
-minutes_until_14 = hours_until_14 * 60 - now.minute
-seconds_until_14 = minutes_until_14 * 60 - now.second
+    hours_until_8 = 24 - now.hour + 8
+minutes_until_8 = hours_until_8 * 60 - now.minute
+seconds_until_8 = minutes_until_8 * 60 - now.second
 scrape_matches.change_interval(hours=24, minutes=0, seconds=0)

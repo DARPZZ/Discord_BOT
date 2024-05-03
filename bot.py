@@ -3,26 +3,33 @@ from share import *
 import Football
 import reaction_role
 import F1
+import counterstrike
+import owner_commands
 load_dotenv() 
 discord_token = os.getenv("discord_token")
 intents.message_content = True
-
 
 @client.event
 async def on_message(message):
     if message.author == client.user:
         return
-    if message.content.startswith('!t'):
-        await message.channel.send('Hello!')
+    if message.content.startswith('!football'):
+         await Football.scrape_matches()
+    elif message.content.startswith('!CS'):
+        print("Hest")
+        await counterstrike.scrape_matches_cs()
 @client.event
 async def on_ready():
     await Football.scrape_matches.start()
+    await counterstrike.scrape_matches_cs.start()
     
-def main():
-    
-    reaction_role
-    Football
-    F1
+async def main():
+    await counterstrike.scrape_matches_cs.start()
+    # counterstrike
+    # owner_commands
+    # reaction_role
+    # Football
+    # F1
     client.run(discord_token)
 if __name__=="__main__": 
     main() 
