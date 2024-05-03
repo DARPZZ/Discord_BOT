@@ -7,7 +7,7 @@ import locale
 from discord.ext import tasks
 matches_for_the_day =[]
 
-@tasks.loop(minutes=5)
+@tasks.loop(minutes=1)
 async def scrape_matches_cs():
     url = "https://bo3.gg/matches/current"
     async with aiohttp.ClientSession() as session:

@@ -10,7 +10,7 @@ fodbold_URL = os.getenv("fodbold_URL")
 matche = os.getenv("matches")
 matches_for_the_day =[]
 
-@tasks.loop(minutes=5)
+@tasks.loop(minutes=1)
 async def scrape_matches():
     url = fodbold_URL
     async with aiohttp.ClientSession() as session:
