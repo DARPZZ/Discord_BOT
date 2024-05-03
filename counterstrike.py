@@ -25,7 +25,6 @@ async def scrape_matches():
         string_date= str(date)
         date_string = string_date[0:10]
         time_string = string_date[11:16]
-        await channel.purge(limit=5)
         if  teamnames:
             if mydate_string == date_string:
                 if match_rank == 'b' or match_rank =='s':
@@ -34,6 +33,7 @@ async def scrape_matches():
                     
                     matches_for_the_day.append(f"** - Team : {firstteam}   VS    Team : {secondteam}        time: {time_string} **  \n")
     channel = client.get_channel(1235813854580179125)
+    await channel.purge(limit=5)
     await channel.send("<@&1235818483640434798>")
     await channel.send("**Todays matches:**")
     matches_message = "\n".join( matches_for_the_day)
