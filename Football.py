@@ -1,16 +1,12 @@
-import requests
 import datetime
 import aiohttp
 from share import *
-from bs4 import BeautifulSoup
 import locale
 from discord.ext import tasks
 load_dotenv() 
 fodbold_URL = os.getenv("fodbold_URL")
 matche = os.getenv("matches")
 matches_for_the_day =[]
-
-
 
 
 

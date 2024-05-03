@@ -1,8 +1,8 @@
-import requests
+
 import datetime
 import aiohttp
 from share import *
-from bs4 import BeautifulSoup
+
 import locale
 
 from discord.ext import tasks
@@ -39,5 +39,3 @@ async def scrape_matches():
     matches_message = "\n".join( matches_for_the_day)
     matches_for_the_day.clear()
     await channel.send(matches_message)
-    
-            
