@@ -25,6 +25,7 @@ async def scrape_matches():
         string_date= str(date)
         date_string = string_date[0:10]
         time_string = string_date[11:16]
+        await channel.purge(limit=5)
         if  teamnames:
             if mydate_string == date_string:
                 if match_rank == 'b' or match_rank =='s':

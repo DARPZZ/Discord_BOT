@@ -9,19 +9,24 @@ load_dotenv()
 discord_token = os.getenv("discord_token")
 intents.message_content = True
 
-@client.event
-async def on_message(message):
-    if message.author == client.user:
-        return
-    if message.content.startswith('!football'):
-         await Football.scrape_matches()
-    elif message.content.startswith('!CS'):
+@client.command() 
+async def CS(ctx):
+    await counterstrike.scrape_matches()
+    
+@client.command()
+async def football(ctx):
+  await Football.scrape_matches()
 
-        await counterstrike.scrape_matches()
 @client.event
 async def on_ready():
    await loop.start_loop.start()
 
+
+
+@client.command()
+async def clear(ctx, amount = 50):
+    await ctx.channel.purge(limit=amount)
+            
 def main():
 
     client.run(discord_token)
