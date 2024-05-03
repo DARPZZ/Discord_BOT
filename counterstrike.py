@@ -1,8 +1,7 @@
 
-import datetime
 import aiohttp
 from share import *
-
+from datetime import datetime, timedelta
 import locale
 
 from discord.ext import tasks
@@ -14,7 +13,7 @@ async def scrape_matches():
         async with session.get(url) as response:
             text = await response.text()
     soup = BeautifulSoup(text, 'html.parser')
-    mydate_time = datetime.datetime.now()
+    mydate_time = datetime.now()
     mydate = mydate_time.date()
     mydate_string = str(mydate)
     matches = soup.find_all('div', class_='table-cell match')
@@ -30,8 +29,10 @@ async def scrape_matches():
                 if match_rank == 'b' or match_rank =='s':
                     firstteam = teamnames[0].text.strip()
                     secondteam = teamnames[1].text.strip()
-                    
-                    matches_for_the_day.append(f"** - Team : {firstteam}   VS    Team : {secondteam}        time: {time_string} **  \n")
+                    time_object = datetime.strptime(time_string, "%H:%M")
+                    time_object += timedelta(hours=2)
+                    new_time_string = time_object.strftime("%H:%M")
+                    matches_for_the_day.append(f"** - Team : {firstteam}   VS    Team : {secondteam}        time: {new_time_string} **  \n")
     channel = client.get_channel(1235813854580179125)
     await channel.purge(limit=5)
     await channel.send("<@&1235818483640434798>")
