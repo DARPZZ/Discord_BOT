@@ -39,5 +39,5 @@ async def scrape_matches():
     matches_message = "\n".join( matches_for_the_day)
     matches_for_the_day.clear()
     await channel.send(matches_message)
-
+    
             
