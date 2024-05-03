@@ -10,7 +10,7 @@ fodbold_URL = os.getenv("fodbold_URL")
 matche = os.getenv("matches")
 matches_for_the_day =[]
 
-@tasks.loop(minutes=1)
+
 async def scrape_matches():
     url = fodbold_URL
     async with aiohttp.ClientSession() as session:
@@ -44,13 +44,3 @@ async def scrape_matches():
     else:
         await channel.send("No matches for today.")
         
-
-now = datetime.datetime.now()
-print(now.hour)
-if now.hour < 8:
-    hours_until_8 = 8 - now.hour
-else:
-    hours_until_8 = 24 - now.hour + 8
-minutes_until_8 = hours_until_8 * 60 - now.minute
-seconds_until_8 = minutes_until_8 * 60 - now.second
-scrape_matches.change_interval(hours=24, minutes=0, seconds=0)

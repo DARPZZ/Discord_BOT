@@ -4,11 +4,11 @@ import aiohttp
 from share import *
 from bs4 import BeautifulSoup
 import locale
+
 from discord.ext import tasks
 matches_for_the_day =[]
 
-@tasks.loop(minutes=1)
-async def scrape_matches_cs():
+async def scrape_matches():
     url = "https://bo3.gg/matches/current"
     async with aiohttp.ClientSession() as session:
         async with session.get(url) as response:
@@ -30,12 +30,13 @@ async def scrape_matches_cs():
                 if match_rank == 'b' or match_rank =='s':
                     firstteam = teamnames[0].text.strip()
                     secondteam = teamnames[1].text.strip()
-                    #print(f"Team : {firstteam}   VS    Team : {secondteam}        time: {time_string} ")
+                    
                     matches_for_the_day.append(f"** - Team : {firstteam}   VS    Team : {secondteam}        time: {time_string} **  \n")
     channel = client.get_channel(1235813854580179125)
     await channel.send("<@&1235818483640434798>")
     await channel.send("**Todays matches:**")
     matches_message = "\n".join( matches_for_the_day)
+    matches_for_the_day.clear()
     await channel.send(matches_message)
 
             
