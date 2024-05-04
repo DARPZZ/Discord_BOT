@@ -7,6 +7,5 @@ from bs4 import BeautifulSoup
 import os
 import requests
 import asyncio
-
-
-    
+import aiohttp
+import locale

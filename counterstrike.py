@@ -1,5 +1,4 @@
 
-import aiohttp
 from share import *
 from datetime import datetime, timedelta
 import locale

@@ -7,3 +7,4 @@ async def start_loop():
     await Football.scrape_matches()
     await counterstrike.scrape_matches()
     
+    

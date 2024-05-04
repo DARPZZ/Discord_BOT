@@ -20,7 +20,10 @@ async def football(ctx):
 @client.event
 async def on_ready():
    await loop.start_loop.start()
-
+   
+@client.command()
+async def f1(ctx):
+    await F1.scrape_matches()
 
 
 @client.command()

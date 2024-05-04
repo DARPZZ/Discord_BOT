@@ -1,7 +1,6 @@
 import datetime
 import aiohttp
 from share import *
-import locale
 from discord.ext import tasks
 load_dotenv() 
 fodbold_URL = os.getenv("fodbold_URL")
