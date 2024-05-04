@@ -15,7 +15,7 @@ async def scrape_matches():
         async with session.get(url) as response:
             text = await response.text()
     soup = BeautifulSoup(text, 'html.parser')
-    locale.setlocale(locale.LC_TIME, "da_DK.UTF-8")
+    locale.setlocale(locale.LC_TIME, "da_DK.UTF-8") 
     mydate = datetime.datetime.now()
     formatted_date = mydate.strftime("%e. %b")
     format_dt = formatted_date.split(" ")
@@ -41,7 +41,8 @@ async def scrape_matches():
         matches_message = "\n".join( matches_for_the_day)
         await channel.send("<@&1234890120029536297>")
         await channel.send("**Todays matches:**")
-        await channel.send(matches_message)
+        for part in split_message(matches_message.split("\n")):
+            await channel.send(part)
         matches_for_the_day.clear()
     else:
         await channel.send("No matches for today.")

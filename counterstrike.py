@@ -21,21 +21,29 @@ async def scrape_matches():
         date = match.get('date')
         teamnames = match.find_all('div', class_='team-name')
         string_date= str(date)
+        score= match.find_all('div', class_='c-match-score score c-match-score--small')
+        
+    
+       
         date_string = string_date[0:10]
         time_string = string_date[11:16]
         if  teamnames:
             if mydate_string == date_string:
                 if match_rank == 'b' or match_rank =='s':
-                    firstteam = teamnames[0].text.strip()
-                    secondteam = teamnames[1].text.strip()
-                    time_object = datetime.strptime(time_string, "%H:%M")
-                    time_object += timedelta(hours=2)
-                    new_time_string = time_object.strftime("%H:%M")
-                    matches_for_the_day.append(f"** - Team : {firstteam}   VS    Team : {secondteam}        time: {new_time_string} **  \n")
+                    if score:
+                        strip_score=score[0].text.strip()
+                        firstteam = teamnames[0].text.strip()
+                        secondteam = teamnames[1].text.strip()
+                        time_object = datetime.strptime(time_string, "%H:%M")
+                        time_object += timedelta(hours=2)
+                        new_time_string = time_object.strftime("%H:%M")
+                        matches_for_the_day.append(f"** - Team : {firstteam}   VS    Team : {secondteam}        time: {new_time_string}        Score:   {strip_score}**  \n")
+                        #print(f"** - Team : {firstteam}   VS    Team : {secondteam}        time: {new_time_string}   Score:   {strip_score} **  \n")
     channel = client.get_channel(1235813854580179125)
     await channel.purge(limit=5)
     await channel.send("<@&1235818483640434798>")
     await channel.send("**Todays matches:**")
     matches_message = "\n".join( matches_for_the_day)
+    for part in split_message(matches_message.split("\n")):
+        await channel.send(part)
     matches_for_the_day.clear()
-    await channel.send(matches_message)
