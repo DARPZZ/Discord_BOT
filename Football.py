@@ -31,9 +31,11 @@ async def scrape_matches():
         matchtime = formatted_time[0] + " " + formatted_time[1]
         if(spiltted_date == matchtime):
             if ongoing_time > formatted_time[2]:
-                matches_for_the_day.append(f"- ** Teams:\t {formattted_teams}\t\t\t\tTime:\t{formatted_time[2]} \t\t Status: Ongoing ** \n")
+                status = "Ongoing"
             elif ongoing_time < formatted_time[2]:
-                matches_for_the_day.append(f"- ** Teams:\t {formattted_teams}\t\t\t\tTime:\t{formatted_time[2]} \t\t Status: Upcomming ** \n")
+                status = "Upcoming"
+
+                matches_for_the_day.append(f"**Teams:** {formattted_teams}\n**Time:** {formatted_time[2]}\n**Status:** {status}\n{'-'*60}\n")
             
     channel = client.get_channel(1234600317090529392)
     await channel.purge(limit=5)
