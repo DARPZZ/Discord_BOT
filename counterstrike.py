@@ -41,9 +41,12 @@ async def scrape_matches():
                         #print(f"** - Team : {firstteam}   VS    Team : {secondteam}        time: {new_time_string}   Score:   {strip_score} **  \n")
     channel = client.get_channel(1235813854580179125)
     await channel.purge(limit=5)
-    await channel.send("<@&1235818483640434798>")
-    await channel.send("**Todays matches:**")
-    matches_message = "\n".join( matches_for_the_day)
-    for part in split_message(matches_message.split("\n")):
-        await channel.send(part)
-    matches_for_the_day.clear()
+    if matches_for_the_day:
+        await channel.send("<@&1235818483640434798>")
+        await channel.send("**Todays matches:**")
+        matches_message = "\n".join( matches_for_the_day)
+        for part in split_message(matches_message.split("\n")):
+            await channel.send(part)
+        matches_for_the_day.clear()
+    else:
+        await channel.send("No matches for today.")
