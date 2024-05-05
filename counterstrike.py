@@ -37,8 +37,9 @@ async def scrape_matches():
                         time_object = datetime.strptime(time_string, "%H:%M")
                         time_object += timedelta(hours=2)
                         new_time_string = time_object.strftime("%H:%M")
-                        matches_for_the_day.append(f"** - Team : {firstteam}   VS    Team : {secondteam}        time: {new_time_string}        Score:   {strip_score}**  \n")
-                        #print(f"** - Team : {firstteam}   VS    Team : {secondteam}        time: {new_time_string}   Score:   {strip_score} **  \n")
+                        matches_for_the_day.append(f"**teams:** {firstteam}  VS  {secondteam}\n**Time:**{new_time_string}\n**Score:** {strip_score}\n{'-'*60}\n")
+                        #print(f"**teams:** {firstteam}  VS  {secondteam}\n**Time:**{new_time_string}\n**Score:** {strip_score}\n{'-'*60}\n")
+                        
     channel = client.get_channel(1235813854580179125)
     await channel.purge(limit=5)
     if matches_for_the_day:
