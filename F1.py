@@ -20,13 +20,13 @@ async def scrape_matches():
     for race in races:
         table_row = race.find_all('tr',class_='standing-table__row')
         r_date = race.find_all('p', class_='f1-races__race-date')
-
+        race_name = race.find_all('h2', class_= 'f1-races__race-name')
+        race_name_split= race_name[0].text.strip()
         new_date_for_race = r_date[0].text.strip()[0:2]
         new_month_for_race = r_date[0].text.strip()[5:8]
         race_date =str(mydate.year) + "-" + new_month_for_race + "-" + new_date_for_race
         race_date_1 = race_date.replace("May", "Maj").replace("Oct","Okt")
         formatted_race_date = datetime.datetime.strptime(race_date_1,'%Y-%b-%d')
-        
         if formatted_race_date> mydate:
             i=0
             for k in table_row:
@@ -34,21 +34,22 @@ async def scrape_matches():
                 
                 billede =Table_row_spilt.split("\n")
                 if not billede[0]  == "TV":
-                        matches_for_the_day.append(f"{formatted_race_date.date().strftime('%Y-%b-%d'), billede[2].strip(), billede[6].strip()}\n")
-                        print(f"{formatted_race_date.date().strftime('%Y-%b-%d'), billede[2].strip(), billede[6].strip()}\n")
+                        matches_for_the_day.append(f"**Time:  **{formatted_race_date.date().strftime('%Y-%b-%d')} **mode:  ** {billede[2].strip()} **Time:  ** {billede[6].strip()}\n")
+                        #print(f"**Date:**\t{formatted_race_date.date().strftime('%Y-%b-%d')}\n**mode:**\t{billede[2].strip()} \n**Time:** \t{billede[6].strip()}\n")
                         if i % 5== 0:
-                            print(f"\n{'-'*60}\n")
+                            #print(f"**Racename:** {race_name_split}\n{'-'*60}\n")
+                            matches_for_the_day.append(f"**Racename:** {race_name_split}\n{'-'*60}\n")
+
                 i = i + 1
 
-    # channel = client.get_channel(1234600281854054482)
-    # if matches_for_the_day:
-    #     matches_message = "\n".join( matches_for_the_day)
-    #     matches_for_the_day.clear()
-    #     await channel.send("<@&1234866967630839870>")
-    #     await channel.send("**Todays matches:**")
-    #     for part in split_message(matches_message.split("\n")):
-    #         await channel.send(part)
-    # else:
-    #     await channel.send("No matches for today.")
+    channel = client.get_channel(1234600281854054482)
+    if matches_for_the_day:
+        matches_message = "\n".join( matches_for_the_day)
+        matches_for_the_day.clear()
+        await channel.send("<@&1234866967630839870>")
+        await channel.send("**Todays matches:**")
+        for part in split_message(matches_message.split("\n")):
+            await channel.send(part)
+    else:
+        await channel.send("No matches for today.")
     
-asyncio.run(scrape_matches())
