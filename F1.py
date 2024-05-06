@@ -34,7 +34,7 @@ async def scrape_matches():
                 
                 billede =Table_row_spilt.split("\n")
                 if not billede[0]  == "TV":
-                        matches_for_the_day.append(f"**Time:  **{formatted_race_date.date().strftime('%Y-%b-%d')} **mode:  ** {billede[2].strip()} **Time:  ** {billede[6].strip()}\n")
+                        matches_for_the_day.append(f"**Date:**\t{formatted_race_date.date().strftime('%Y-%b-%d')}\n**mode:**\t{billede[2].strip()} \n**Time:** \t{billede[6].strip()}\n")
                         #print(f"**Date:**\t{formatted_race_date.date().strftime('%Y-%b-%d')}\n**mode:**\t{billede[2].strip()} \n**Time:** \t{billede[6].strip()}\n")
                         if i % 5== 0:
                             #print(f"**Racename:** {race_name_split}\n{'-'*60}\n")
