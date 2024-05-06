@@ -49,5 +49,7 @@ async def scrape_matches():
         for part in split_message(matches_message.split("\n")):
             await channel.send(part)
         matches_for_the_day.clear()
+        return True
     else:
         await channel.send("No matches for today.")
+        return False

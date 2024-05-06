@@ -4,8 +4,17 @@ import Football
 import counterstrike
 @tasks.loop(hours=1) 
 async def start_football_loop():
-    await Football.scrape_matches()
+    has_matches = await Football.scrape_matches()
+    if not has_matches:
+        start_football_loop.change_interval(hours=6)
+    else:
+        start_football_loop.change_interval(hours=1)
 
-@tasks.loop(hours=1)  
+@tasks.loop(hours=1)
 async def start_counterstrike_loop():
-    await counterstrike.scrape_matches()
+    has_matches = await counterstrike.scrape_matches()
+    if not has_matches:
+        start_counterstrike_loop.change_interval(hours=6)
+    else:
+        start_counterstrike_loop.change_interval(hours=1)
+    
