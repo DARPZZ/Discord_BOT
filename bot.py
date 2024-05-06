@@ -9,7 +9,8 @@ import Ufc
 load_dotenv() 
 discord_token = os.getenv("discord_token")
 intents.message_content = True
-5
+
+
 @client.command() 
 async def CS(ctx):
     await counterstrike.scrape_matches()
@@ -20,8 +21,8 @@ async def football(ctx):
 
 @client.event
 async def on_ready():
-   await loop.start_loop.start()
-   
+   await loop.start_counterstrike_loop()
+   await loop.start_football_loop()
 @client.command()
 async def f1(ctx):
     await F1.scrape_matches()
