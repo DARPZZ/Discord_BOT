@@ -4,7 +4,7 @@ import Football
 import reaction_role
 import F1
 import counterstrike
-import loop
+from loop import *
 import Ufc
 load_dotenv() 
 discord_token = os.getenv("discord_token")
@@ -19,10 +19,11 @@ async def CS(ctx):
 async def football(ctx):
   await Football.scrape_matches()
 
-@client.event
-async def on_ready():
-   await loop.start_counterstrike_loop()
-   await loop.start_football_loop()
+
+   
+   
+   
+   
 @client.command()
 async def f1(ctx):
     await F1.scrape_matches()
@@ -35,6 +36,17 @@ async def ufc(ctx):
 @client.command()
 async def clear(ctx, amount = 50):
     await ctx.channel.purge(limit=amount)
+    
+    
+    
+    
+    
+@client.event
+async def on_ready():
+   start_counterstrike_loop.before_loop(client.wait_until_ready)
+   start_football_loop.before_loop(client.wait_until_ready)
+   start_counterstrike_loop.start()
+   start_football_loop.start()
             
 def main():
 
