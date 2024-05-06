@@ -29,13 +29,15 @@ async def scrape_matches():
         time = match.find('div', class_='date-time-wrapper').text.strip()
         formatted_time = time.split(" ");
         matchtime = formatted_time[0] + " " + formatted_time[1]
+        find_league = match.find_all('small', class_='text-secondary d-none d-sm-inline-block mx-2')
+        league = find_league[0].text.strip()
         if(spiltted_date == matchtime):
             if ongoing_time > formatted_time[2]:
                 status = "Ongoing"
             elif ongoing_time < formatted_time[2]:
                 status = "Upcoming"
-            #print(f"**Teams:** {formattted_teams}\n**Time:** {formatted_time[2]}\n**Status:** {status}\n{'-'*60}\n")
-            matches_for_the_day.append(f"**Teams:** {formattted_teams}\n**Time:** {formatted_time[2]}\n**Status:** {status}\n{'-'*60}\n")
+            #print(f"**Teams:** {formattted_teams}\n**Time:** {formatted_time[2]}\n**League:** {league}\n**Status:** {status}\n{'-'*60}\n")
+            matches_for_the_day.append(f"**Teams:** {formattted_teams}\n**Time:** {formatted_time[2]}\n**League:** {league}\n**Status:** {status}\n{'-'*60}\n")
             
     channel = client.get_channel(1234600317090529392)
     await channel.purge(limit=5)
@@ -48,4 +50,3 @@ async def scrape_matches():
         matches_for_the_day.clear()
     else:
         await channel.send("No matches for today.")
-    
