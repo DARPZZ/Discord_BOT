@@ -45,8 +45,12 @@ async def clear(ctx, amount = 50):
 async def on_ready():
    start_counterstrike_loop.before_loop(client.wait_until_ready)
    start_football_loop.before_loop(client.wait_until_ready)
+   start_f1_loop.before_loop(client.wait_until_ready)
+   start_Ufc_loop.before_loop(client.wait_until_ready)
    start_counterstrike_loop.start()
    start_football_loop.start()
+   start_Ufc_loop.start()
+   start_f1_loop.start()
             
 def main():
 

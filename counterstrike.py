@@ -2,7 +2,7 @@
 from share import *
 from datetime import datetime, timedelta
 import locale
-
+from pytz import timezone
 from discord.ext import tasks
 matches_for_the_day =[]
 
@@ -12,7 +12,7 @@ async def scrape_matches():
         async with session.get(url) as response:
             text = await response.text()
     soup = BeautifulSoup(text, 'html.parser')
-    mydate_time = datetime.now()
+    mydate_time = datetime.now(timezone('Europe/Copenhagen'))
     mydate = mydate_time.date()
     mydate_string = str(mydate)
     matches = soup.find_all('div', class_='table-cell match')
@@ -24,22 +24,19 @@ async def scrape_matches():
         string_date= str(date)
         score= match.find_all('div', class_='c-match-score score c-match-score--small')
         
-    
-       
-        date_string = string_date[0:10]
-        time_string = string_date[11:16]
         if  teamnames:
-            if mydate_string == date_string:
+            # convert match til min tid zone
+            match_time = datetime.strptime(string_date, "%Y-%m-%dT%H:%M:%S.%f+00:00")
+            match_time = match_time.replace(tzinfo=timezone('UTC')).astimezone(timezone('Europe/Copenhagen'))
+            
+            if mydate_string == str(match_time.date()):
                 if match_rank == 'b' or match_rank =='s':
-                    if score:
-                        strip_score=score[0].text.strip()
-                        firstteam = teamnames[0].text.strip()
-                        secondteam = teamnames[1].text.strip()
-                        time_object = datetime.strptime(time_string, "%H:%M")
-                        time_object += timedelta(hours=2)
-                        new_time_string = time_object.strftime("%H:%M")
-                        matches_for_the_day.append(f"**teams:** {firstteam}  VS  {secondteam}\n**Time:**{new_time_string}\n**Score:** {strip_score}\n**Tournament**: {tournament}\n{'-'*60}\n")
-                        #print(f"**teams:** {firstteam}  VS  {secondteam}\n**Time:**{new_time_string}\n**Score:** {strip_score}\n**Tournament**: {tournament}\n{'-'*60}\n")
+                    strip_score=score[0].text.strip()
+                    firstteam = teamnames[0].text.strip()
+                    secondteam = teamnames[1].text.strip()
+                    new_time_string = match_time.strftime("%H:%M")
+                    matches_for_the_day.append(f"**teams:** {firstteam}  VS  {secondteam}\n**Time:**{new_time_string}\n**Score:** {strip_score}\n**Tournament**: {tournament}\n{'-'*60}\n")
+                    #print(f"**teams:** {firstteam}  VS  {secondteam}\n**Time:**{new_time_string}\n**Score:** {strip_score}\n**Tournament**: {tournament}\n{'-'*60}\n")
     channel = client.get_channel(1235813854580179125)
     await channel.purge(limit=5)
     if matches_for_the_day:
