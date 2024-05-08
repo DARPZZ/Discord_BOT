@@ -43,6 +43,7 @@ async def scrape_matches():
                 i = i + 1
 
     channel = client.get_channel(1234600281854054482)
+    await channel.purge(limit=5)
     if matches_for_the_day:
         matches_message = "\n".join( matches_for_the_day)
         matches_for_the_day.clear()
