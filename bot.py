@@ -19,9 +19,6 @@ async def CS(ctx):
 async def football(ctx):
   await Football.scrape_matches()
 
-
-   
-   
    
    
 @client.command()

@@ -19,7 +19,7 @@ async def scrape_matches():
     mydate = datetime.datetime.now()
     formatted_date = mydate.strftime("%e. %b")
     format_dt = formatted_date.split(" ")
-    spiltted_date = format_dt[1] + " " +  format_dt[2]
+    spiltted_date = format_dt[0] + " " +  format_dt[1]
     ongoing_time = mydate.strftime("%H:%M")
     matches = soup.find_all('li', class_=matche)
     for match in matches:
