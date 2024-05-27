@@ -2,7 +2,7 @@ from share import *
 from discord.ext import tasks
 import Football
 import counterstrike
-import Ufc
+import ufc
 import F1
 @tasks.loop(hours=1) 
 async def start_football_loop():

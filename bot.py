@@ -5,7 +5,7 @@ import reaction_role
 import F1
 import counterstrike
 from loop import *
-import Ufc
+import ufc
 load_dotenv() 
 discord_token = os.getenv("discord_token")
 intents.message_content = True
