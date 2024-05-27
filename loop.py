@@ -27,4 +27,4 @@ async def start_f1_loop():
 
 @tasks.loop(hours=144)
 async def start_Ufc_loop():
-    await Ufc.scrape_matches()
+    await ufc.scrape_matches()
