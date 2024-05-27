@@ -4,10 +4,11 @@ from datetime import datetime, timedelta
 matches_for_the_day=[]
 async def scrape_matches():
     url = "https://www.ufc.com/events"
+    headers = {'Accept-Language': 'en-US,en;q=0.5'}
     async with aiohttp.ClientSession() as session:
-        async with session.get(url) as response:
+        async with session.get(url, headers=headers) as response:
             text = await response.text()
-    soup = BeautifulSoup(text, 'html.parser')
+            soup = BeautifulSoup(text, 'html.parser')
     
     matches = soup.find_all('li', class_='l-listing__item')
     
