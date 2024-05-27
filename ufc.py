@@ -52,7 +52,8 @@ async def scrape_matches():
         mma_kamp_copenhagen = copenhagen_time.strftime("%d %B     %I:%M")
         #print(f"**Date and time:**\t {mma_kamp_copenhagen}\n**Headline:**\t {fighters}\n{'-'*60}\n ")
         matches_for_the_day.append(f"**Date and time:**\t {mma_kamp_copenhagen}\n**Headline:**\t {fighters}\n{'-'*60}\n ")
-        channel = client.get_channel(1234600336291790980)
+        
+    channel = client.get_channel(1234600336291790980)
     await channel.purge(limit=5)
     if matches_for_the_day:
         await channel.send("<@&1234891079699009651>")
