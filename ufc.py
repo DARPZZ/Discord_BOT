@@ -8,10 +8,10 @@ async def scrape_matches():
         async with session.get(url) as response:
             text = await response.text()
     soup = BeautifulSoup(text, 'html.parser')
-    locale.setlocale(locale.LC_TIME, "da_DK.UTF-8") 
+    
     matches = soup.find_all('li', class_='l-listing__item')
     
-    # Define time zones for GMT+2 (CEST) and Copenhagen
+
     edt_timezone = pytz.timezone('America/New_York')
     copenhagen_timezone = pytz.timezone('Europe/Copenhagen')
     
