@@ -4,9 +4,9 @@ from datetime import datetime, timedelta
 import locale
 from pytz import timezone
 from discord.ext import tasks
-matches_for_the_day =[]
 
 async def scrape_matches(url, channel):
+    matches_for_the_day =[]
     url = url
     async with aiohttp.ClientSession() as session:
         async with session.get(url) as response:
@@ -38,14 +38,13 @@ async def scrape_matches(url, channel):
                     matches_for_the_day.append(f"**teams:** {firstteam}  VS  {secondteam}\n**Time:**{new_time_string}\n**Score:** {strip_score}\n**Tournament**: {tournament}\n{'-'*60}\n")
                     #print(f"**teams:** {firstteam}  VS  {secondteam}\n**Time:**{new_time_string}\n**Score:** {strip_score}\n**Tournament**: {tournament}\n{'-'*60}\n")
     channel = client.get_channel(channel)
-    await channel.purge(limit=5)
+    await channel.purge()
     if matches_for_the_day:
-        
         await channel.send("**Todays matches:**")
         matches_message = "\n".join( matches_for_the_day)
+        matches_for_the_day.clear()
         for part in split_message(matches_message.split("\n")):
             await channel.send(part)
-        matches_for_the_day.clear()
         return True
     else:
         await channel.send("No matches for today.")
