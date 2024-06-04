@@ -6,8 +6,8 @@ from pytz import timezone
 from discord.ext import tasks
 matches_for_the_day =[]
 
-async def scrape_matches():
-    url = "https://bo3.gg/matches/current"
+async def scrape_matches(url, channel):
+    url = url
     async with aiohttp.ClientSession() as session:
         async with session.get(url) as response:
             text = await response.text()
@@ -37,10 +37,10 @@ async def scrape_matches():
                     new_time_string = match_time.strftime("%H:%M")
                     matches_for_the_day.append(f"**teams:** {firstteam}  VS  {secondteam}\n**Time:**{new_time_string}\n**Score:** {strip_score}\n**Tournament**: {tournament}\n{'-'*60}\n")
                     #print(f"**teams:** {firstteam}  VS  {secondteam}\n**Time:**{new_time_string}\n**Score:** {strip_score}\n**Tournament**: {tournament}\n{'-'*60}\n")
-    channel = client.get_channel(1235813854580179125)
+    channel = client.get_channel(channel)
     await channel.purge(limit=5)
     if matches_for_the_day:
-        await channel.send("<@&1235818483640434798>")
+        
         await channel.send("**Todays matches:**")
         matches_message = "\n".join( matches_for_the_day)
         for part in split_message(matches_message.split("\n")):

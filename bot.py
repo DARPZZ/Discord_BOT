@@ -3,17 +3,12 @@ from share import *
 import Football
 import reaction_role
 import F1
-import counterstrike
 from loop import *
 import ufc
 load_dotenv() 
 discord_token = os.getenv("discord_token")
 intents.message_content = True
 
-
-@client.command() 
-async def CS(ctx):
-    await counterstrike.scrape_matches()
     
 @client.command()
 async def football(ctx):
@@ -44,10 +39,13 @@ async def on_ready():
    start_football_loop.before_loop(client.wait_until_ready)
    start_f1_loop.before_loop(client.wait_until_ready)
    start_Ufc_loop.before_loop(client.wait_until_ready)
+   start_valorant_loop.before_loop(client.wait_until_ready)
+   
    start_counterstrike_loop.start()
    start_football_loop.start()
    start_Ufc_loop.start()
    start_f1_loop.start()
+   start_valorant_loop.start()
             
 def main():
 
