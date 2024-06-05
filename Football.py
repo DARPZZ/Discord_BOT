@@ -19,7 +19,7 @@ async def scrape_matches():
     mydate = datetime.datetime.now()
     formatted_date = mydate.strftime("%e. %b")
     format_dt = formatted_date.split(" ")
-    spiltted_date = format_dt[0] + " " +  format_dt[1]
+    spiltted_date = format_dt[1] + " " +  format_dt[2]
     ongoing_time = mydate.strftime("%H:%M")
     matches = soup.find_all('li', class_=matche)
     for match in matches:
@@ -31,6 +31,8 @@ async def scrape_matches():
         matchtime = formatted_time[0] + " " + formatted_time[1]
         find_league = match.find_all('small', class_='text-secondary d-none d-sm-inline-block mx-2')
         league = find_league[0].text.strip()
+        print("split date  : " + spiltted_date)
+        print("matchtime : " + matchtime)
         if(spiltted_date == matchtime):
             if ongoing_time > formatted_time[2]:
                 status = "Ongoing"
