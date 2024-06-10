@@ -19,7 +19,10 @@ async def scrape_matches():
     mydate = datetime.datetime.now()
     formatted_date = mydate.strftime("%e. %b")
     format_dt = formatted_date.split(" ")
-    spiltted_date = format_dt[1] + " " +  format_dt[2]
+    try:
+        spiltted_date = format_dt[1] + " " +  format_dt[2]
+    except:
+         spiltted_date = format_dt[0] + " " +  format_dt[1]
     ongoing_time = mydate.strftime("%H:%M")
     matches = soup.find_all('li', class_=matche)
     for match in matches:
@@ -31,16 +34,14 @@ async def scrape_matches():
         matchtime = formatted_time[0] + " " + formatted_time[1]
         find_league = match.find_all('small', class_='text-secondary d-none d-sm-inline-block mx-2')
         league = find_league[0].text.strip()
-        print("split date  : " + spiltted_date)
-        print("matchtime : " + matchtime)
         if(spiltted_date == matchtime):
             if ongoing_time > formatted_time[2]:
                 status = "Ongoing"
             elif ongoing_time < formatted_time[2]:
                 status = "Upcoming"
-            #print(f"**Teams:** {formattted_teams}\n**Time:** {formatted_time[2]}\n**League:** {league}\n**Status:** {status}\n{'-'*60}\n")
+            #print(f"**Teams: ** {formattted_teams}\n**Time: ** {formatted_time[2]}\n**League: ** {league}\n**Status: ** {status}\n{'-'*60}\n")
             matches_for_the_day.append(f"**Teams:** {formattted_teams}\n**Time:** {formatted_time[2]}\n**League:** {league}\n**Status:** {status}\n{'-'*60}\n")
-            
+
     channel = client.get_channel(1234600317090529392)
     await channel.purge(limit=5)
     if matches_for_the_day:
