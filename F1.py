@@ -17,6 +17,8 @@ async def scrape_matches():
     races = soup.find_all('div', class_= 'f1-races__race-inner')
     mydate = datetime.datetime.now()
     formatted_date = mydate.strftime("%d %b").strip()
+    uk_timezone = pytz.timezone('Europe/London')
+    danish_timezone = pytz.timezone('Europe/Copenhagen')
     for race in races:
         table_row = race.find_all('tr',class_='standing-table__row')
         r_date = race.find_all('p', class_='f1-races__race-date')
@@ -33,9 +35,14 @@ async def scrape_matches():
                 Table_row_spilt = table_row[i].text.strip()
                 
                 billede =Table_row_spilt.split("\n")
+                
                 if not billede[0]  == "TV":
+                        uk_time_str = billede[6].strip()
+                        uk_time = datetime.datetime.strptime(uk_time_str, '%H:%M').replace(tzinfo=uk_timezone)
+                        danish_time = uk_time.astimezone(danish_timezone)
+                        danish_hour_str = danish_time.strftime('%H:%M') 
                         matches_for_the_day.append(f"**Date:**\t{formatted_race_date.date().strftime('%Y-%b-%d')}\n**mode:**\t{billede[2].strip()} \n**Time:** \t{billede[6].strip()}\n")
-                        #print(f"**Date:**\t{formatted_race_date.date().strftime('%Y-%b-%d')}\n**mode:**\t{billede[2].strip()} \n**Time:** \t{billede[6].strip()}\n")
+                        #print(f"**Date:**\t{formatted_race_date.date().strftime('%Y-%b-%d')}\n**mode:**\t{billede[2].strip()} \n**Time:** \t{danish_hour_str}\n")
                         if i % 5== 0:
                             #print(f"**Racename:** {race_name_split}\n{'-'*60}\n")
                             matches_for_the_day.append(f"**Racename:** {race_name_split}\n{'-'*60}\n")
