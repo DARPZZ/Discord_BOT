@@ -41,13 +41,14 @@ async def scrape_matches():
                         uk_time = datetime.datetime.strptime(uk_time_str, '%H:%M').replace(tzinfo=uk_timezone)
                         danish_time = uk_time.astimezone(danish_timezone)
                         danish_hour_str = danish_time.strftime('%H:%M') 
-                        matches_for_the_day.append(f"**Date:**\t{formatted_race_date.date().strftime('%Y-%b-%d')}\n**mode:**\t{billede[2].strip()} \n**Time:** \t{billede[6].strip()}\n")
+                        matches_for_the_day.append(f"**Date:**\t{formatted_race_date.date().strftime('%Y-%b-%d')}\n**mode:**\t{billede[2].strip()} \n**Time:** \t{danish_hour_str}\n")
                         #print(f"**Date:**\t{formatted_race_date.date().strftime('%Y-%b-%d')}\n**mode:**\t{billede[2].strip()} \n**Time:** \t{danish_hour_str}\n")
                         if i % 5== 0:
                             #print(f"**Racename:** {race_name_split}\n{'-'*60}\n")
                             matches_for_the_day.append(f"**Racename:** {race_name_split}\n{'-'*60}\n")
 
                 i = i + 1
+        
 
     channel = client.get_channel(1234600281854054482)
     await channel.purge(limit=25)
@@ -60,4 +61,3 @@ async def scrape_matches():
             await channel.send(part)
     else:
         await channel.send("No matches for today.")
-    
