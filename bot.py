@@ -9,7 +9,6 @@ load_dotenv()
 discord_token = os.getenv("discord_token")
 intents.message_content = True
 
-    
 @client.command()
 async def football(ctx):
   await Football.scrape_matches()
