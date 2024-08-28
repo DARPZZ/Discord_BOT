@@ -24,7 +24,12 @@ async def f1(ctx):
    
 @client.command()
 async def cs(ctx):
-    await Counterstrike.scrape_matches()
+    matches_info = Counterstrike.hello()
+    if matches_info:
+        await ctx.send(f"**Live Matches:**\n\n{matches_info}")
+    else:
+        await ctx.send("No live matches at the moment.")
+        
 @client.command()
 async def ufc(ctx):
     await ufc.scrape_matches()
