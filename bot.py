@@ -21,7 +21,7 @@ async def f1(ctx):
 
         
 @client.command()
-async def ufc(ctx):
+async def UFC(ctx):
     await ufc.scrape_matches()
 
 
