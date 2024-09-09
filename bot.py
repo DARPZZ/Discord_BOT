@@ -14,7 +14,9 @@ async def football(ctx):
   await Football.scrape_matches()
 
    
-   
+@client.command()
+async def cs(ctx):
+    await CounterStrike.scrape_matches()  
 @client.command()
 async def f1(ctx):
     await F1.scrape_matches()
@@ -29,18 +31,16 @@ async def UFC(ctx):
 async def clear(ctx, amount = 50):
     await ctx.channel.purge(limit=amount)
     
-    
-    
-    
-    
 @client.event
 async def on_ready():
    start_football_loop.before_loop(client.wait_until_ready)
    start_f1_loop.before_loop(client.wait_until_ready)
    start_Ufc_loop.before_loop(client.wait_until_ready)
+   start_counterstrike_loop.before_loop(client.wait_until_ready)
    start_football_loop.start()
    start_Ufc_loop.start()
    start_f1_loop.start()
+   start_counterstrike_loop.start()
             
 def main():
 
