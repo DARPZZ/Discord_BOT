@@ -5,7 +5,6 @@ import pytz
 from share import *
 matches_for_the_day =[]
 
-
 async def scrape_matches():
     url = "https://bo3.gg/matches/current"
     headers = {
@@ -54,4 +53,3 @@ async def scrape_matches():
             await channel.send(part)
     else:
         await channel.send("No matches for today.")
-
