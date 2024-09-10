@@ -6,25 +6,16 @@ on:
       - main  # Run the workflow when a push is made to the 'main' branch
 
 jobs:
-  deploy:
+  job_one:
+    name: Deploy
     runs-on: ubuntu-latest
-
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-
-    - name: Add SSH key
-      uses: shimataro/ssh-key-action@v2
+    - name: Test Discord deploy
+      uses: appleboy/ssh-action@master
       with:
-        key: ${{ secrets.DISCORD_SECRET }}
-        known_hosts: ${{ secrets.SERVER_IP }}
-
-    - name: Add server to known_hosts dynamically
-      run: |
-        ssh-keyscan -H ${{ secrets.SERVER_IP }} >> ~/.ssh/known_hosts
-
-    - name: Run commands on remote server
-      run: |
-        ssh root@${{ secrets.SERVER_IP }} "bash -s" << 'EOF'
-        echo "Connection successful! This is a test log."
-        EOF
+        host: ${{secrets.HOST}}
+        username: ${{secrets.USER_NAME}}
+        key: ${{secrets.DISCORD_SECRET}}
+        port: 22
+        script: |
+          echo "Deployment to the virtual server is starting..."
