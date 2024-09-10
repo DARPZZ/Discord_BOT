@@ -3,7 +3,7 @@ name: Deploy to Virtual Server
 on:
   push:
     branches:
-      - main  
+      - main  # Run the workflow when a push is made to the 'main' branch
 
 jobs:
   deploy:
@@ -19,12 +19,10 @@ jobs:
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         known_hosts: ${{ secrets.SERVER_IP }}
 
-    - name: Add server to known_hosts dynamically
+    - name: Add server to known_hosts
       run: |
         ssh-keyscan -H ${{ secrets.SERVER_IP }} >> ~/.ssh/known_hosts
 
-    - name: Run commands on remote server
+    - name: Test SSH connection
       run: |
-        ssh root@${{ secrets.SERVER_IP }} "bash -s" << 'EOF'
-        echo "Connection successful! This is a test log."
-        EOF
+        ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no root@${{ secrets.SERVER_IP }} "echo Connection successful!"
