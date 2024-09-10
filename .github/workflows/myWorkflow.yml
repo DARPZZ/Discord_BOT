@@ -3,7 +3,7 @@ name: Deploy to Virtual Server
 on:
   push:
     branches:
-      - main  # Run the workflow when a push is made to the 'main' branch
+      - main
 
 jobs:
   job_one:
@@ -17,6 +17,7 @@ jobs:
         username: ${{secrets.USER_NAME}}
         key: ${{secrets.DISCORD_SECRET}}
         port: 22
+        passphrase: ${{secrets.SSH_PASSPHRASE}} 
         script: |
           echo "Stopping existing Discord bot container..."
           docker stop discord-bot || true
