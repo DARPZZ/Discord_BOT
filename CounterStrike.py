@@ -16,14 +16,14 @@ async def scrape_matches():
             text = await response.text()
     soup = BeautifulSoup(text, 'html.parser')
     mydate_time = datetime.now()
-    mydate = mydate_time.date()
-    mydate = mydate.strftime("%d-%m")
-    mydate_string = str(mydate)
+    my_date = mydate_time.date()
+    my_date = my_date.strftime("%d-%m")
+    mydate_string = str(my_date)
     locale.setlocale(locale.LC_TIME, "da_DK.UTF-8")
     matches = soup.find_all('div', class_= 'c-matches-group-rows')
     for match in matches:
-        tableRows = match.find_all('div', class_='table-row table-row--upcoming')
-        for tableRow in tableRows:
+        table_rows = match.find_all('div', class_='table-row table-row--upcoming')
+        for tableRow in table_rows:
             ADate = tableRow.find('a', class_='c-global-match-link table-cell')
             if ADate:
                 href = ADate.get('href') 

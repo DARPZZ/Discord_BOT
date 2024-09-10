@@ -4,6 +4,7 @@ import Football
 import CounterStrike
 import ufc
 import F1
+import twitch
 @tasks.loop(hours=1) 
 async def start_football_loop():
     has_matches = await Football.scrape_matches()
@@ -11,6 +12,9 @@ async def start_football_loop():
         start_football_loop.change_interval(hours=3)
     else:
         start_football_loop.change_interval(hours=1)
+@tasks.loop(hours=1) 
+async def twitch_loop():
+    await twitch.get_live_twitch_streamer('eslcs')
 
 @tasks.loop(hours=1)
 async def start_counterstrike_loop():
