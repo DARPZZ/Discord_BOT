@@ -3,7 +3,7 @@ name: Deploy to Virtual Server
 on:
   push:
     branches:
-      - main  # Run the workflow when a push is made to the 'main' branch
+      - main  
 
 jobs:
   deploy:
@@ -17,8 +17,9 @@ jobs:
       uses: shimataro/ssh-key-action@v2
       with:
         key: ${{ secrets.SSH_PRIVATE_KEY }}
+        known_hosts: ${{ secrets.SERVER_IP }}
 
-    - name: Add server to known_hosts
+    - name: Add server to known_hosts dynamically
       run: |
         ssh-keyscan -H ${{ secrets.SERVER_IP }} >> ~/.ssh/known_hosts
 
