@@ -19,10 +19,12 @@ jobs:
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         known_hosts: ${{ secrets.SERVER_IP }}
 
-    - name: Add server to known_hosts
+    - name: Add server to known_hosts dynamically
       run: |
         ssh-keyscan -H ${{ secrets.SERVER_IP }} >> ~/.ssh/known_hosts
 
-    - name: Test SSH connection
+    - name: Run commands on remote server
       run: |
-        ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no root@${{ secrets.SERVER_IP }} "echo Connection successful!"
+        ssh root@${{ secrets.SERVER_IP }} "bash -s" << 'EOF'
+        echo "Connection successful! This is a test log."
+        EOF
