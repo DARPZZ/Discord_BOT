@@ -3,31 +3,33 @@ name: Deploy to Virtual Server
 on:
   push:
     branches:
-      - main
+      - main  # Run the workflow when a push is made to the 'main' branch
 
 jobs:
   job_one:
     name: Deploy
     runs-on: ubuntu-latest
     steps:
-    - name: Test Discord deploy
+    - name: Deploy Discord bot
       uses: appleboy/ssh-action@master
       with:
         host: ${{secrets.HOST}}
         username: ${{secrets.USER_NAME}}
         key: ${{secrets.DISCORD_SECRET}}
         port: 22
-        passphrase: ${{secrets.SSH_PASSPHRASE}}
         script: |
-          echo "Stopping and removing existing Discord bot container (if it exists)..."
-          docker stop discord-bot || true  # Stop the container if running
-          docker rm discord-bot || true    # Remove the container if it exists
+          echo "Stopping existing Discord bot container..."
+          docker stop discord-bot || true
           
+          echo "Removing existing Discord bot container..."
+          docker rm discord-bot || true
+
           echo "Removing old Docker image for Discord bot..."
-          docker rmi my-discord-bot || true  # Remove the image
+          docker rmi my-discord-bot:latest || true
 
           echo "Building new Docker image for Discord bot..."
-          docker build -t my-discord-bot .
+          cd ${{secrets.DEPLOY_PATH}}
+          docker build -t my-discord-bot:latest .
 
           echo "Running new Discord bot container..."
-          docker run -d --name discord-bot my-discord-bot
+          docker run -d --name discord-bot my-discord-bot:latest
