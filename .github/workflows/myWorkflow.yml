@@ -10,9 +10,6 @@ jobs:
     name: Deploy
     runs-on: ubuntu-latest
     steps:
-    - name: Install sshpass
-      run: sudo apt-get install sshpass
-
     - name: Test Discord deploy
       uses: appleboy/ssh-action@master
       with:
@@ -20,6 +17,16 @@ jobs:
         username: ${{secrets.USER_NAME}}
         key: ${{secrets.DISCORD_SECRET}}
         port: 22
-        passphrase: ${{secrets.SSH_PASSPHRASE}}  # Add this line to provide the passphrase
         script: |
-          echo "Deployment to the virtual server is starting..."
+          echo "Stopping and removing existing Discord bot container (if it exists)..."
+          docker stop discord-bot || true  # Stop the container if running
+          docker rm discord-bot || true    # Remove the container if it exists
+          
+          echo "Removing old Docker image for Discord bot..."
+          docker rmi my-discord-bot || true  # Remove the image
+
+          echo "Building new Docker image for Discord bot..."
+          docker build -t my-discord-bot .
+
+          echo "Running new Discord bot container..."
+          docker run -d --name discord-bot my-discord-bot
