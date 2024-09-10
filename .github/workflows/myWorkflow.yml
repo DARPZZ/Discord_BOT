@@ -3,13 +3,16 @@ name: Deploy to Virtual Server
 on:
   push:
     branches:
-      - main  # Run the workflow when a push is made to the 'main' branch
+      - main
 
 jobs:
   job_one:
     name: Deploy
     runs-on: ubuntu-latest
     steps:
+    - name: Install sshpass
+      run: sudo apt-get install sshpass
+
     - name: Test Discord deploy
       uses: appleboy/ssh-action@master
       with:
@@ -17,5 +20,6 @@ jobs:
         username: ${{secrets.USER_NAME}}
         key: ${{secrets.DISCORD_SECRET}}
         port: 22
+        passphrase: ${{secrets.SSH_PASSPHRASE}}  # Add this line to provide the passphrase
         script: |
           echo "Deployment to the virtual server is starting..."
