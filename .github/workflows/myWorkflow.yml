@@ -27,7 +27,7 @@ jobs:
           docker rmi my-discord-bot:latest || true
           
           echo "Building new Docker image for Discord bot..."
-          cd /root/projects/Discord_BOT
+          cd /root/Discord_BOT
           docker build -t my-discord-bot:latest .
           
           echo "Running new Discord bot container..."
