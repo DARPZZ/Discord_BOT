@@ -17,6 +17,7 @@ jobs:
         username: ${{secrets.USER_NAME}}
         key: ${{secrets.DISCORD_SECRET}}
         port: 22
+        passphrase: ${{secrets.SSH_PASSPHRASE}}
         script: |
           echo "Stopping and removing existing Discord bot container (if it exists)..."
           docker stop discord-bot || true  # Stop the container if running
