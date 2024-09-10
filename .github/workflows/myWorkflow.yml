@@ -28,6 +28,8 @@ jobs:
           
           echo "Building new Docker image for Discord bot..."
           cd /root/Discord_BOT
+          echo "Pulling the latest code changes"
+          git pull
           docker build -t my-discord-bot:latest .
           
           echo "Running new Discord bot container..."
