@@ -32,9 +32,9 @@ async def scrape_matches():
         if formatted_race_date> mydate:
             i=0
             for k in table_row:
-                Table_row_spilt = table_row[i].text.strip()
+                table_row_spilt = table_row[i].text.strip()
                 
-                billede =Table_row_spilt.split("\n")
+                billede =table_row_spilt.split("\n")
                 
                 if not billede[0]  == "TV":
                         uk_time_str = billede[6].strip()
