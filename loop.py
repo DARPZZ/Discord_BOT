@@ -12,6 +12,7 @@ async def start_football_loop():
         start_football_loop.change_interval(hours=3)
     else:
         start_football_loop.change_interval(hours=1)
+        
 @tasks.loop(hours=1) 
 async def twitch_loop():
     await twitch.get_live_twitch_streamer('eslcs')
