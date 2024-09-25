@@ -1,7 +1,7 @@
 from share import *
 from discord.ext import tasks
 import Football
-import CounterStrikeFolder.CounterStrike as CounterStrike
+import CounterStrike as CounterStrike
 import ufc
 import F1
 import twitch
