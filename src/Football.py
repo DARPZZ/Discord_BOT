@@ -37,8 +37,10 @@ async def scrape_matches():
         if(spiltted_date == match_time):
             if ongoing_time > formatted_time[2]:
                 status = "Ongoing"
+                
             elif ongoing_time < formatted_time[2]:
                 status = "Upcoming"
+                
             #print(f"**Teams: ** {formattted_teams}\n**Time: ** {formatted_time[2]}\n**League: ** {league}\n**Status: ** {status}\n{'-'*60}\n")
             matches_for_the_day.append(f"**Teams:** {formattted_teams}\n**Time:** {formatted_time[2]}\n**League:** {league}\n**Status:** {status}\n{'-'*60}\n")
 
