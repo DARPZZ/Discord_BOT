@@ -10,7 +10,7 @@ ENV LC_ALL da_DK.UTF-8
 ENV TZ Europe/Copenhagen
 
 # Set the working directory in the container
-WORKDIR /usr/src/app
+WORKDIR /src/app
 # Copy the current directory contents into the container at /usr/src/app
 COPY . .
 
