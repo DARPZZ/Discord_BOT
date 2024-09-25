@@ -11,7 +11,6 @@ ENV TZ Europe/Copenhagen
 
 # Set the working directory in the container
 WORKDIR /usr/src/app
-RUN touch /usr/src/app/discord.log
 # Copy the current directory contents into the container at /usr/src/app
 COPY . .
 
