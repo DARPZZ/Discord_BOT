@@ -31,14 +31,16 @@ async def scrape_matches():
         formattted_teams = split_teams[0] + "\t VS \t" + split_teams[1]
         time = match.find('div', class_='date-time-wrapper').text.strip()
         formatted_time = time.split(" ");
-        match_time = formatted_time[0] + " " + formatted_time[1]
+        matchtime = formatted_time[0] + " " + formatted_time[1]
         find_league = match.find_all('small', class_='text-secondary d-none d-sm-inline-block mx-2')
         league = find_league[0].text.strip()
-        if(spiltted_date == match_time):
+        if(spiltted_date == matchtime):
             if ongoing_time > formatted_time[2]:
                 status = "Ongoing"
+                
             elif ongoing_time < formatted_time[2]:
                 status = "Upcoming"
+                
             #print(f"**Teams: ** {formattted_teams}\n**Time: ** {formatted_time[2]}\n**League: ** {league}\n**Status: ** {status}\n{'-'*60}\n")
             matches_for_the_day.append(f"**Teams:** {formattted_teams}\n**Time:** {formatted_time[2]}\n**League:** {league}\n**Status:** {status}\n{'-'*60}\n")
 

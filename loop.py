@@ -1,7 +1,7 @@
 from share import *
 from discord.ext import tasks
 import Football
-import CounterStrike
+import CounterStrikeFolder.CounterStrike as CounterStrike
 import ufc
 import F1
 import twitch
@@ -15,7 +15,7 @@ async def start_football_loop():
         
 @tasks.loop(hours=1) 
 async def twitch_loop():
-    await twitch.get_live_twitch_streamer('eslcs')
+    await twitch.get_live_twitch_streamer('KmartPoker')
 
 @tasks.loop(hours=1)
 async def start_counterstrike_loop():
