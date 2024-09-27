@@ -3,7 +3,7 @@ name: Deploy to Virtual Server
 on:
   push:
     branches:
-      - main  # Run the workflow when a push is made to the 'main' branch
+      - main  
 
 jobs:
   job_one:
@@ -34,3 +34,29 @@ jobs:
           
           echo "Running new Discord bot container..."
           docker run -d --name discord-bot my-discord-bot:latest
+          
+    - name: Check Docker container logs
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{secrets.HOST}}
+        username: ${{secrets.USER_NAME}}
+        key: ${{secrets.DISCORD_SECRET}}
+        port: 22
+        passphrase: ${{secrets.SSH_PASSPHRASE}} 
+        script: |
+          echo "Checking if the Docker container is running..."
+          docker ps | grep discord-bot
+          echo "Fetching logs from the Discord bot container..."
+          docker logs discord-bot
+
+    - name: Clean up unused Docker resources
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{secrets.HOST}}
+        username: ${{secrets.USER_NAME}}
+        key: ${{secrets.DISCORD_SECRET}}
+        port: 22
+        passphrase: ${{secrets.SSH_PASSPHRASE}} 
+        script: |
+          echo "Cleaning up unused Docker resources..."
+          docker system prune -f
