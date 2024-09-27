@@ -3,35 +3,14 @@ name: Deploy to Virtual Server
 on:
   push:
     branches:
-      - main  # Run the workflow when a push is made to the 'main' branch
+      - main  
 
 jobs:
-  build:
-    name: Build Discord Bot Image
+  remove_container:
+    name: Remove Old Discord Bot Container
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-
-    - name: Build Docker image for Discord bot
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{secrets.HOST}}
-        username: ${{secrets.USER_NAME}}
-        key: ${{secrets.DISCORD_SECRET}}
-        port: 22
-        passphrase: ${{secrets.SSH_PASSPHRASE}} 
-        script: |
-          cd /root/Discord_BOT
-          git pull
-          docker build -t my-discord-bot:latest .
-
-  deploy:
-    name: Deploy Discord Bot
-    runs-on: ubuntu-latest
-    needs: build  # This ensures that this job runs after 'build'
-    steps:
-    - name: Deploy Docker container for Discord bot
+    - name: Remove old Discord bot container
       uses: appleboy/ssh-action@master
       with:
         host: ${{secrets.HOST}}
@@ -46,14 +25,34 @@ jobs:
           
           echo "Removing old Docker image for Discord bot..."
           docker rmi my-discord-bot:latest || true
+
+  build_image:
+    name: Build Discord Bot Image
+    runs-on: ubuntu-latest
+    needs: remove_container 
+    steps:
+    - name: Build new Docker image for Discord bot
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{secrets.HOST}}
+        username: ${{secrets.USER_NAME}}
+        key: ${{secrets.DISCORD_SECRET}}
+        port: 22
+        passphrase: ${{secrets.SSH_PASSPHRASE}} 
+        script: |
+          echo "Building new Docker image for Discord bot..."
+          cd /root/Discord_BOT
+          echo "Pulling the latest code changes..."
+          git pull
+          docker build -t my-discord-bot:latest .
           
           echo "Running new Discord bot container..."
           docker run -d --name discord-bot my-discord-bot:latest
 
-  logs:
-    name: Check Logs and Clean Up
+  check_logs:
+    name: Check Discord Bot Logs
     runs-on: ubuntu-latest
-    needs: deploy  # This ensures that this job runs after 'deploy'
+    needs: build_image
     steps:
     - name: Check Docker container logs
       uses: appleboy/ssh-action@master
@@ -66,17 +65,6 @@ jobs:
         script: |
           echo "Checking if the Docker container is running..."
           docker ps | grep discord-bot
+          
           echo "Fetching logs from the Discord bot container..."
           docker logs discord-bot
-          
-    - name: Clean up unused Docker resources
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{secrets.HOST}}
-        username: ${{secrets.USER_NAME}}
-        key: ${{secrets.DISCORD_SECRET}}
-        port: 22
-        passphrase: ${{secrets.SSH_PASSPHRASE}} 
-        script: |
-          echo "Cleaning up unused Docker resources..."
-          docker system prune -f
