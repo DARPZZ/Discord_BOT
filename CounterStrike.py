@@ -6,6 +6,7 @@ from share import *
 matches_for_the_day =[]
 
 async def scrape_matches():
+    await scrape_current_matches()
     url = "https://bo3.gg/matches/current"
     headers = {
         'accept-language': 'da-DK,da;q=0.9,en-US;q=0.8,en;q=0.7',
@@ -55,3 +56,27 @@ async def scrape_matches():
     else:
         await channel.send("No matches for today.")
         return False
+    
+
+
+async def scrape_current_matches():
+    url = "https://bo3.gg/matches/current"
+    headers = {
+        'accept-language': 'da-DK,da;q=0.9,en-US;q=0.8,en;q=0.7',
+      
+    }
+    async with aiohttp.ClientSession(headers=headers) as session:
+        async with session.get(url) as response:
+            text = await response.text()
+    soup = BeautifulSoup(text, 'html.parser')
+    matches = soup.find_all('div', class_= 'c-matches-group-rows')
+    for match in matches:
+        table_rows = match.find_all('div', class_='table-row table-row--current')
+        for table_row in table_rows:
+                team_names = table_row.find_all('div', class_='team-name')
+                first_team = team_names[0].text.strip()
+                second_team = team_names[1].text.strip()
+                #print(f"**Teams: ** {first_team} VS {second_team}\n**Score: **\n{'-'*60}\n")
+                matches_for_the_day.append(f"**Teams: ** {first_team} VS {second_team}\n**Time: ** Live  \n{'-'*60}\n")
+        
+ 
