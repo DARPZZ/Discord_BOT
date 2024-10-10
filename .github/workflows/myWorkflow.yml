@@ -3,7 +3,7 @@ name: Deploy to Virtual Server
 on:
   push:
     branches:
-      - main  
+      - main
 
 jobs:
   remove_container:
