@@ -43,6 +43,7 @@ async def scrape_matches():
                     new_time_string = time_object.strftime("%H:%M")
                     #print(f"**Teams: ** {first_team} VS {second_team}\n**Time: ** {new_time_string}\n**BO: ** {bo_type}\n{'-'*60}\n")
                     matches_for_the_day.append(f"**Teams: ** {first_team} VS {second_team}\n**Time: ** {new_time_string}\n**BO: ** {bo_type}\n{'-'*60}\n")
+                    
     channel = client.get_channel(1235813854580179125)
     await channel.purge(limit=25)
     if matches_for_the_day:
