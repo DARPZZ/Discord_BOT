@@ -37,12 +37,12 @@ async def scrape_matches():
                     team_names = table_row.find_all('div', class_='team-name')
                     first_team = team_names[0].text.strip()
                     second_team = team_names[1].text.strip()
+                    bo_type = table_row.find('span', class_='bo-type').text.strip()
                     time_object = datetime.strptime(match_time, "%H:%M")
                     time_object += timedelta(hours=2)
                     new_time_string = time_object.strftime("%H:%M")
-                    #print(f"**Teams: ** {firstteam} VS {secondteam}\n**Time: ** {new_time_string}\n{'-'*60}\n")
-                    matches_for_the_day.append(f"**Teams: ** {first_team} VS {second_team}\n**Time: ** {new_time_string}\n{'-'*60}\n")
-        
+                    #print(f"**Teams: ** {first_team} VS {second_team}\n**Time: ** {new_time_string}\n**BO: ** {bo_type}\n{'-'*60}\n")
+                    matches_for_the_day.append(f"**Teams: ** {first_team} VS {second_team}\n**Time: ** {new_time_string}\n**BO: ** {bo_type}\n{'-'*60}\n")
     channel = client.get_channel(1235813854580179125)
     await channel.purge(limit=25)
     if matches_for_the_day:
@@ -78,5 +78,3 @@ async def scrape_current_matches():
                 second_team = team_names[1].text.strip()
                 #print(f"**Teams: ** {first_team} VS {second_team}\n**Score: **\n{'-'*60}\n")
                 matches_for_the_day.append(f"**Teams: ** {first_team} VS {second_team}\n**Time: ** Live  \n{'-'*60}\n")
-        
- 
