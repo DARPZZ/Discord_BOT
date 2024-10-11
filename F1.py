@@ -44,7 +44,6 @@ async def scrape_matches():
                         if i % 5== 0:
                             #print(f"**Racename:** {race_name_split}\n{'-'*60}\n")
                             matches_for_the_day.append(f"**Racename:** {race_name_split}\n{'-'*60}\n")
-
                 i = i + 1
             return(True)
         
