@@ -47,7 +47,7 @@ async def scrape_matches():
                             break
                             
                 i = i + 1
-
+            break
         
 
     channel = client.get_channel(1234600281854054482)
