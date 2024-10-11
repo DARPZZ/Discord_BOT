@@ -16,9 +16,6 @@ async def scrape_matches():
     locale.setlocale(locale.LC_TIME, "da_DK.UTF-8")
     races = soup.find_all('div', class_= 'f1-races__race-inner')
     mydate = datetime.now()
-    formatted_date = mydate.strftime("%d %b").strip()
-    uk_timezone = pytz.timezone('Europe/London')
-    danish_timezone = pytz.timezone('Europe/Copenhagen')
     for race in races:
         table_row = race.find_all('tr',class_='standing-table__row')
         r_date = race.find_all('p', class_='f1-races__race-date')
