@@ -46,7 +46,7 @@ async def scrape_matches():
                             matches_for_the_day.append(f"**Racename:** {race_name_split}\n{'-'*60}\n")
 
                 i = i + 1
-            exit(True)
+            return(True)
         
 
     channel = client.get_channel(1234600281854054482)
