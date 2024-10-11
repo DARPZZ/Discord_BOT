@@ -15,6 +15,4 @@ async def get_live_twitch_streamer(streamers):
             await channel.send("**Live streamers:**")
             for part in split_message(matches_message.split("\n")):
                 await channel.send(part)
-        else:
-            await channel.send("No matches for today.")
 
