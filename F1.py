@@ -1,5 +1,5 @@
 import requests
-import datetime
+from datetime import datetime, timedelta
 import pytz 
 from share import *
 matches_for_the_day =[]
@@ -15,7 +15,7 @@ async def scrape_matches():
     soup = BeautifulSoup(text, 'html.parser')
     locale.setlocale(locale.LC_TIME, "da_DK.UTF-8")
     races = soup.find_all('div', class_= 'f1-races__race-inner')
-    mydate = datetime.datetime.now()
+    mydate = datetime.now()
     formatted_date = mydate.strftime("%d %b").strip()
     uk_timezone = pytz.timezone('Europe/London')
     danish_timezone = pytz.timezone('Europe/Copenhagen')
@@ -28,7 +28,7 @@ async def scrape_matches():
         new_month_for_race = r_date[0].text.strip()[5:8]
         race_date =str(mydate.year) + "-" + new_month_for_race + "-" + new_date_for_race
         race_date_1 = race_date.replace("May", "Maj").replace("Oct","Okt")
-        formatted_race_date = datetime.datetime.strptime(race_date_1,'%Y-%b-%d')
+        formatted_race_date = datetime.strptime(race_date_1,'%Y-%b-%d')
         if formatted_race_date> mydate:
             i=0
             for k in table_row:
@@ -38,9 +38,10 @@ async def scrape_matches():
                 
                 if not billede[0]  == "TV":
                         uk_time_str = billede[6].strip()
-                        uk_time = datetime.datetime.strptime(uk_time_str, '%H:%M').replace(tzinfo=uk_timezone)
-                        danish_time = uk_time.astimezone(danish_timezone)
-                        danish_hour_str = danish_time.strftime('%H:%M') 
+                        uk_time = datetime.strptime(uk_time_str, '%H:%M')
+                        uk_time += timedelta(hours=1)
+                        danish_time = uk_time
+                        danish_hour_str = danish_time.strftime('%H:%M')
                         matches_for_the_day.append(f"**Date:**\t{formatted_race_date.date().strftime('%Y-%b-%d')}\n**mode:**\t{billede[2].strip()} \n**Time:** \t{danish_hour_str}\n")
                         #print(f"**Date:**\t{formatted_race_date.date().strftime('%Y-%b-%d')}\n**mode:**\t{billede[2].strip()} \n**Time:** \t{danish_hour_str}\n")
                         if i % 5== 0:
@@ -61,3 +62,4 @@ async def scrape_matches():
             await channel.send(part)
     else:
         await channel.send("No matches for today.")
+
