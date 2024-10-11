@@ -16,9 +16,6 @@ async def scrape_matches():
     locale.setlocale(locale.LC_TIME, "da_DK.UTF-8")
     races = soup.find_all('div', class_= 'f1-races__race-inner')
     mydate = datetime.now()
-    formatted_date = mydate.strftime("%d %b").strip()
-    uk_timezone = pytz.timezone('Europe/London')
-    danish_timezone = pytz.timezone('Europe/Copenhagen')
     for race in races:
         table_row = race.find_all('tr',class_='standing-table__row')
         r_date = race.find_all('p', class_='f1-races__race-date')
@@ -43,12 +40,13 @@ async def scrape_matches():
                         danish_time = uk_time
                         danish_hour_str = danish_time.strftime('%H:%M')
                         matches_for_the_day.append(f"**Date:**\t{formatted_race_date.date().strftime('%Y-%b-%d')}\n**mode:**\t{billede[2].strip()} \n**Time:** \t{danish_hour_str}\n")
-                        #print(f"**Date:**\t{formatted_race_date.date().strftime('%Y-%b-%d')}\n**mode:**\t{billede[2].strip()} \n**Time:** \t{danish_hour_str}\n")
+                        #print(f"**Date:**\t{formatted_race_date.date().strftime('%d-%m-%Y')}\n**mode:**\t{billede[2].strip()} \n**Time:** \t{danish_hour_str}\n")
                         if i % 5== 0:
                             #print(f"**Racename:** {race_name_split}\n{'-'*60}\n")
                             matches_for_the_day.append(f"**Racename:** {race_name_split}\n{'-'*60}\n")
 
                 i = i + 1
+            exit(True)
         
 
     channel = client.get_channel(1234600281854054482)
@@ -62,4 +60,3 @@ async def scrape_matches():
             await channel.send(part)
     else:
         await channel.send("No matches for today.")
-

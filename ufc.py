@@ -26,11 +26,9 @@ async def scrape_matches():
     for match in matches:
         head_line = match.find_all('h3', class_='c-card-event--result__headline')
         match_info = match.find_all('div', class_='c-card-event--result__date tz-change-data')
-        
         fighters = head_line[0].text.strip()
         stripped_match_info = match_info[0].text.strip()
         split_match_info = stripped_match_info.split(" ")
-        
         month = split_match_info[1].capitalize()
         day = split_match_info[2].strip(',')
         time = split_match_info[4]

@@ -1,4 +1,3 @@
-# This example requires the 'message_content' intent.
 from share import *
 import Football
 import reaction_role
