@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 import pytz 
 from share import *
 matches_for_the_day =[]
-
+current_driver_standing=[]
 
 
 
@@ -62,3 +62,34 @@ async def scrape_matches():
         await channel.send("No matches for today.")
 
 
+async def scrape_driver_standing():
+    url = "https://www.skysports.com/f1/standings"
+    
+    async with aiohttp.ClientSession() as session:
+        async with session.get(url) as response:
+            text = await response.text()
+
+    soup = BeautifulSoup(text, 'html.parser')
+    
+    table = soup.find('table', class_='standing-table__table')
+    
+    if table:
+        rows = table.find_all('tr')[1:]
+        for row in rows:
+            cells = row.find_all('td')
+            name = cells[1].text.strip()
+            country = cells[2].text.strip()  
+            team = cells[3].text.strip()     
+            points = cells[4].text.strip()  
+            current_driver_standing.append(f"**Name:** {name}\n**Country:** {country}\n**Team:** {team}\n**Points:** {points}\n\n")
+    channel = client.get_channel(1297902739698880573)
+    await channel.purge(limit=25)
+    if matches_for_the_day:
+        matches_message = "\n".join( matches_for_the_day)
+        matches_for_the_day.clear()
+        await channel.send("<@&1234866967630839870>")
+        await channel.send("**Todays matches:**")
+        for part in split_message(matches_message.split("\n")):
+            await channel.send(part)
+    else:
+        await channel.send("No matches for today.")
