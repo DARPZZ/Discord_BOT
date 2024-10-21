@@ -39,17 +39,18 @@ async def scrape_matches():
                         uk_time += timedelta(hours=1)
                         danish_time = uk_time
                         danish_hour_str = danish_time.strftime('%H:%M')
-                        matches_for_the_day.append(f"**Date:**\t{formatted_race_date.date().strftime('%Y-%b-%d')}\n**mode:**\t{billede[2].strip()} \n**Time:** \t{danish_hour_str}\n")
+                        matches_for_the_day.append(f"**Date:**\t{formatted_race_date.date().strftime('%d-%m-%Y')}\n**mode:**\t{billede[2].strip()} \n**Time:** \t{danish_hour_str}\n")
                         #print(f"**Date:**\t{formatted_race_date.date().strftime('%d-%m-%Y')}\n**mode:**\t{billede[2].strip()} \n**Time:** \t{danish_hour_str}\n")
                         if i % 5== 0:
                             #print(f"**Racename:** {race_name_split}\n{'-'*60}\n")
                             matches_for_the_day.append(f"**Racename:** {race_name_split}\n{'-'*60}\n")
-
+                            await send_message(1234600281854054482)
+                            return(True)
                 i = i + 1
-            exit(True)
-        
-
-    channel = client.get_channel(1234600281854054482)
+    
+    
+async def send_message(Channel_id):
+    channel = client.get_channel(Channel_id)
     await channel.purge(limit=25)
     if matches_for_the_day:
         matches_message = "\n".join( matches_for_the_day)
@@ -60,3 +61,8 @@ async def scrape_matches():
             await channel.send(part)
     else:
         await channel.send("No matches for today.")
+
+
+    
+
+    
