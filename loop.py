@@ -28,9 +28,9 @@ async def start_counterstrike_loop():
 @tasks.loop(hours=144)
 async def start_f1_loop():
     await F1.scrape_matches()
-
-@tasks.loop(hours=144) 
-async def start_driver_standing_f1():
+    
+@tasks.loop(hours=144)
+async def start_f1_driver_loop():
     await F1.scrape_driver_standing()
 
 

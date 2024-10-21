@@ -34,7 +34,7 @@ async def clear(ctx, amount = 50):
 def wait_until_ready():
     start_football_loop.before_loop(client.wait_until_ready)
     start_f1_loop.before_loop(client.wait_until_ready)
-    start_driver_standing_f1.before_loop(client.wait_until_ready)
+    start_f1_driver_loop.before_loop(client.wait_until_ready)
     start_Ufc_loop.before_loop(client.wait_until_ready)
     start_counterstrike_loop.before_loop(client.wait_until_ready)
     twitch_loop.before_loop(client.wait_until_ready)
@@ -43,7 +43,7 @@ def loop_start():
     start_football_loop.start()
     start_Ufc_loop.start()
     start_f1_loop.start()
-    start_driver_standing_f1.start()
+    start_f1_driver_loop.start()
     start_counterstrike_loop.start()
     twitch_loop.start()
     
