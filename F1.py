@@ -63,14 +63,11 @@ async def scrape_driver_standing():
         rows = table.find_all('tr')[1:]
         for row in rows:
             cells = row.find_all('td')
-            
-           
-            place = cells[0].text.strip()
             name = cells[1].text.strip()
             country = cells[2].text.strip()  
             team = cells[3].text.strip()     
             points = cells[4].text.strip()  
-            current_driver_standing.append(f"**Name:** {name}\n**Place:** {place}\n**Country:** {country}\n**Team:** {team}\nPoints: {points}\n\n")
+            current_driver_standing.append(f"**Name:** {name}\n**Country:** {country}\n**Team:** {team}\n**Points:** {points}\n\n")
         await send_message(1297902739698880573,current_driver_standing)
     
     
