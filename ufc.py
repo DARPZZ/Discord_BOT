@@ -36,9 +36,6 @@ async def scrape_matches():
         time += time_zone
         mma_kamp_edt = f" {month} {day} {time}"
         matches_for_the_day.append(f"**Date and time:** {mma_kamp_edt} CEST\n**Headline:** {fighters}\n{'-'*60}\n ")
-            
-
-
     channel = client.get_channel(1278765738345365504)
     await channel.purge(limit=5)
     if matches_for_the_day:
