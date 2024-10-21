@@ -17,6 +17,8 @@ async def start_football_loop():
 async def twitch_loop():
     await twitch.get_live_twitch_streamer('KmartPoker')
 
+
+
 @tasks.loop(hours=1)
 async def start_counterstrike_loop():
     has_matches = await CounterStrike.scrape_matches()
@@ -28,6 +30,10 @@ async def start_counterstrike_loop():
 @tasks.loop(hours=144)
 async def start_f1_loop():
     await F1.scrape_matches()
+
+@tasks.loop(hours=144) 
+async def start_driver_standing_f1():
+    await F1.scrape_driver_standing()
 
 
 @tasks.loop(hours=144)
