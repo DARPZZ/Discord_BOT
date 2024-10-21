@@ -85,8 +85,8 @@ async def scrape_driver_standing():
     channel = client.get_channel(1297902739698880573)
     await channel.purge(limit=25)
     if matches_for_the_day:
-        matches_message = "\n".join( matches_for_the_day)
-        matches_for_the_day.clear()
+        matches_message = "\n".join( current_driver_standing)
+        current_driver_standing.clear()
         await channel.send("<@&1234866967630839870>")
         await channel.send("**Todays matches:**")
         for part in split_message(matches_message.split("\n")):
