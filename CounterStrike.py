@@ -37,12 +37,17 @@ async def scrape_matches():
                     team_names = table_row.find_all('div', class_='team-name')
                     first_team = team_names[0].text.strip()
                     second_team = team_names[1].text.strip()
-                    bo_type = table_row.find('span', class_='bo-type').text.strip()
+                    bo_type = table_row.find('span', class_='bo-type')
+                    if(bo_type != None):
+                        
+                        bo_type_stripped = bo_type.text.strip()
+                    else:
+                        bo_type_stripped = "Unknown"
                     time_object = datetime.strptime(match_time, "%H:%M")
                     time_object += timedelta(hours=2)
                     new_time_string = time_object.strftime("%H:%M")
-                    #print(f"**Teams: ** {first_team} VS {second_team}\n**Time: ** {new_time_string}\n**BO: ** {bo_type}\n{'-'*60}\n")
-                    matches_for_the_day.append(f"**Teams: ** {first_team} VS {second_team}\n**Time: ** {new_time_string}\n**BO: ** {bo_type}\n{'-'*60}\n")
+                    #print(f"**Teams: ** {first_team} VS {second_team}\n**Time: ** {new_time_string}\n**BO: ** {bo_type_stripped}\n{'-'*60}\n")
+                    matches_for_the_day.append(f"**Teams: ** {first_team} VS {second_team}\n**Time: ** {new_time_string}\n**BO: ** {bo_type_stripped}\n{'-'*60}\n")
                     
     channel = client.get_channel(1235813854580179125)
     await channel.purge(limit=25)
@@ -58,7 +63,6 @@ async def scrape_matches():
         await channel.send("No matches for today.")
         return False
     
-
 
 async def scrape_current_matches():
     url = "https://bo3.gg/matches/current"
