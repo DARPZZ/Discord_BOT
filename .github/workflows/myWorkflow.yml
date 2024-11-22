@@ -47,7 +47,7 @@ jobs:
           docker build -t my-discord-bot:latest .
           
           echo "Running new Discord bot container..."
-          docker run -d --name discord-bot my-discord-bot:latest
+          docker run --restart=always -d --name discord-bot my-discord-bot:latest
 
   check_logs:
     name: Check Discord Bot Logs
