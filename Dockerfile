@@ -8,7 +8,7 @@ ENV LANG da_DK.UTF-8
 ENV LANGUAGE da_DK:en
 ENV LC_ALL da_DK.UTF-8
 ENV TZ Europe/Copenhagen
-restart: always
+
 WORKDIR /usr/src/app
 RUN touch /usr/src/app/discord.log
 
