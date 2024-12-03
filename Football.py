@@ -22,7 +22,7 @@ async def scrape_matches():
         time = match.find('div', class_='time').text.strip()
         teams = match.find('span', class_='text').text.strip()
         league = match.find('div', class_='league').text.strip()
-        i += i
+        i += 1
         matches_for_the_day.append(f"**Teams:** {teams} \n**League:** {league}\n**Time:** {time}\n{'-'*60}\n ")
         if(i ==7):
            
