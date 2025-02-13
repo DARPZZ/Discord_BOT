@@ -4,7 +4,22 @@ from share import *
 from discord.ext import tasks
 matches_for_the_day =[]
 date_string =''
+first_team_win_odss=""
+draw_odss=""
+second_team_win_odss=""
 
+async def calculate_odds(football_match,teams):
+    global first_team_win_odss
+    global draw_odss
+    global second_team_win_odss
+    first_team__name = teams.split("-")[0]
+    second_team__name = teams.split("-")[1]
+    odss = football_match.find('ul', class_='odds')
+    odss_value = odss.find_all('span', class_='value')
+    first_team_win_odss = first_team__name + " " + odss_value[0].text.strip()
+    draw_odss = "Draw" + " " + odss_value[1].text.strip()
+    second_team_win_odss = second_team__name + " " + odss_value[2].text.strip()
+    
 async def scrape_matches():
     print("Calling scrape football matches")
     loop_bool = True
@@ -25,15 +40,7 @@ async def scrape_matches():
             loop_bool = False
             break
         teams = football_match.find('span', class_='text').text.strip()
-        
-        first_team__name = teams.split("-")[0]
-        second_team__name = teams.split("-")[1]
-        odss = football_match.find('ul', class_='odds')
-        
-        odss_value = odss.find_all('span', class_='value')
-        first_team_win_odss = first_team__name + " " + odss_value[0].text.strip()
-        draw_odss = "Draw" + " " + odss_value[1].text.strip()
-        second_team_win_odss = second_team__name + " " + odss_value[2].text.strip()
+        await calculate_odds(football_match,teams)
         tid = football_match.find('div', class_='time').text.strip()
         kanal = football_match.find('div', class_='chanels')
         img_tag = kanal.find('img')
@@ -41,7 +48,7 @@ async def scrape_matches():
         league = football_match.find('div', class_='league')
         real_league = league.find('span', class_='text').text.strip()
         matches_for_the_day.append(
-            f"**Teams:** {teams} \n**Tid:** {tid}\n**Liga:** {real_league} \n**Odss:** {first_team_win_odss}  {draw_odss} {second_team_win_odss} \n**Kanal:** {kanal} \n{'-'*60}\n "
+            f"**Teams:** {teams} \n**Tid:** {tid}\n**Liga:** {real_league} \n**Odss:** {first_team_win_odss}   {draw_odss}   {second_team_win_odss}  \n**Kanal:** {kanal} \n{'-'*60}\n "
             )
     channel = client.get_channel(1234600317090529392)
     await channel.purge(limit=25)
