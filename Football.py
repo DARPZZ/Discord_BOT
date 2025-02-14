@@ -15,10 +15,13 @@ async def calculate_odds(football_match,teams):
     first_team__name = teams.split("-")[0]
     second_team__name = teams.split("-")[1]
     odss = football_match.find('ul', class_='odds')
-    odss_value = odss.find_all('span', class_='value')
-    first_team_win_odss = first_team__name + " " + odss_value[0].text.strip()
-    draw_odss = "Draw" + " " + odss_value[1].text.strip()
-    second_team_win_odss = second_team__name + " " + odss_value[2].text.strip()
+    if odss != None:
+        odss_value = odss.find_all('span', class_='value')
+        first_team_win_odss = first_team__name + " " + odss_value[0].text.strip()
+        draw_odss = "Draw" + " " + odss_value[1].text.strip()
+        second_team_win_odss = second_team__name + " " + odss_value[2].text.strip()
+    else:
+        first_team_win_odss = "No odds or match is ongoing"
     
 async def scrape_matches():
     print("Calling scrape football matches")
