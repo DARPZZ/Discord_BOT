@@ -7,8 +7,12 @@ date_string =''
 first_team_win_odss=""
 draw_odss=""
 second_team_win_odss=""
+all_odds = ""
+no_odds =""
 
 async def calculate_odds(football_match,teams):
+    global all_odds
+    global no_odds
     global first_team_win_odss
     global draw_odss
     global second_team_win_odss
@@ -20,11 +24,11 @@ async def calculate_odds(football_match,teams):
         first_team_win_odss = first_team__name + " " + odss_value[0].text.strip()
         draw_odss = "Draw" + " " + odss_value[1].text.strip()
         second_team_win_odss = second_team__name + " " + odss_value[2].text.strip()
+        all_odds = first_team_win_odss + draw_odss + second_team_win_odss
     else:
-        first_team_win_odss = "No odds or match is ongoing"
+        all_odds ="No odds or the match is live"
     
 async def scrape_matches():
-    print("Calling scrape football matches")
     loop_bool = True
     url = "https://www.livescore.dk/fodbold-i-tv/"
     async with aiohttp.ClientSession() as session:
@@ -51,7 +55,7 @@ async def scrape_matches():
         league = football_match.find('div', class_='league')
         real_league = league.find('span', class_='text').text.strip()
         matches_for_the_day.append(
-            f"**Teams:** {teams} \n**Tid:** {tid}\n**Liga:** {real_league} \n**Odss:** {first_team_win_odss}   {draw_odss}   {second_team_win_odss}  \n**Kanal:** {kanal} \n{'-'*60}\n "
+            f"**Teams:** {teams} \n**Tid:** {tid}\n**Liga:** {real_league} \n**Odss:** {all_odds}  \n**Kanal:** {kanal} \n{'-'*60}\n "
             )
     channel = client.get_channel(1234600317090529392)
     await channel.purge(limit=25)
