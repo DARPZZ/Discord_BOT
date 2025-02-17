@@ -25,7 +25,9 @@ async def calculate_odds(football_match,teams):
         first_team_win_odss = first_team__name + " " + odss_value[0].text.strip()
         draw_odss = "Draw" + " " + odss_value[1].text.strip()
         second_team_win_odss = second_team__name + " " + odss_value[2].text.strip()
-        all_odds = first_team_win_odss + draw_odss + second_team_win_odss
+        
+        all_odds = f"{first_team_win_odss}\u2003{draw_odss}\u2003{second_team_win_odss}"
+
     else:
         all_odds ="No odds or the match is live"
     
@@ -39,9 +41,12 @@ async def scrape_matches():
     todays_matches = soup.find('div', class_='tv-table tv-table--football')
     football_match = todays_matches.find_next()
     date = football_match.find('div', class_='date')
-    embedVar = discord.Embed(title="Football", description="Football matches for the day", color=0x00ff00)
+    embedVar = discord.Embed(title="Football", description="", color=0x00ff00)
     while loop_bool:
+
         match = football_match.find_next_sibling()
+        if match == None:
+            break
         football_match = match
         if date != None:
             date_string = date.text.strip()
@@ -56,10 +61,12 @@ async def scrape_matches():
         kanal = img_tag.get('alt', 'No alt attribute') if img_tag else 'No image found'
         league = football_match.find('div', class_='league')
         real_league = league.find('span', class_='text').text.strip()
-        await add_feilds(embedVar, "Teams", teams)
-        await add_feilds(embedVar,"Tid", tid)
-        await add_feilds(embedVar, "Liga", value= real_league)
-        await add_feilds(embedVar,"Odds")
+        await add_feilds(embedVar, "Teams:", teams)
+        await add_feilds(embedVar,"Tid:", tid)
+        await add_feilds(embedVar, "Liga:",real_league)
+        await add_feilds(embedVar,"Odds:", all_odds)
+        await add_feilds(embedVar,"Kanal:", kanal)
+        await add_feilds(embedVar,"",f"\n{'-'*60}\n")
         # matches_for_the_day.append(
         #     f"**Teams:** {teams} \n**Tid:** {tid}\n**Liga:** {real_league} \n**Odss:** {all_odds}  \n**Kanal:** {kanal} \n{'-'*60}\n "
         #     )
@@ -69,6 +76,7 @@ async def scrape_matches():
     
 
     channel = client.get_channel(1234600317090529392)
+    await channel.purge()
     await channel.send(embed=embedVar)
     # await channel.purge(limit=25)
     # if matches_for_the_day:
@@ -78,7 +86,7 @@ async def scrape_matches():
     #     await channel.send(f"**{date_string} ** \n")
     #     for part in split_message(matches_message.split("\n")):
     #         await channel.send(part)
-    #     return True
+    return True
     # else:
     #     await channel.send("No matches for today.")
     # return False
