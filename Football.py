@@ -9,7 +9,8 @@ draw_odss=""
 second_team_win_odss=""
 all_odds = ""
 no_odds =""
-
+async def add_feilds(embedVar,name, value):
+    embedVar.add_field(name=name, value=value, inline=False)
 async def calculate_odds(football_match,teams):
     global all_odds
     global no_odds
@@ -38,6 +39,7 @@ async def scrape_matches():
     todays_matches = soup.find('div', class_='tv-table tv-table--football')
     football_match = todays_matches.find_next()
     date = football_match.find('div', class_='date')
+    embedVar = discord.Embed(title="Football", description="Football matches for the day", color=0x00ff00)
     while loop_bool:
         match = football_match.find_next_sibling()
         football_match = match
@@ -54,19 +56,29 @@ async def scrape_matches():
         kanal = img_tag.get('alt', 'No alt attribute') if img_tag else 'No image found'
         league = football_match.find('div', class_='league')
         real_league = league.find('span', class_='text').text.strip()
-        matches_for_the_day.append(
-            f"**Teams:** {teams} \n**Tid:** {tid}\n**Liga:** {real_league} \n**Odss:** {all_odds}  \n**Kanal:** {kanal} \n{'-'*60}\n "
-            )
+        await add_feilds(embedVar, "Teams", teams)
+        await add_feilds(embedVar,"Tid", tid)
+        await add_feilds(embedVar, "Liga", value= real_league)
+        await add_feilds(embedVar,"Odds")
+        # matches_for_the_day.append(
+        #     f"**Teams:** {teams} \n**Tid:** {tid}\n**Liga:** {real_league} \n**Odss:** {all_odds}  \n**Kanal:** {kanal} \n{'-'*60}\n "
+        #     )
+    
+    
+    
+    
+
     channel = client.get_channel(1234600317090529392)
-    await channel.purge(limit=25)
-    if matches_for_the_day:
-        matches_message = "\n".join(matches_for_the_day)
-        matches_for_the_day.clear()
-        await channel.send("<@&1234890120029536297>")
-        await channel.send(f"**{date_string} ** \n")
-        for part in split_message(matches_message.split("\n")):
-            await channel.send(part)
-        return True
-    else:
-        await channel.send("No matches for today.")
-    return False
+    await channel.send(embed=embedVar)
+    # await channel.purge(limit=25)
+    # if matches_for_the_day:
+    #     matches_message = "\n".join(matches_for_the_day)
+    #     matches_for_the_day.clear()
+    #     await channel.send("<@&1234890120029536297>")
+    #     await channel.send(f"**{date_string} ** \n")
+    #     for part in split_message(matches_message.split("\n")):
+    #         await channel.send(part)
+    #     return True
+    # else:
+    #     await channel.send("No matches for today.")
+    # return False
