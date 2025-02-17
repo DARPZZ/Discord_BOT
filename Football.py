@@ -33,6 +33,8 @@ async def scrape_matches():
     date = football_match.find('div', class_='date')
     while loop_bool:
         match = football_match.find_next_sibling()
+        if match == None:
+            break
         football_match = match
         if date != None:
             date_string = date.text.strip()
