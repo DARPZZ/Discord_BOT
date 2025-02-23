@@ -39,6 +39,9 @@ async def calculate_odds(football_match,teams):
         all_odds ="No odds or the match is live"
     
 async def scrape_matches():
+    date_string =""
+    channel = client.get_channel(1234600317090529392)
+    await channel.purge()
     loop_bool = True
     url = "https://www.livescore.dk/fodbold-i-tv/"
     async with aiohttp.ClientSession() as session:
@@ -48,15 +51,16 @@ async def scrape_matches():
     todays_matches = soup.find('div', class_='tv-table tv-table--football')
     football_match = todays_matches.find_next()
     date = football_match.find('div', class_='date')
-    embedVar = discord.Embed( color=0x00ff00 )
-    embedVar.set_footer(text="Oddsne er fra LeoVegas",icon_url=None)
+    if date != None:
+        date_string = date.text.strip()
+    await channel.send(content=f"Fodbold kampe {date_string}")  
     while loop_bool:
+        embedVar = discord.Embed( color=0x00ff00 )
+        embedVar.set_footer(text="Oddsne er fra LeoVegas",icon_url=None)
         match = football_match.find_next_sibling()
         if match == None:
             break
         football_match = match
-        if date != None:
-            date_string = date.text.strip()
         if match.find('div', class_='date'):
             loop_bool = False
             break
@@ -67,14 +71,7 @@ async def scrape_matches():
         img_tag = kanal.find('img')
         kanal = img_tag.get('alt', 'No alt attribute') if img_tag else 'No image found'
         league = football_match.find('div', class_='league')
-        real_league = league.find('span', class_='text').text.strip()
+        real_league = league.find('span', class_='text').text.strip() 
         await add_feilds(embedVar,teams,tid,real_league,kanal)
-    embedVar.title = f"Fodbold kmape: {date_string}"
-        # matches_for_the_day.append(
-        #     f"**Teams:** {teams} \n**Tid:** {tid}\n**Liga:** {real_league} \n**Odss:** {all_odds}  \n**Kanal:** {kanal} \n{'-'*60}\n "
-        #     )
-    
-    channel = client.get_channel(1234600317090529392)
-    await channel.purge()
-    await channel.send(embed=embedVar)
+        await channel.send(embed=embedVar)
     return True
