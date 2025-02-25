@@ -49,6 +49,10 @@ async def scrape_matches():
             text = await response.text()
     soup = BeautifulSoup(text, 'html.parser')
     todays_matches = soup.find('div', class_='tv-table tv-table--football')
+    if todays_matches == None:
+        no_matches_embed = discord.Embed( color=0x00ff00,description="There is no matches today")
+        await channel.send(embed=no_matches_embed)
+        return
     football_match = todays_matches.find_next()
     date = football_match.find('div', class_='date')
     if date != None:
