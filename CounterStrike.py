@@ -53,11 +53,12 @@ async def scrape_matches():
                     else:
                         bo_type_stripped = "Unknown"
                     time_object = datetime.strptime(match_time, "%H:%M")
+
+                    new_time_string = time_object.strftime("%H:%M")
                     
-                    
-                    embedVar.add_field(name="Teams:", value=get_team_names(table_row), inline=False)
-                    embedVar.add_field( name="Time", value=time_object, inline=False)
-                    embedVar.add_field(name="BO", value=bo_type_stripped,inline=False)
+                    embedVar.add_field(name="**Teams:**", value=get_team_names(table_row), inline=False)
+                    embedVar.add_field( name="**Time:**", value=new_time_string, inline=False)
+                    embedVar.add_field(name="**BO:**", value=bo_type_stripped,inline=False)
                     #print(f"**Teams: ** {first_team} VS {second_team}\n**Time: ** {new_time_string}\n**BO: ** {bo_type_stripped}\n{'-'*60}\n")
                     await channel.send(embed=embedVar)
         
