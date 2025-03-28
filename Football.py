@@ -19,25 +19,27 @@ async def add_feilds(embedVar,teams,tid,real_league,kanal):
     embedVar.add_field(name="",value=f"\n{'-'*60}\n", inline=False)
 
 async def calculate_odds(football_match,teams):
-    global all_odds
-    global no_odds
-    global first_team_win_odss
-    global draw_odss
-    global second_team_win_odss
-    first_team__name = teams.split("-")[0]
-    second_team__name = teams.split("-")[1]
-    odss = football_match.find('ul', class_='odds')
-    if odss != None:
-        odss_value = odss.find_all('span', class_='value')
-        first_team_win_odss = first_team__name + " " + odss_value[0].text.strip()
-        draw_odss = "Draw" + " " + odss_value[1].text.strip()
-        second_team_win_odss = second_team__name + " " + odss_value[2].text.strip()
-        
-        all_odds = f"{first_team_win_odss}\u2003{draw_odss}\u2003{second_team_win_odss}"
+    try:
+        global all_odds
+        global no_odds
+        global first_team_win_odss
+        global draw_odss
+        global second_team_win_odss
+        first_team__name = teams.split("-")[0]
+        second_team__name = teams.split("-")[1]
+        odss = football_match.find('ul', class_='odds')
+        if odss != None:
+            odss_value = odss.find_all('span', class_='value')
+            first_team_win_odss = first_team__name + " " + odss_value[0].text.strip()
+            draw_odss = "Draw" + " " + odss_value[1].text.strip()
+            second_team_win_odss = second_team__name + " " + odss_value[2].text.strip()
+            
+            all_odds = f"{first_team_win_odss}\u2003{draw_odss}\u2003{second_team_win_odss}"
 
-    else:
-        all_odds ="No odds or the match is live"
-    
+        else:
+            all_odds ="No odds or the match is live"
+    except:
+        all_odds = "Could not calculate all odds"    
 async def scrape_matches():
     date_string =""
     channel = client.get_channel(1234600317090529392)

@@ -1,17 +1,27 @@
 import re
 import requests
 from datetime import datetime, timedelta
-import pytz 
 from share import *
+url = "https://bo3.gg/matches/current"
+headers = {'accept-language': 'da-DK,da;q=0.9,en-US;q=0.8,en;q=0.7',}
 matches_for_the_day =[]
+def show_rateing(table_row):
+    rating = table_row.find("div", class_="c-table-cell-match-rating")
+    rating_star = rating.find_all("i", class_="filled o-icon o-icon--star-1")
+    if(len(rating_star)>=2):
+        return True
+    return False
+
+def get_team_names(table_row):
+    team_names = table_row.find_all('div', class_='team-name')
+    first_team = team_names[0].text.strip()
+    second_team = team_names[1].text.strip()
+    return f"{first_team} VS {second_team}"
 
 async def scrape_matches():
-    await scrape_current_matches()
-    url = "https://bo3.gg/matches/current"
-    headers = {
-        'accept-language': 'da-DK,da;q=0.9,en-US;q=0.8,en;q=0.7',
-      
-    }
+    channel = client.get_channel(1235813854580179125)
+    await channel.purge(limit=25)
+    await scrape_current_matches(channel)
     async with aiohttp.ClientSession(headers=headers) as session:
         async with session.get(url) as response:
             text = await response.text()
@@ -25,18 +35,17 @@ async def scrape_matches():
     for match in matches:
         table_rows = match.find_all('div', class_='table-row table-row--upcoming')
         for table_row in table_rows:
+            embedVar = discord.Embed( color=0x9D00FF, description="Match"  )
             ADate = table_row.find('a', class_='c-global-match-link table-cell')
-            if ADate:
-                href = ADate.get('href') 
+            if ADate and show_rateing(table_row):
+                href = ADate.get('href')
                 date_match = re.search(r'\d{2}-\d{2}-\d{4}', href)
                 match_date = date_match.group(0)
                 match_date = match_date.split('-')
                 match_date =  match_date[0] + '-' + match_date[1]
                 if (match_date == mydate_string):
                     match_time = table_row.find('span', class_='time').text.strip()
-                    team_names = table_row.find_all('div', class_='team-name')
-                    first_team = team_names[0].text.strip()
-                    second_team = team_names[1].text.strip()
+                   
                     bo_type = table_row.find('span', class_='bo-type')
                     if(bo_type != None):
                         
@@ -46,30 +55,17 @@ async def scrape_matches():
                     time_object = datetime.strptime(match_time, "%H:%M")
                     time_object += timedelta(hours=1)
                     new_time_string = time_object.strftime("%H:%M")
-                    #print(f"**Teams: ** {first_team} VS {second_team}\n**Time: ** {new_time_string}\n**BO: ** {bo_type_stripped}\n{'-'*60}\n")
-                    matches_for_the_day.append(f"**Teams: ** {first_team} VS {second_team}\n**Time: ** {new_time_string}\n**BO: ** {bo_type_stripped}\n{'-'*60}\n")
                     
-    channel = client.get_channel(1235813854580179125)
-    await channel.purge(limit=25)
-    if matches_for_the_day:
-        matches_message = "\n".join( matches_for_the_day)
-        matches_for_the_day.clear()
-        await channel.send("<@&1235818483640434798>")
-        await channel.send("**Todays matches:**")
-        for part in split_message(matches_message.split("\n")):
-            await channel.send(part)
-        return True
-    else:
-        await channel.send("No matches for today.")
-        return False
-    
+                    embedVar.add_field(name="Teams:", value=get_team_names(table_row), inline=False)
+                    embedVar.add_field( name="Time", value=new_time_string, inline=False)
+                    embedVar.add_field(name="BO", value=bo_type_stripped,inline=False)
+                    #print(f"**Teams: ** {first_team} VS {second_team}\n**Time: ** {new_time_string}\n**BO: ** {bo_type_stripped}\n{'-'*60}\n")
+                    await channel.send(embed=embedVar)
+        
 
-async def scrape_current_matches():
-    url = "https://bo3.gg/matches/current"
-    headers = {
-        'accept-language': 'da-DK,da;q=0.9,en-US;q=0.8,en;q=0.7',
-      
-    }
+
+async def scrape_current_matches(channel):
+    
     async with aiohttp.ClientSession(headers=headers) as session:
         async with session.get(url) as response:
             text = await response.text()
@@ -78,8 +74,9 @@ async def scrape_current_matches():
     for match in matches:
         table_rows = match.find_all('div', class_='table-row table-row--current')
         for table_row in table_rows:
-                team_names = table_row.find_all('div', class_='team-name')
-                first_team = team_names[0].text.strip()
-                second_team = team_names[1].text.strip()
+            embedVar = discord.Embed( color=0x9D00FF, description="Live Match")
+            if show_rateing(table_row):
                 #print(f"**Teams: ** {first_team} VS {second_team}\n**Score: **\n{'-'*60}\n")
-                matches_for_the_day.append(f"**Teams: ** {first_team} VS {second_team}\n**Time: ** Live  \n{'-'*60}\n")
+                embedVar.add_field(name="**Teams: **",value= get_team_names(table_row),inline=False)
+                embedVar.add_field(name="**Time: **", value="Live", inline=False)
+                await channel.send(embed=embedVar)
