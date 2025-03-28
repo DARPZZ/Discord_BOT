@@ -61,6 +61,7 @@ async def scrape_matches():
                     embedVar.add_field(name="**BO:**", value=bo_type_stripped,inline=False)
                     #print(f"**Teams: ** {first_team} VS {second_team}\n**Time: ** {new_time_string}\n**BO: ** {bo_type_stripped}\n{'-'*60}\n")
                     await channel.send(embed=embedVar)
+    return True
         
 
 
