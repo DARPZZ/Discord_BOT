@@ -44,7 +44,7 @@ async def scrape_matches():
                     else:
                         bo_type_stripped = "Unknown"
                     time_object = datetime.strptime(match_time, "%H:%M")
-                    time_object += timedelta(hours=2)
+                    time_object += timedelta(hours=1)
                     new_time_string = time_object.strftime("%H:%M")
                     #print(f"**Teams: ** {first_team} VS {second_team}\n**Time: ** {new_time_string}\n**BO: ** {bo_type_stripped}\n{'-'*60}\n")
                     matches_for_the_day.append(f"**Teams: ** {first_team} VS {second_team}\n**Time: ** {new_time_string}\n**BO: ** {bo_type_stripped}\n{'-'*60}\n")
