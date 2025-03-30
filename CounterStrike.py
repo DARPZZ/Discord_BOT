@@ -53,7 +53,7 @@ async def scrape_matches():
                     else:
                         bo_type_stripped = "Unknown"
                     time_object = datetime.strptime(match_time, "%H:%M")
-                    time_object += timedelta(hours=1)
+                    time_object += timedelta(hours=2)
                     new_time_string = time_object.strftime("%H:%M")
                     embedVar.add_field(name="**Teams:**", value=get_team_names(table_row), inline=False)
                     embedVar.add_field( name="**Time:**", value=new_time_string, inline=False)
