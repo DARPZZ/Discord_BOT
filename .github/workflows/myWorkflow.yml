@@ -10,7 +10,7 @@ jobs:
     name: Remove Old Discord Bot Container
     runs-on: ubuntu-latest
     steps:
-    - name: Remove old Discord bot container
+    - name: Remove old container
       uses: appleboy/ssh-action@master
       with:
         host: ${{secrets.HOST}}
