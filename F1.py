@@ -4,9 +4,10 @@ import pytz
 from share import *
 matches_for_the_day = []
 current_driver_standing = []
-
+current_team_standing = []
+f1StartUrl = 'https://www.skysports.com/f1/'
 async def scrape_matches():
-    url = "https://www.skysports.com/f1/schedule-results"
+    url = f"{f1StartUrl}schedule-results"
     async with aiohttp.ClientSession() as session:
         async with session.get(url) as response:
             text = await response.text()
@@ -58,7 +59,7 @@ async def scrape_matches():
 
 
 async def scrape_driver_standing():
-    url = "https://www.skysports.com/f1/standings"
+    url = f"{f1StartUrl}/standings"
     
     async with aiohttp.ClientSession() as session:
         async with session.get(url) as response:
@@ -89,3 +90,29 @@ async def scrape_driver_standing():
             await channel.send(part)
     else:
         await channel.send("No standings available.")
+        
+async def scrape_team_standing():
+    channel = client.get_channel(1381729288340111551)
+    await channel.purge()
+    url = f"{f1StartUrl}/standings"
+    async with aiohttp.ClientSession() as session:
+        async with session.get(url) as response:
+            text = await response.text()
+            
+    soup = BeautifulSoup(text, 'html.parser')
+    table = soup.find_all('table', class_='standing-table__table')
+    if table:
+        team_table = table[1]
+        standing_table__row = team_table.find_all('tr', class_='standing-table__row')
+        for element in standing_table__row:
+            embedVar = discord.Embed( color=0x9D00FF)
+            team_name = element.find('td', class_='standing-table__cell standing-table__cell--name')
+            if team_name != None:
+                team_points = team_name.findNextSibling()
+                team_name_text = team_name.text.strip()
+                team_points_text = team_points.text.strip()
+                embedVar.add_field(name="**Name: **", value=f"{team_name_text}", inline=False)
+                embedVar.add_field(name="**Points: **", value=f"{team_points_text}",inline=False)
+                await channel.send(embed=embedVar)
+
+    
