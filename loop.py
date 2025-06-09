@@ -15,7 +15,7 @@ async def start_football_loop():
         
 @tasks.loop(hours=1) 
 async def twitch_loop():
-    await twitch.get_live_twitch_streamer('KmartPoker')
+    await twitch.get_live_twitch_streamer(['KmartPoker','shroud'])
 
 @tasks.loop(hours=1)
 async def start_counterstrike_loop():
@@ -25,15 +25,15 @@ async def start_counterstrike_loop():
     else:
          start_counterstrike_loop.change_interval(hours=1)
         
-@tasks.loop(hours=144)
+@tasks.loop(hours=48)
 async def start_f1_loop():
     await F1.scrape_matches()
     
-@tasks.loop(hours=144)
+@tasks.loop(hours=48)
 async def start_f1_driver_loop():
     await F1.scrape_driver_standing()
 
 
-@tasks.loop(hours=144)
+@tasks.loop(hours=48)
 async def start_Ufc_loop():
     await ufc.scrape_matches()
