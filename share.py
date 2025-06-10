@@ -21,3 +21,4 @@ def split_message(lines, limit=2000):
             current_message += "\n" + line
     messages.append(current_message) 
     return messages
+

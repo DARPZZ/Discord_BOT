@@ -28,11 +28,11 @@ async def clear(ctx, amount = 50):
     await ctx.channel.purge(limit=amount)
     
 @client.command()
-async def f1_driver():
+async def f1_driver(ctx):
     await F1.scrape_driver_standing()
     
 @client.command
-async def f1_team():
+async def f1_team(ctx):
     await F1.scrape_team_standing()
     
 def wait_until_ready():
