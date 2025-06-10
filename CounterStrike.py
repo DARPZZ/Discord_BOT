@@ -27,7 +27,7 @@ def get_current_date():
 
 async def scrape_matches():
     channel = client.get_channel(1235813854580179125)
-    await channel.purge(limit=25)
+    await channel.purge()
     await scrape_current_matches(channel)
     async with aiohttp.ClientSession(headers=headers) as session:
         async with session.get(url) as response:

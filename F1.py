@@ -59,7 +59,7 @@ async def scrape_matches():
 async def scrape_driver_standing():
     url = f"{f1StartUrl}/standings"
     channel = client.get_channel(1297902739698880573)
-    await channel.purge(limit=25)
+    await channel.purge()
     async with aiohttp.ClientSession() as session:
         async with session.get(url) as response:
             text = await response.text()

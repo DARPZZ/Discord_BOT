@@ -12,7 +12,6 @@ intents.message_content = True
 async def football(ctx):
   await Football.scrape_matches()
 
-   
 @client.command()
 async def cs(ctx):
     await CounterStrike.scrape_matches()  
@@ -20,16 +19,21 @@ async def cs(ctx):
 async def f1(ctx):
     await F1.scrape_matches()
 
-        
 @client.command()
 async def UFC(ctx):
     await ufc.scrape_matches()
-
 
 @client.command()
 async def clear(ctx, amount = 50):
     await ctx.channel.purge(limit=amount)
     
+@client.command()
+async def f1_driver():
+    await F1.scrape_driver_standing()
+    
+@client.command
+async def f1_team():
+    await F1.scrape_team_standing()
     
 def wait_until_ready():
     start_football_loop.before_loop(client.wait_until_ready)
@@ -39,7 +43,6 @@ def wait_until_ready():
     start_Ufc_loop.before_loop(client.wait_until_ready)
     start_counterstrike_loop.before_loop(client.wait_until_ready)
     twitch_loop.before_loop(client.wait_until_ready)
-    
 
 def loop_start():
     start_football_loop.start()
