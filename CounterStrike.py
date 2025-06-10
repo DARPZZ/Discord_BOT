@@ -5,6 +5,7 @@ from share import *
 url = "https://bo3.gg/matches/current"
 headers = {'accept-language': 'da-DK,da;q=0.9,en-US;q=0.8,en;q=0.7',}
 matches_for_the_day =[]
+
 async def  show_rateing(table_row):
     rating = table_row.find("div", class_="c-table-cell-match-rating")
     if rating != None:
@@ -24,6 +25,12 @@ def get_current_date():
     my_date = mydate_time.date()
     my_date = my_date.strftime("%d-%m")
     return my_date
+def get_match_date(href):
+    date_match = re.search(r'\d{2}-\d{2}-\d{4}', href)
+    match_date = date_match.group(0)
+    match_date = match_date.split('-')
+    match_date =  match_date[0] + '-' + match_date[1]
+    return match_date
 
 async def scrape_matches():
     channel = client.get_channel(1235813854580179125)
@@ -43,11 +50,8 @@ async def scrape_matches():
             ADate = table_row.find('a', class_='c-global-match-link table-cell')
             if ADate and await show_rateing(table_row):
                 href = ADate.get('href')
-                date_match = re.search(r'\d{2}-\d{2}-\d{4}', href)
-                match_date = date_match.group(0)
-                match_date = match_date.split('-')
-                match_date =  match_date[0] + '-' + match_date[1]
-                if (match_date == mydate_string):
+
+                if (get_match_date(href) == mydate_string):
                     match_time = table_row.find('span', class_='time').text.strip()
                    
                     bo_type = table_row.find('span', class_='bo-type')
@@ -62,7 +66,6 @@ async def scrape_matches():
                     embedVar.add_field(name="**Teams:**", value=await get_team_names(table_row), inline=False)
                     embedVar.add_field( name="**Time:**", value=new_time_string, inline=False)
                     embedVar.add_field(name="**BO:**", value=bo_type_stripped,inline=False)
-                    #print(f"**Teams: ** {first_team} VS {second_team}\n**Time: ** {new_time_string}\n**BO: ** {bo_type_stripped}\n{'-'*60}\n")
                     await channel.send(embed=embedVar)
     return True
         
@@ -80,7 +83,6 @@ async def scrape_current_matches(channel):
         for table_row in table_rows:
             embedVar = discord.Embed( color=0x9D00FF, description="Live Match")
             if await show_rateing(table_row):
-                #print(f"**Teams: ** {first_team} VS {second_team}\n**Score: **\n{'-'*60}\n")
                 embedVar.add_field(name="**Teams: **",value= await get_team_names(table_row),inline=False)
                 embedVar.add_field(name="**Time: **", value="Live", inline=False)
                 await channel.send(embed=embedVar)
