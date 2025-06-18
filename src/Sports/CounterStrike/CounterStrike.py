@@ -1,6 +1,7 @@
 import re
 import requests
 from datetime import datetime, timedelta
+from . import CounterStrikeCurrentMatches
 from share import *
 url = "https://bo3.gg/matches/current"
 headers = {'accept-language': 'da-DK,da;q=0.9,en-US;q=0.8,en;q=0.7',}
@@ -25,10 +26,18 @@ def get_current_date():
     my_date = my_date.strftime("%d-%m")
     return my_date
 
+def get_bo_type(table_row):
+    bo_type = table_row.find('span', class_='bo-type')
+    if(bo_type != None):
+        bo_type_stripped = bo_type.text.strip()
+    else:
+        bo_type_stripped = "Unknown"
+    return bo_type_stripped
+
 async def scrape_matches():
     channel = client.get_channel(1235813854580179125)
     await channel.purge(limit=25)
-    await scrape_current_matches(channel)
+    await CounterStrikeCurrentMatches.scrape_current_matches(channel,headers,url,show_rateing,get_team_names)
     async with aiohttp.ClientSession(headers=headers) as session:
         async with session.get(url) as response:
             text = await response.text()
@@ -50,12 +59,7 @@ async def scrape_matches():
                 if (match_date == mydate_string):
                     match_time = table_row.find('span', class_='time').text.strip()
                    
-                    bo_type = table_row.find('span', class_='bo-type')
-                    if(bo_type != None):
-                        
-                        bo_type_stripped = bo_type.text.strip()
-                    else:
-                        bo_type_stripped = "Unknown"
+                    bo_type_stripped = get_bo_type(table_row)
                     time_object = datetime.strptime(match_time, "%H:%M")
                     time_object += timedelta(hours=2)
                     new_time_string = time_object.strftime("%H:%M")
@@ -66,21 +70,3 @@ async def scrape_matches():
                     await channel.send(embed=embedVar)
     return True
         
-
-
-async def scrape_current_matches(channel):
-    
-    async with aiohttp.ClientSession(headers=headers) as session:
-        async with session.get(url) as response:
-            text = await response.text()
-    soup = BeautifulSoup(text, 'html.parser')
-    matches = soup.find_all('div', class_= 'c-matches-group-rows')
-    for match in matches:
-        table_rows = match.find_all('div', class_='table-row table-row--current')
-        for table_row in table_rows:
-            embedVar = discord.Embed( color=0x9D00FF, description="Live Match")
-            if await show_rateing(table_row):
-                #print(f"**Teams: ** {first_team} VS {second_team}\n**Score: **\n{'-'*60}\n")
-                embedVar.add_field(name="**Teams: **",value= await get_team_names(table_row),inline=False)
-                embedVar.add_field(name="**Time: **", value="Live", inline=False)
-                await channel.send(embed=embedVar)
