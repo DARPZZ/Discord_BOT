@@ -1,10 +1,10 @@
 from share import *
 from discord.ext import tasks
-import Football
-import CounterStrike as CounterStrike
-import ufc
-import F1
-import twitch
+import src.Sports.Football.Football as Football
+import src.Sports.CounterStrike.CounterStrike as CounterStrike
+import src.Sports.Ufc.ufc as ufc
+import src.Sports.F1.F1 as F1
+import src.Twitch.twitch as twitch
 @tasks.loop(hours=1) 
 async def start_football_loop():
     has_matches = await Football.scrape_matches()

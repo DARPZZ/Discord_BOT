@@ -1,16 +1,15 @@
 from share import *
-import Football
+from src.Sports.Football import Football
 import reaction_role
-import F1
 from loop import *
-import ufc
+import src.Sports.Ufc.ufc as ufc
 load_dotenv() 
 discord_token = os.getenv("discord_token")
 intents.message_content = True
 
 @client.command()
 async def football(ctx):
-  await Football.scrape_matches()
+  await Football.Football.scrape_matches()
 
    
 @client.command()
@@ -18,12 +17,12 @@ async def cs(ctx):
     await CounterStrike.scrape_matches()  
 @client.command()
 async def f1(ctx):
-    await F1.scrape_matches()
+    await F1.F1.scrape_matches()
 
         
 @client.command()
 async def UFC(ctx):
-    await ufc.scrape_matches()
+    await UFC.scrape_matches()
 
 
 @client.command()
