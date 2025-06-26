@@ -3,6 +3,7 @@ import requests
 from datetime import datetime, timedelta
 from . import CounterStrikeCurrentMatches
 from share import *
+from ...SendIfNoData import sendMessageForNoData
 url = "https://bo3.gg/matches/current"
 headers = {'accept-language': 'da-DK,da;q=0.9,en-US;q=0.8,en;q=0.7',}
 matches_for_the_day =[]
@@ -58,7 +59,6 @@ async def scrape_matches():
                 match_date =  match_date[0] + '-' + match_date[1]
                 if (match_date == mydate_string):
                     match_time = table_row.find('span', class_='time').text.strip()
-                   
                     bo_type_stripped = get_bo_type(table_row)
                     time_object = datetime.strptime(match_time, "%H:%M")
                     time_object += timedelta(hours=2)
@@ -66,7 +66,9 @@ async def scrape_matches():
                     embedVar.add_field(name="**Teams:**", value=await get_team_names(table_row), inline=False)
                     embedVar.add_field( name="**Time:**", value=new_time_string, inline=False)
                     embedVar.add_field(name="**BO:**", value=bo_type_stripped,inline=False)
-                    #print(f"**Teams: ** {first_team} VS {second_team}\n**Time: ** {new_time_string}\n**BO: ** {bo_type_stripped}\n{'-'*60}\n")
+                    matches_for_the_day.append(embedVar)
                     await channel.send(embed=embedVar)
+    if (len(matches_for_the_day)<=0):
+        await sendMessageForNoData(discord,channel)
     return True
         
