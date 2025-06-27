@@ -8,7 +8,6 @@ async def scrape_driver_standing(f1StartUrl,add_feilds):
             text = await response.text()
 
     soup = BeautifulSoup(text, 'html.parser')
-    
     table = soup.find('table', class_='standing-table__table')
     
     if table:

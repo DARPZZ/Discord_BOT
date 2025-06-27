@@ -39,7 +39,8 @@ async def calculate_odds(football_match,teams):
         else:
             all_odds ="No odds or the match is live"
     except:
-        all_odds = "Could not calculate all odds"    
+        all_odds = "Could not calculate all odds"
+        
 async def scrape_matches():
     date_string =""
     channel = client.get_channel(1234600317090529392)

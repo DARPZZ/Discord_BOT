@@ -30,14 +30,9 @@ async def start_f1_loop():
     await F1.scrape_matches()
     
 @tasks.loop(hours=48)
-async def start_f1_driver_loop():
-    await F1.driver_standing()
+async def start_f1_driver_team_loop():
+    await F1.Driver_team_standing()
     
-@tasks.loop(hours=48)
-async def start_F1_Team_loop():
-    await F1.team_standing()
-    
-
 @tasks.loop(hours=48)
 async def start_Ufc_loop():
     await ufc.scrape_matches()

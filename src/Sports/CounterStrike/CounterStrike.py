@@ -3,6 +3,7 @@ import requests
 from datetime import datetime, timedelta
 from . import CounterStrikeCurrentMatches
 from share import *
+
 from ...SendIfNoData import sendMessageForNoData
 url = "https://bo3.gg/matches/current"
 headers = {'accept-language': 'da-DK,da;q=0.9,en-US;q=0.8,en;q=0.7',}
@@ -36,6 +37,7 @@ def get_bo_type(table_row):
     return bo_type_stripped
 
 async def scrape_matches():
+    
     channel = client.get_channel(1235813854580179125)
     await channel.purge(limit=25)
     await CounterStrikeCurrentMatches.scrape_current_matches(channel,headers,url,show_rateing,get_team_names)
@@ -70,5 +72,6 @@ async def scrape_matches():
                     await channel.send(embed=embedVar)
     if (len(matches_for_the_day)<=0):
         await sendMessageForNoData(discord,channel)
+        return False
     return True
         

@@ -56,13 +56,11 @@ async def scrape_matches():
 
                 i += 1
 
+   
 
-async def driver_standing():
-   await DriverStanding.scrape_driver_standing(f1StartUrl,add_feilds)
+async def Driver_team_standing():
     
-        
-
-async def team_standing():
-   await TeamStanding.scrape_team_standing(f1StartUrl,add_feilds)
-
-    
+    L = await asyncio.gather(
+        DriverStanding.scrape_driver_standing(f1StartUrl,add_feilds),
+        TeamStanding.scrape_team_standing(f1StartUrl,add_feilds),
+    )
