@@ -74,4 +74,3 @@ async def scrape_matches():
         await sendMessageForNoData(discord,channel)
         return False
     return True
-        
