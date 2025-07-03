@@ -41,6 +41,7 @@ async def scrape_matches():
     channel = client.get_channel(1235813854580179125)
     await channel.purge(limit=25)
     await CounterStrikeCurrentMatches.scrape_current_matches(channel,headers,url,show_rateing,get_team_names)
+    
     async with aiohttp.ClientSession(headers=headers) as session:
         async with session.get(url) as response:
             text = await response.text()
@@ -70,7 +71,8 @@ async def scrape_matches():
                     embedVar.add_field(name="**BO:**", value=bo_type_stripped,inline=False)
                     matches_for_the_day.append(embedVar)
                     await channel.send(embed=embedVar)
-    if (len(matches_for_the_day)<=0):
+    is_there_ongoing_matches = CounterStrikeCurrentMatches.are_there_current_matches()
+    if (len(matches_for_the_day)<=0 and is_there_ongoing_matches == False):
         await sendMessageForNoData(discord,channel)
         return False
     return True
