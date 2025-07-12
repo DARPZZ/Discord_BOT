@@ -61,10 +61,10 @@ async def clear(interaction: discord.Interaction, amount: int = 50):
 @client.tree.command(name="csstats", description="Get information about cs2 players")
 @app_commands.describe(player_id="Players id")
 async def csstats(interaction: discord.Interaction, player_id: str):
-    if(player_id  == None):
-        return
-    await interaction.response.send_message(f"Getting data...")
-    await cs2_match_stats.get_info(player_id)
+
+    await interaction.response.send_message(f"Getting data...",ephemeral=True)
+    data = await cs2_match_stats.get_info(player_id)
+    await interaction.followup.send(embed=data,ephemeral=True)
 #endregion
 
 @client.event

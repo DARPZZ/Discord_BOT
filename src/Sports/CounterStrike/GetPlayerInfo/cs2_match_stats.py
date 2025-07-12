@@ -69,7 +69,7 @@ async def create_embed(kills,death,kd,wind,timeplayed,timeplayed_2_weeks,hs):
     # Optional: add thumbnail (game logo or avatar)
     embed.set_thumbnail(url="https://i.imgur.com/R66g1Pe.png")  # Example image
     embed.set_footer(text="Stats generated")
-    await channel.send(embed=embed)
+    return embed
 
         
 async def get_info(PlayerID):
@@ -85,5 +85,6 @@ async def get_info(PlayerID):
     kills = kd_data.get("kills")
     deaths = kd_data.get("deaths")
     kd = kd_data.get("kd")
-    await create_embed(kills,deaths,kd,winprocentage,total_playtime_round,two_weeks_playtime_round,hs_pro)
+    embed = await create_embed(kills,deaths,kd,winprocentage,total_playtime_round,two_weeks_playtime_round,hs_pro)
+    return embed
     
