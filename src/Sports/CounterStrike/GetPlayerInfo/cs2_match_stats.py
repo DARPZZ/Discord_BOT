@@ -8,8 +8,8 @@ cs2ID = os.getenv("cs2ID")
 steamID = os.getenv("steamID")
 GET_USER_STATS_FOR_GAME = "http://api.steampowered.com/ISteamUserStats/GetUserStatsForGame/v0002/"
 import asyncio
-async def GetUserStatsForGame():
-    url = f"{GET_USER_STATS_FOR_GAME}?appid={cs2ID}&key={apiKey}&steamid={steamID}8"
+async def GetUserStatsForGame(playerID):
+    url = f"{GET_USER_STATS_FOR_GAME}?appid={cs2ID}&key={apiKey}&steamid={playerID}8"
 
     try:
         response = requests.get(url)
@@ -38,6 +38,7 @@ def calculate_map_win_procentage(data):
     total_matches_played = stats.get("total_matches_played")
     total_matches_won = stats.get("total_matches_won")
     total_win_procentage = (total_matches_won / total_matches_played) * 100
+    print()
     return total_win_procentage
 
 def calculate_kd(data):
@@ -54,10 +55,11 @@ def calculate_kd(data):
     return kd_dict
 
 
-async def get_info():
-    data = await GetUserStatsForGame()
+async def get_info(PlayerID):
+    data = await GetUserStatsForGame(PlayerID)
     kd_data = calculate_kd(data)
     hs_pro = get_hs_procentage(data,kd_data.get("kills"))
+    print(hs_pro)
     calculate_map_win_procentage(data)
-asyncio.run(get_info()) 
+    
     

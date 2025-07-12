@@ -3,10 +3,23 @@ from src.Sports.Football import Football
 import reaction_role
 from discord import app_commands
 from loop import *
+import src.Sports.CounterStrike.GetPlayerInfo.cs2_match_stats as cs2_match_stats
 load_dotenv() 
 discord_token = os.getenv("discord_token")
 intents.message_content = True
 intents.members = True
+
+
+
+@client.event
+async def on_ready():
+    try:
+        synced = await client.tree.sync()
+        print(f"Synced {len(synced)} commands to test guild.")
+    except Exception as e:
+        print(f"Failed to sync commands: {e}")
+    await loop_start()
+   
 
 #region sportsCommands
 def has_owner_role(interaction: discord.Interaction) -> bool:
@@ -15,7 +28,6 @@ def has_owner_role(interaction: discord.Interaction) -> bool:
 @client.tree.command(name="football", description="Scrape football matches")
 async def football(interaction: discord.Interaction):
     if not has_owner_role(interaction):
-
         return
 
     await interaction.response.send_message("Scraping football matches...")
@@ -44,6 +56,15 @@ async def clear(interaction: discord.Interaction, amount: int = 50):
         return
     await interaction.response.send_message(f"Clearing {amount} messages...")
     await interaction.channel.purge(limit=amount)
+    
+    
+@client.tree.command(name="csstats", description="Get information about cs2 players")
+@app_commands.describe(player_id="Players id")
+async def csstats(interaction: discord.Interaction, player_id: str):
+    if(player_id  == None):
+        return
+    await interaction.response.send_message(f"Getting data...")
+    await cs2_match_stats.get_info(player_id)
 #endregion
 
 @client.event
@@ -62,10 +83,7 @@ async def loop_start():
     )
     
     
-@client.event
-async def on_ready():
-    await loop_start()
-   
+
    
             
 def main():
