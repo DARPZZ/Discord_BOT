@@ -6,9 +6,10 @@ load_dotenv()
 apiKey = os.getenv("steamAPIKey")
 cs2ID = os.getenv("cs2ID")
 steamID = os.getenv("steamID")
+GET_USER_STATS_FOR_GAME = "http://api.steampowered.com/ISteamUserStats/GetUserStatsForGame/v0002/"
 import asyncio
 async def GetUserStatsForGame():
-    url = f" http://api.steampowered.com/ISteamUserStats/GetUserStatsForGame/v0002/?appid={cs2ID}&key={apiKey}&steamid={steamID}8"
+    url = f"{GET_USER_STATS_FOR_GAME}?appid={cs2ID}&key={apiKey}&steamid={steamID}8"
 
     try:
         response = requests.get(url)
@@ -51,7 +52,8 @@ def calculate_kd(data):
         "kd": kd
     }
     return kd_dict
-        
+
+
 async def get_info():
     data = await GetUserStatsForGame()
     kd_data = calculate_kd(data)
