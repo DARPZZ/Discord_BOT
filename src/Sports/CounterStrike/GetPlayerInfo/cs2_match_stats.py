@@ -5,6 +5,15 @@ import discord
 import datetime
 from share import * 
 CS2_APP_ID = 730
+
+def show_no_data_embed(message):
+    embed = discord.Embed(
+    title="🎮 Player Stats",
+    description="performance overview",
+    )
+    embed.add_field(name="Profile is: ", value=message, inline=False)
+    return embed
+
 def change_color(kd, win_percentage):
     if kd > 1.6 or win_percentage > 62:
         return 0xFF0000  
@@ -99,15 +108,12 @@ async def get_info(PlayerID):
     user_profile_data = await user_data_profile(PlayerID)
     communityvisibilitystate = user_profile_data.get("visibilitystate")
     if(communityvisibilitystate == 2):  
-        embed = discord.Embed(
-        title="🎮 Player Stats",
-        description="performance overview",
-        )
-        
-        embed.add_field(name="Profile is: ", value=f"Private", inline=False)
-        return embed
+        return show_no_data_embed("Account fully private")
     user_stats_data = await steamAPI.GetUserStatsForGame(PlayerID)
+    if(user_stats_data == None):
+        return show_no_data_embed("Only freinds can see stats")
     user_playtime_data = await user_playtime(PlayerID)
+    
     stats_list = user_stats_data['playerstats']['stats']
     kd_data = calculate_kd(stats_list)
     hs_pro = get_hs_procentage(kd_data.get("kills"),stats_list)
