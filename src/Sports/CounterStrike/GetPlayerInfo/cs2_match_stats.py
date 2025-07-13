@@ -8,6 +8,11 @@ import discord
 import datetime
 from share import *
 CS2_APP_ID = 730
+def change_color(kd, win_percentage):
+    if kd > 1.6 or win_percentage > 62:
+        return 0xFF0000  
+    else:
+        return 0x008000  
     
 def get_hs_procentage(kills,stats_list):
     stats = {s['name']: s['value'] for s in stats_list}
@@ -39,12 +44,17 @@ def calculate_kd(stats_list):
 
 async def user_data_profile(PlayerID):
     data = await steamAPI.ProfileInformation(PlayerID)
+    if(data['response']== {}):
+        return
     profile_data = data['response']['players']
     for element in profile_data:
         name = element.get('personaname')
         avatar = element.get('avatar')
         creation_date_unix = element.get('timecreated')
-        creation_date_human = datetime.datetime.fromtimestamp(creation_date_unix).date()
+        if(creation_date_unix):
+            creation_date_human = datetime.datetime.fromtimestamp(creation_date_unix).date()
+        else:
+            creation_date_human = "Private"
         person_dict = {
         "name": name,
         "avatar": avatar,
@@ -70,7 +80,7 @@ async def create_embed(kills,death,kd,wind,timeplayed,timeplayed_2_weeks,hs,name
     embed = discord.Embed(
         title="🎮 Player Stats",
         description=f"performance overview for: {name}",
-        color=0x3498db,
+        color=change_color(kd,wind) ,
     )
     embed.add_field(name="Account created", value=f"{creation_time}", inline=True)
     embed.add_field(name="🔫 Total Kills", value=f"{kills:,}", inline=True)
@@ -93,6 +103,7 @@ async def get_info(PlayerID):
         embed = discord.Embed(
         title="🎮 Player Stats",
         description="performance overview",
+        
         )
         
         embed.add_field(name="🔫 Profile is: ", value=f"Private", inline=False)

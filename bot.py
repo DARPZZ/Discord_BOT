@@ -59,23 +59,34 @@ async def clear(interaction: discord.Interaction, amount: int = 50):
     await interaction.channel.purge(limit=amount)
     
     
+async def get_numbers_of_ID(accounts,interaction):
+    if(len(accounts)>10):
+        await interaction.response.send_message("You can´t have that many id´s", ephemeral=True)
+        return False
+    else:
+        return True
+    
 
 @client.tree.command(name="csstats", description="Get information about cs2 players")
 @app_commands.describe(player_id="Players id")
 async def csstats(interaction: discord.Interaction, player_id: str):
     allowed_channel_id = 1393994288462823615  
-
+   
     if interaction.channel.id != allowed_channel_id:
         await interaction.response.send_message(
             "❌ This command can only be used in the designated channel: " +"cs2-player-lookup", 
             ephemeral=True
         )
         return
-
-    player_id_after_vanity = await link_checker.check_if_link_is_64(player_id)
-    await interaction.response.send_message("Getting data...", ephemeral=True)
-    data = await cs2_match_stats.get_info(player_id_after_vanity)
-    await interaction.followup.send(embed=data, ephemeral=True)
+    accounts =  player_id.split(" ")
+    if(await get_numbers_of_ID(accounts,interaction)):
+        await interaction.response.send_message("Getting data...", ephemeral=True)
+        for element in accounts:
+            
+            player_id_after_vanity = await link_checker.check_if_link_is_64(element)
+            
+            data = await cs2_match_stats.get_info(player_id_after_vanity)
+            await interaction.followup.send(embed=data, ephemeral=True)
 
     
 #endregion
