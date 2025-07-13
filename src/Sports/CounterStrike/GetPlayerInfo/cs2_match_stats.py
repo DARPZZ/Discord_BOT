@@ -70,6 +70,7 @@ async def create_embed(kills,death,kd,wind,timeplayed,timeplayed_2_weeks,hs,name
     embed = discord.Embed(
         title="🎮 Player Stats",
         description=f"performance overview for: {name}",
+        color=0x3498db,
     )
     embed.add_field(name="Account created", value=f"{creation_time}", inline=True)
     embed.add_field(name="🔫 Total Kills", value=f"{kills:,}", inline=True)
