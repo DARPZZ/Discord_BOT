@@ -64,18 +64,18 @@ async def user_data_profile(PlayerID):
          
 async def user_playtime(PlayerID):
     playtime_data = await steamAPI.GetPlaytime(PlayerID)
-    if(playtime_data['response'] == {}):
-        return
-    games_list = playtime_data['response']['games']
-    for game in games_list:
-        app_id = game['appid']
-        playtime_forever = game.get("playtime_forever")
-        
-        playtime_past_2_weeks = game.get('playtime_2weeks', 0)
-        if(app_id == CS2_APP_ID):
-
-            return [playtime_forever, playtime_past_2_weeks]
-        
+    if(playtime_data):    
+        if(playtime_data['response'] == {}):
+            return
+        games_list = playtime_data['response']['games']
+        for game in games_list:
+            app_id = game['appid']
+            playtime_forever = game.get("playtime_forever")
+            
+            playtime_past_2_weeks = game.get('playtime_2weeks', 0)
+            if(app_id == CS2_APP_ID):
+                return [playtime_forever, playtime_past_2_weeks]
+            
 async def create_embed(kills,death,kd,wind,timeplayed,timeplayed_2_weeks,hs,name,image,creation_time):
     embed = discord.Embed(
         title="🎮 Player Stats",
