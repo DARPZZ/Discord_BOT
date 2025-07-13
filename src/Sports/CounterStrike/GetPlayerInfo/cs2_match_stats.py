@@ -1,12 +1,9 @@
-import os
-import json
-import requests
 import src.Sports.CounterStrike.GetPlayerInfo.steam_api_call as steamAPI
 #import steam_api_call as steamAPI
 import asyncio
 import discord
 import datetime
-from share import *
+from share import * 
 CS2_APP_ID = 730
 def change_color(kd, win_percentage):
     if kd > 1.6 or win_percentage > 62:
@@ -51,6 +48,7 @@ async def user_data_profile(PlayerID):
         name = element.get('personaname')
         avatar = element.get('avatar')
         creation_date_unix = element.get('timecreated')
+        communityvisibilitystate = element.get('communityvisibilitystate')
         if(creation_date_unix):
             creation_date_human = datetime.datetime.fromtimestamp(creation_date_unix).date()
         else:
@@ -58,7 +56,9 @@ async def user_data_profile(PlayerID):
         person_dict = {
         "name": name,
         "avatar": avatar,
-        "creation_date_human": creation_date_human
+        "creation_date_human": creation_date_human,
+        "visibilitystate": communityvisibilitystate
+        
         }
         return person_dict
          
@@ -96,18 +96,18 @@ async def create_embed(kills,death,kd,wind,timeplayed,timeplayed_2_weeks,hs,name
 
         
 async def get_info(PlayerID):
-    user_stats_data = await steamAPI.GetUserStatsForGame(PlayerID)
-    user_playtime_data = await user_playtime(PlayerID)
     user_profile_data = await user_data_profile(PlayerID)
-    if(user_stats_data == None):
+    communityvisibilitystate = user_profile_data.get("visibilitystate")
+    if(communityvisibilitystate == 2):  
         embed = discord.Embed(
         title="🎮 Player Stats",
         description="performance overview",
-        
         )
         
-        embed.add_field(name="🔫 Profile is: ", value=f"Private", inline=False)
+        embed.add_field(name="Profile is: ", value=f"Private", inline=False)
         return embed
+    user_stats_data = await steamAPI.GetUserStatsForGame(PlayerID)
+    user_playtime_data = await user_playtime(PlayerID)
     stats_list = user_stats_data['playerstats']['stats']
     kd_data = calculate_kd(stats_list)
     hs_pro = get_hs_procentage(kd_data.get("kills"),stats_list)
