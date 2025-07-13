@@ -3,6 +3,7 @@ from src.Sports.Football import Football
 import reaction_role
 from discord import app_commands
 from loop import *
+import src.Sports.CounterStrike.vani_link_chekcer as link_checker
 import src.Sports.CounterStrike.GetPlayerInfo.cs2_match_stats as cs2_match_stats
 load_dotenv() 
 discord_token = os.getenv("discord_token")
@@ -61,10 +62,11 @@ async def clear(interaction: discord.Interaction, amount: int = 50):
 @client.tree.command(name="csstats", description="Get information about cs2 players")
 @app_commands.describe(player_id="Players id")
 async def csstats(interaction: discord.Interaction, player_id: str):
-
+    player_id_after_vanity = await link_checker.check_if_link_is_64(player_id)
     await interaction.response.send_message(f"Getting data...",ephemeral=True)
-    data = await cs2_match_stats.get_info(player_id)
+    data = await cs2_match_stats.get_info(player_id_after_vanity)
     await interaction.followup.send(embed=data,ephemeral=True)
+    
 #endregion
 
 @client.event

@@ -38,3 +38,20 @@ async def GetUserStatsForGame(playerID):
     except requests.exceptions.RequestException as e:
         print('Error:', e)
         return None
+    
+async def CheckForVanityLink(playerID):
+
+    url = f"https://api.steampowered.com/ISteamUser/ResolveVanityURL/v1/?key={apiKey}&vanityurl={playerID}"
+    try:
+        response = requests.get(url)
+
+        if response.status_code == 200:
+            posts = response.json()
+            
+            return posts
+        else:
+            print('Error:', response.status_code)
+            return None
+    except requests.exceptions.RequestException as e:
+        print('Error:', e)
+        return None
