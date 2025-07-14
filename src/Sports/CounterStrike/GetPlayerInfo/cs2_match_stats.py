@@ -14,8 +14,8 @@ def show_no_data_embed(message):
     embed.add_field(name="Profile is: ", value=message, inline=False)
     return embed
 
-def change_color(kd, win_percentage):
-    if kd > 1.6 or win_percentage > 62:
+def change_color(kd, win_percentage,accuracy):
+    if kd > 1.6 or win_percentage > 62 or accuracy > 25 :
         return 0xFF0000  
     else:
         return 0x008000  
@@ -31,11 +31,16 @@ def calculate_map_win_procentage(stats_list):
     total_matches_played = stats.get("total_matches_played")
     total_matches_won = stats.get("total_matches_won")
     total_win_procentage = (total_matches_won / total_matches_played) * 100
-   
     return round(total_win_procentage,2)
 
-def calculate_kd(stats_list):
+def calculate_accuracy(stats_list):
+    stats = {s['name']: s['value'] for s in stats_list}
+    total_shots_hit = stats.get('total_shots_hit')
+    total_shots_fired = stats.get('total_shots_fired')
+    accuracy = (total_shots_hit / total_shots_fired) * 100
+    return round(accuracy,2)
 
+def calculate_kd(stats_list):
     stats = {s['name']: s['value'] for s in stats_list}
     kills = stats.get('total_kills')
     death = stats.get('total_deaths')
@@ -55,7 +60,7 @@ async def user_data_profile(PlayerID):
     profile_data = data['response']['players']
     for element in profile_data:
         name = element.get('personaname')
-        avatar = element.get('avatar')
+        avatar = element.get('avatarfull')
         creation_date_unix = element.get('timecreated')
         communityvisibilitystate = element.get('communityvisibilitystate')
         if(creation_date_unix):
@@ -67,7 +72,6 @@ async def user_data_profile(PlayerID):
         "avatar": avatar,
         "creation_date_human": creation_date_human,
         "visibilitystate": communityvisibilitystate
-        
         }
         return person_dict
          
@@ -85,11 +89,11 @@ async def user_playtime(PlayerID):
             if(app_id == CS2_APP_ID):
                 return [playtime_forever, playtime_past_2_weeks]
             
-async def create_embed(kills,death,kd,wind,timeplayed,timeplayed_2_weeks,hs,name,image,creation_time):
+async def create_embed(kills,death,kd,wind,timeplayed,timeplayed_2_weeks,hs,name,image,creation_time,accuracy):
     embed = discord.Embed(
         title="🎮 Player Stats",
-        description=f"performance overview for: {name}",
-        color=change_color(kd,wind) ,
+        description=f"performance overview for: **{name}**",
+        color=change_color(kd,wind,accuracy),
     )
     embed.add_field(name="Account created", value=f"{creation_time}", inline=True)
     embed.add_field(name="🔫 Total Kills", value=f"{kills:,}", inline=True)
@@ -99,11 +103,12 @@ async def create_embed(kills,death,kd,wind,timeplayed,timeplayed_2_weeks,hs,name
     embed.add_field(name="⏱️ Time Played (2 Weeks)", value=timeplayed_2_weeks, inline=True)
     embed.add_field(name="📅 Time Played (All Time)", value=timeplayed, inline=True)
     embed.add_field(name="🔫 Headshot %", value=hs, inline=True)
+    embed.add_field(name="🔫 Accuracy %", value=accuracy, inline=True)
     embed.set_thumbnail(url=f"{image}")
     embed.set_footer(text="Stats generated")
     return embed
 
-        
+    
 async def get_info(PlayerID):
     user_profile_data = await user_data_profile(PlayerID)
     communityvisibilitystate = user_profile_data.get("visibilitystate")
@@ -115,6 +120,7 @@ async def get_info(PlayerID):
     user_playtime_data = await user_playtime(PlayerID)
     
     stats_list = user_stats_data['playerstats']['stats']
+    accuracy = calculate_accuracy(stats_list)
     kd_data = calculate_kd(stats_list)
     hs_pro = get_hs_procentage(kd_data.get("kills"),stats_list)
     winprocentage = calculate_map_win_procentage(stats_list)
@@ -128,6 +134,6 @@ async def get_info(PlayerID):
     name = user_profile_data.get("name")
     image = user_profile_data.get("avatar")
     creation_date = user_profile_data.get("creation_date_human")
-    embed = await create_embed(kills,deaths,kd,winprocentage,total_playtime_round,two_weeks_playtime_round,hs_pro,name,image,creation_date)
+    embed = await create_embed(kills,deaths,kd,winprocentage,total_playtime_round,two_weeks_playtime_round,hs_pro,name,image,creation_date,accuracy)
     return embed
     
