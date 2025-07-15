@@ -10,8 +10,6 @@ discord_token = os.getenv("discord_token")
 intents.message_content = True
 intents.members = True
 
-
-
 @client.event
 async def on_ready():
     try:
