@@ -1,10 +1,11 @@
 import re
 import requests
 from datetime import datetime, timedelta
-from . import CounterStrikeCurrentMatches
+from . import counter_strike_current_matches
 from share import *
 
-from ...SendIfNoData import sendMessageForNoData
+from ...send_If_no_data import sendMessageForNoData
+
 url = "https://bo3.gg/matches/current"
 headers = {'accept-language': 'da-DK,da;q=0.9,en-US;q=0.8,en;q=0.7',}
 matches_for_the_day =[]
@@ -37,11 +38,9 @@ def get_bo_type(table_row):
     return bo_type_stripped
 
 async def scrape_matches():
-    
     channel = client.get_channel(1235813854580179125)
     await channel.purge(limit=25)
-    await CounterStrikeCurrentMatches.scrape_current_matches(channel,headers,url,show_rateing,get_team_names)
-    
+    await counter_strike_current_matches.scrape_current_matches(channel,headers,url,show_rateing,get_team_names)
     async with aiohttp.ClientSession(headers=headers) as session:
         async with session.get(url) as response:
             text = await response.text()
@@ -71,7 +70,7 @@ async def scrape_matches():
                     embedVar.add_field(name="**BO:**", value=bo_type_stripped,inline=False)
                     matches_for_the_day.append(embedVar)
                     await channel.send(embed=embedVar)
-    is_there_ongoing_matches = CounterStrikeCurrentMatches.are_there_current_matches()
+    is_there_ongoing_matches = counter_strike_current_matches.are_there_current_matches()
     if (len(matches_for_the_day)<=0 and is_there_ongoing_matches == False):
         await sendMessageForNoData(discord,channel)
         return False

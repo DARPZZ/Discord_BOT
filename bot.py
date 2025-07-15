@@ -1,10 +1,10 @@
 from share import *
-from src.Sports.Football import Football
+from src.sports.football import football
 import reaction_role
 from discord import app_commands
 from loop import *
-import src.Sports.CounterStrike.vani_link_chekcer as link_checker
-import src.Sports.CounterStrike.GetPlayerInfo.cs2_match_stats as cs2_match_stats
+import src.sports.counterstrike.vani_link_chekcer as link_checker
+import src.sports.counterstrike.GetPlayerInfo.cs2_match_stats as cs2_match_stats
 load_dotenv() 
 discord_token = os.getenv("discord_token")
 intents.message_content = True
@@ -30,7 +30,6 @@ def has_owner_role(interaction: discord.Interaction) -> bool:
 async def football(interaction: discord.Interaction):
     if not has_owner_role(interaction):
         return
-
     await interaction.response.send_message("Scraping football matches...")
     await Football.scrape_matches()
 
@@ -38,15 +37,13 @@ async def football(interaction: discord.Interaction):
 @client.tree.command(name="cs", description="Scrape Counter-Strike matches")
 async def cs(interaction: discord.Interaction):
     if not has_owner_role(interaction):
-
         return
-    await CounterStrike.scrape_matches()
+    await counter_strike.scrape_matches()
 
 @client.tree.command(name="f1", description="Scrape F1 matches")
 async def f1(interaction: discord.Interaction):
     if not has_owner_role(interaction):
         return
-
     await interaction.response.send_message("Scraping F1 matches...")
     await F1.F1.scrape_matches()
 

@@ -1,10 +1,10 @@
 from share import *
 from discord.ext import tasks
-import src.Sports.Football.Football as Football
-import src.Sports.CounterStrike.CounterStrike as CounterStrike
-import src.Sports.Ufc.ufc as ufc
-import src.Sports.F1.F1 as F1
-import src.Twitch.twitch as twitch
+import src.sports.football.football as Football
+import src.sports.counterstrike.counter_strike as counter_strike
+import src.sports.ufc.ufc as ufc
+import src.sports.f1.f1 as F1
+import src.twitch.twitch as twitch
 @tasks.loop(hours=1) 
 async def start_football_loop():
     has_matches = await Football.scrape_matches()
@@ -19,7 +19,7 @@ async def twitch_loop():
 
 @tasks.loop(hours=1)
 async def start_counterstrike_loop():
-    has_matches = await CounterStrike.scrape_matches()
+    has_matches = await counter_strike.scrape_matches()
     if not has_matches:
          start_counterstrike_loop.change_interval(hours=3)
     else:

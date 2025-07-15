@@ -2,8 +2,8 @@ import requests
 from datetime import datetime, timedelta
 import pytz
 from share import *
-from . import DriverStanding
-from . import TeamStanding
+from . import driver_standing
+from . import Team_standing
 f1StartUrl = 'https://www.skysports.com/f1/'
 def add_feilds(p_embedVar,p_name,p_value):
     p_embedVar.add_field(name=F"**{p_name}**",value=f"{p_value}",inline=False)
@@ -39,6 +39,6 @@ async def scrape_matches():
             
 async def Driver_team_standing():
     L = await asyncio.gather(
-        DriverStanding.scrape_driver_standing(f1StartUrl,add_feilds),
-        TeamStanding.scrape_team_standing(f1StartUrl,add_feilds),
+        driver_standing.scrape_driver_standing(f1StartUrl,add_feilds),
+        Team_standing.scrape_team_standing(f1StartUrl,add_feilds),
     )

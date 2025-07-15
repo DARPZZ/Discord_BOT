@@ -1,5 +1,5 @@
 from share import *
-import src.SendIfNoData as SendIfNoData
+import src.send_If_no_data
 matches_for_the_day = []
 
 async def scrape_current_matches(channel,headers,url,show_rateing,get_team_names):

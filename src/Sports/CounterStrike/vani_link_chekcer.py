@@ -1,4 +1,4 @@
-import src.Sports.CounterStrike.GetPlayerInfo.steam_api_call as checker
+import src.sports.counterstrike.GetPlayerInfo.steam_api_call as checker
 
 
 async def check_if_link_is_64(PlayerID):
