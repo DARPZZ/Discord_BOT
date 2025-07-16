@@ -5,6 +5,7 @@ from discord import app_commands
 from loop import *
 import src.sports.counterstrike.vani_link_chekcer as link_checker
 import src.sports.counterstrike.GetPlayerInfo.cs2_match_stats as cs2_match_stats
+import src.sports.f1.f1 as formula1
 load_dotenv() 
 discord_token = os.getenv("discord_token")
 intents.message_content = True
@@ -36,6 +37,7 @@ async def football(interaction: discord.Interaction):
 async def cs(interaction: discord.Interaction):
     if not has_owner_role(interaction):
         return
+    await interaction.response.send_message("Scrape Counter-Strike matches...")
     await counter_strike.scrape_matches()
 
 @client.tree.command(name="f1", description="Scrape F1 matches")
@@ -43,7 +45,7 @@ async def f1(interaction: discord.Interaction):
     if not has_owner_role(interaction):
         return
     await interaction.response.send_message("Scraping F1 matches...")
-    await F1.F1.scrape_matches()
+    await formula1.scrape_matches()
 
 @client.tree.command(name="clear", description="Clear a number of messages from the channel")
 @app_commands.describe(amount="Number of messages to delete (default 50)")

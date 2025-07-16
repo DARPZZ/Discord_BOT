@@ -13,7 +13,7 @@ async def  show_rateing(table_row):
     rating = table_row.find("div", class_="c-table-cell-match-rating")
     if rating != None:
         rating_star = rating.find_all("i", class_="filled o-icon o-icon--star-1")
-        if(len(rating_star)>=2):
+        if(len(rating_star)>=0):
             return True
     return False
 
@@ -48,17 +48,20 @@ async def scrape_matches():
     mydate_string = str(get_current_date())
     locale.setlocale(locale.LC_TIME, "da_DK.UTF-8")
     matches = soup.find_all('div', class_= 'c-matches-group-rows')
+
     for match in matches:
         table_rows = match.find_all('div', class_='table-row table-row--upcoming')
         for table_row in table_rows:
             embedVar = discord.Embed( color=0x9D00FF, description="Match"  )
             ADate = table_row.find('a', class_='c-global-match-link table-cell')
+            print(ADate)
             if ADate and await show_rateing(table_row):
                 href = ADate.get('href')
                 date_match = re.search(r'\d{2}-\d{2}-\d{4}', href)
                 match_date = date_match.group(0)
                 match_date = match_date.split('-')
                 match_date =  match_date[0] + '-' + match_date[1]
+                print(match_date + mydate_string)
                 if (match_date == mydate_string):
                     match_time = table_row.find('span', class_='time').text.strip()
                     bo_type_stripped = get_bo_type(table_row)
@@ -69,6 +72,7 @@ async def scrape_matches():
                     embedVar.add_field( name="**Time:**", value=new_time_string, inline=False)
                     embedVar.add_field(name="**BO:**", value=bo_type_stripped,inline=False)
                     matches_for_the_day.append(embedVar)
+                
                     await channel.send(embed=embedVar)
     is_there_ongoing_matches = counter_strike_current_matches.are_there_current_matches()
     if (len(matches_for_the_day)<=0 and is_there_ongoing_matches == False):

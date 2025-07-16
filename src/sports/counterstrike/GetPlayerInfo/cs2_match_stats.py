@@ -37,8 +37,13 @@ def calculate_accuracy(stats_list):
     stats = {s['name']: s['value'] for s in stats_list}
     total_shots_hit = stats.get('total_shots_hit')
     total_shots_fired = stats.get('total_shots_fired')
-    accuracy = (total_shots_hit / total_shots_fired) * 100
-    return round(accuracy,2)
+    if(total_shots_fired != None and total_shots_hit != None):
+        
+        accuracy = (total_shots_hit / total_shots_fired) * 100
+        
+        return round(accuracy,2)
+    else:
+        return "Could not calculate the accuracy "
 
 def calculate_kd(stats_list):
     stats = {s['name']: s['value'] for s in stats_list}
