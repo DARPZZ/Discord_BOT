@@ -13,7 +13,7 @@ async def  show_rateing(table_row):
     rating = table_row.find("div", class_="c-table-cell-match-rating")
     if rating != None:
         rating_star = rating.find_all("i", class_="filled o-icon o-icon--star-1")
-        if(len(rating_star)>=0):
+        if(len(rating_star)>=2):
             return True
     return False
 
@@ -72,7 +72,6 @@ async def scrape_matches():
                     embedVar.add_field( name="**Time:**", value=new_time_string, inline=False)
                     embedVar.add_field(name="**BO:**", value=bo_type_stripped,inline=False)
                     matches_for_the_day.append(embedVar)
-                
                     await channel.send(embed=embedVar)
     is_there_ongoing_matches = counter_strike_current_matches.are_there_current_matches()
     if (len(matches_for_the_day)<=0 and is_there_ongoing_matches == False):

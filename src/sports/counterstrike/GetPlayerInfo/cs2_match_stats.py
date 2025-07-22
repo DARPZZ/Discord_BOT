@@ -6,19 +6,24 @@ import datetime
 from share import * 
 CS2_APP_ID = 730
 
-def show_no_data_embed(message):
+def show_no_data_embed(message) -> discord.Embed:
     embed = discord.Embed(
     title="🎮 Player Stats",
     description="performance overview",
     )
     embed.add_field(name="Profile is: ", value=message, inline=False)
+    
     return embed
 
 def change_color(kd, win_percentage,accuracy):
-    if kd > 1.6 or win_percentage > 62 or accuracy > 25 :
-        return 0xFF0000  
-    else:
-        return 0x008000  
+    try:
+        if kd > 1.6 or win_percentage > 62 or accuracy > 25 :
+            return 0xFF0000  
+        else:
+            return 0x008000  
+    except:
+         return 0x008000  
+   
     
 def get_hs_procentage(kills,stats_list):
     stats = {s['name']: s['value'] for s in stats_list}
