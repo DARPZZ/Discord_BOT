@@ -20,6 +20,7 @@ jobs:
           sudo apt install gh -y
 
       - name: Delete merged branch
+        if: github.event.pull_request.head.ref != 'development'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           BRANCH: ${{ github.event.pull_request.head.ref }}
