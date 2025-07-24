@@ -1,80 +1,94 @@
+import asyncio
 import re
+from tracemalloc import start
 import requests
 from datetime import datetime, timedelta
-from . import counter_strike_current_matches
 from share import *
-
-from ...send_If_no_data import sendMessageForNoData
-
-url = "https://bo3.gg/matches/current"
-headers = {'accept-language': 'da-DK,da;q=0.9,en-US;q=0.8,en;q=0.7',}
-matches_for_the_day =[]
-async def  show_rateing(table_row):
-    rating = table_row.find("div", class_="c-table-cell-match-rating")
-    if rating != None:
-        rating_star = rating.find_all("i", class_="filled o-icon o-icon--star-1")
-        if(len(rating_star)>=2):
-            return True
-    return False
-
-async def get_team_names(table_row):
-    team_names = table_row.find_all('div', class_='team-name')
-    first_team = team_names[0].text.strip()
-    second_team = team_names[1].text.strip()
-    return f"{first_team} VS {second_team}"
-
+DISCORDCHANNEL = 1235813854580179125
 def get_current_date():
-    mydate_time = datetime.now()
-    my_date = mydate_time.date()
-    my_date = my_date.strftime("%d-%m")
-    return my_date
+    return datetime.today().strftime('%Y-%m-%d')
 
-def get_bo_type(table_row):
-    bo_type = table_row.find('span', class_='bo-type')
-    if(bo_type != None):
-        bo_type_stripped = bo_type.text.strip()
-    else:
-        bo_type_stripped = "Unknown"
-    return bo_type_stripped
-
-async def scrape_matches():
-    channel = client.get_channel(1235813854580179125)
+async def get_counter_strike_pro_info_upcomming():
+    url = f"https://api.bo3.gg/api/v2/matches/upcoming?date={get_current_date()}&utc_offset=7200&filter[discipline_id][eq]=1"
+    try:
+        response = requests.get(url)
+        if response.status_code == 200:
+            matches = response.json()
+            return matches
+        else:
+            print('Error:', response.status_code)
+            return None
+    except requests.exceptions.RequestException as e:
+        print('Error:', e)
+        return None
+    
+async def get_counter_strike_pro_info_live():
+    url = f"https://api.bo3.gg/api/v2/matches/live?date={get_current_date()}&utc_offset=7200&filter%5Bdiscipline_id%5D%5Beq%5D=1"
+    try:
+        response = requests.get(url)
+        if response.status_code == 200:
+            matches = response.json()
+            return matches
+        else:
+            print('Error:', response.status_code)
+            return None
+    except requests.exceptions.RequestException as e:
+        print('Error:', e)
+        return None
+    
+def get_team_names(element):
+    team_names = element.get('slug')
+    pattern = re.compile(r"^([a-z0-9\-_]+)-vs-([a-z0-9\-_]+?)(?:-\d{2}-\d{2}-\d{4})?$", re.IGNORECASE)
+    for line in team_names.strip().splitlines():
+        match = pattern.match(line)
+        if match:
+            team1 = match.group(1).replace("-", " ")
+            team2 = match.group(2).replace("-", " ")
+            return f"{team1} VS {team2}"
+        
+def get_odds(element):
+    bet_updates = element.get('bet_updates')
+    if bet_updates:
+        coeff_team_1 = bet_updates.get('team_1')
+        odds_team_1  = coeff_team_1.get('coeff')
+        coeff_team_2  = bet_updates.get('team_2')
+        odds_team_2  = coeff_team_2.get('coeff')
+        return f"{odds_team_1} - {odds_team_2}"
+    
+async def show_info_for_upcomming_matches(channel):
+    data = await get_counter_strike_pro_info_upcomming()
+    match_data = data['data']['tiers']['high_tier']['matches']
+    for element in match_data:
+        stars = element.get('stars')
+        if (stars < 1):
+            continue
+        start_date_str = element.get('start_date')
+        start_date = datetime.strptime(start_date_str, '%Y-%m-%dT%H:%M:%S.%f%z')
+        start_date_only = start_date.strftime('%Y-%m-%d %H:%M:%S')
+        embedVar = discord.Embed( color=0xFF9DFF,title=f"{start_date_only}")
+        team_name = get_team_names(element)
+        odds =  get_odds(element)
+        bo_type = element.get('bo_type')
+        embedVar.add_field(name="**Teams: **",value= team_name,inline=False)
+        embedVar.add_field(name="**Odds: **",value= odds,inline=True)
+        embedVar.add_field(name="**BO: **",value= bo_type,inline=True)
+        await channel.send(embed=embedVar)
+        
+async def show_info_for_live_matches(channel):
+    data = await get_counter_strike_pro_info_live()
+    match_data = data['data']
+    for element in match_data:
+        embedVar = discord.Embed( color=0x9DFF00,title=f"**Live**")
+        team_name = get_team_names(element)
+        team1_score = element.get('team1_score')
+        team2_score =element.get('team2_score')
+        embedVar.add_field(name="**Teams**: ",value=team_name)
+        embedVar.add_field(name="**Score**: ",value=f"{team1_score} - {team2_score} ")
+        await channel.send(embed=embedVar)
+        
+async def show_info():
+    channel = client.get_channel(DISCORDCHANNEL)
     await channel.purge(limit=25)
-    await counter_strike_current_matches.scrape_current_matches(channel,headers,url,show_rateing,get_team_names)
-    async with aiohttp.ClientSession(headers=headers) as session:
-        async with session.get(url) as response:
-            text = await response.text()
-    soup = BeautifulSoup(text, 'html.parser')
-    mydate_string = str(get_current_date())
-    locale.setlocale(locale.LC_TIME, "da_DK.UTF-8")
-    matches = soup.find_all('div', class_= 'c-matches-group-rows')
-
-    for match in matches:
-        table_rows = match.find_all('div', class_='table-row table-row--upcoming')
-        for table_row in table_rows:
-            embedVar = discord.Embed( color=0x9D00FF, description="Match"  )
-            ADate = table_row.find('a', class_='c-global-match-link table-cell')
-            print(ADate)
-            if ADate and await show_rateing(table_row):
-                href = ADate.get('href')
-                date_match = re.search(r'\d{2}-\d{2}-\d{4}', href)
-                match_date = date_match.group(0)
-                match_date = match_date.split('-')
-                match_date =  match_date[0] + '-' + match_date[1]
-                print(match_date + mydate_string)
-                if (match_date == mydate_string):
-                    match_time = table_row.find('span', class_='time').text.strip()
-                    bo_type_stripped = get_bo_type(table_row)
-                    time_object = datetime.strptime(match_time, "%H:%M")
-                    time_object += timedelta(hours=2)
-                    new_time_string = time_object.strftime("%H:%M")
-                    embedVar.add_field(name="**Teams:**", value=await get_team_names(table_row), inline=False)
-                    embedVar.add_field( name="**Time:**", value=new_time_string, inline=False)
-                    embedVar.add_field(name="**BO:**", value=bo_type_stripped,inline=False)
-                    matches_for_the_day.append(embedVar)
-                    await channel.send(embed=embedVar)
-    is_there_ongoing_matches = counter_strike_current_matches.are_there_current_matches()
-    if (len(matches_for_the_day)<=0 and is_there_ongoing_matches == False):
-        await sendMessageForNoData(discord,channel)
-        return False
+    await show_info_for_live_matches(channel)
+    await show_info_for_upcomming_matches(channel)
     return True
