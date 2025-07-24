@@ -38,7 +38,7 @@ async def cs(interaction: discord.Interaction):
     if not has_owner_role(interaction):
         return
     await interaction.response.send_message("Scrape Counter-Strike matches...")
-    await counter_strike.scrape_matches()
+    await counter_strike.show_info()
 
 @client.tree.command(name="f1", description="Scrape F1 matches")
 async def f1(interaction: discord.Interaction):
