@@ -76,20 +76,23 @@ def get_start_date(element):
         return eror_message("start date")
     
 async def show_info_for_upcomming_matches(channel):
-    data = await get_counter_strike_pro_info_upcomming()
-    match_data = data['data']['tiers']['high_tier']['matches']
-    for element in match_data:
-        stars = element.get('stars')
-        if (stars < 1):
-            continue
-        embedVar = discord.Embed( color=0xFF9DFF,title=f"{get_start_date(element)}")
-        team_name = get_team_names(element)
-        odds =  get_odds(element)
-        bo_type = element.get('bo_type')
-        embedVar.add_field(name="**Teams: **",value= team_name,inline=False)
-        embedVar.add_field(name="**Odds: **",value= odds,inline=True)
-        embedVar.add_field(name="**BO: **",value= bo_type,inline=True)
-        await channel.send(embed=embedVar)
+    try:
+        data = await get_counter_strike_pro_info_upcomming()
+        match_data = data['data']['tiers']['high_tier']['matches']
+        for element in match_data:
+            stars = element.get('stars')
+            if (stars < 1):
+                continue
+            embedVar = discord.Embed( color=0xFF9DFF,title=f"{get_start_date(element)}")
+            team_name = get_team_names(element)
+            odds =  get_odds(element)
+            bo_type = element.get('bo_type')
+            embedVar.add_field(name="**Teams: **",value= team_name,inline=False)
+            embedVar.add_field(name="**Odds: **",value= odds,inline=True)
+            embedVar.add_field(name="**BO: **",value= bo_type,inline=True)
+            await channel.send(embed=embedVar)
+    except:
+        await channel.send("We could not find any high tier matches")
         
 async def show_info_for_live_matches(channel):
     data = await get_counter_strike_pro_info_live()
@@ -102,7 +105,6 @@ async def show_info_for_live_matches(channel):
         team_name = get_team_names(element)
         team1_score = element.get('team1_score')
         team2_score =element.get('team2_score')
-        
         embedVar.add_field(name="**Teams**: ",value=team_name)
         embedVar.add_field(name="**Score**: ",value=f"{team1_score} - {team2_score} ")
         await channel.send(embed=embedVar)
