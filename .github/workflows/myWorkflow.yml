@@ -21,11 +21,10 @@ jobs:
     - name: Install dependencies
       run: |
         pip install -r requirements.txt
-
+        pip install pytest
     - name: Run tests
       run: |
         python -m pytest Test/
-        pip install pytest
 
   remove_container:
     name: Remove Old Discord Bot Container
