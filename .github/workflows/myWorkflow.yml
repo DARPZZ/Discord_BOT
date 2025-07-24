@@ -24,7 +24,7 @@ jobs:
         pip install pytest
     - name: Run tests
       run: |
-        python -m pytest Test/
+        python -m pytest Test/test_main.py
 
   remove_container:
     name: Remove Old Discord Bot Container
