@@ -21,7 +21,7 @@ jobs:
     - name: Install dependencies
       run: |
         pip install -r requirements.txt
-        pip install pytest
+        pip install pytest aioresponses pytest-asyncio
     - name: Run tests
       run: |
         python -m pytest Test/test_main.py
