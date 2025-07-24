@@ -6,46 +6,66 @@ on:
       - main
 
 jobs:
+  run_tests:
+    name: Run Discord Bot Tests
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.11"
+
+    - name: Install dependencies
+      run: |
+        pip install -r requirements.txt
+
+    - name: Run tests
+      run: |
+        python -m pytest Test/
+
   remove_container:
     name: Remove Old Discord Bot Container
     runs-on: ubuntu-latest
+    needs: run_tests
     steps:
     - name: Remove old container
       uses: appleboy/ssh-action@master
       with:
-        host: ${{secrets.HOST}}
-        username: ${{secrets.USER_NAME}}
-        key: ${{secrets.DISCORD_SECRET}}
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USER_NAME }}
+        key: ${{ secrets.DISCORD_SECRET }}
         port: 22
-        passphrase: ${{secrets.SSH_PASSPHRASE}} 
+        passphrase: ${{ secrets.SSH_PASSPHRASE }}
         script: |
           echo "Stopping and removing existing Discord bot container (if it exists)..."
           docker stop discord-bot || true
           docker rm discord-bot || true
-          
+
           echo "Removing old Docker image for Discord bot..."
           docker rmi my-discord-bot:latest || true
 
   build_image:
     name: Build Discord Bot Image
     runs-on: ubuntu-latest
-    needs: remove_container 
+    needs: remove_container
     steps:
-    - name: Build new Docker image for Discord bot
+    - name: Build new Docker image
       uses: appleboy/ssh-action@master
       with:
-        host: ${{secrets.HOST}}
-        username: ${{secrets.USER_NAME}}
-        key: ${{secrets.DISCORD_SECRET}}
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USER_NAME }}
+        key: ${{ secrets.DISCORD_SECRET }}
         port: 22
-        passphrase: ${{secrets.SSH_PASSPHRASE}} 
+        passphrase: ${{ secrets.SSH_PASSPHRASE }}
         script: |
-          echo "Building new Docker image for Discord bot..."
+          echo "Building new Docker image..."
           cd /root/Discord_BOT
-          echo "Pulling the latest code changes..."
           git pull
           docker build -t my-discord-bot:latest .
-          
+
           echo "Running new Discord bot container..."
           docker run --restart=unless-stopped -d --name discord-bot my-discord-bot:latest
 
@@ -54,17 +74,14 @@ jobs:
     runs-on: ubuntu-latest
     needs: build_image
     steps:
-    - name: Check Docker container logs
+    - name: Check Docker logs
       uses: appleboy/ssh-action@master
       with:
-        host: ${{secrets.HOST}}
-        username: ${{secrets.USER_NAME}}
-        key: ${{secrets.DISCORD_SECRET}}
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USER_NAME }}
+        key: ${{ secrets.DISCORD_SECRET }}
         port: 22
-        passphrase: ${{secrets.SSH_PASSPHRASE}} 
+        passphrase: ${{ secrets.SSH_PASSPHRASE }}
         script: |
-          echo "Checking if the Docker container is running..."
           docker ps | grep discord-bot
-          
-          echo "Fetching logs from the Discord bot container..."
           docker logs discord-bot
