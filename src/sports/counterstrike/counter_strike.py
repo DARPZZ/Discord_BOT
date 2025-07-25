@@ -39,7 +39,18 @@ async def get_counter_strike_pro_info_live():
     except requests.exceptions.RequestException as e:
         print('Error:', e)
         return None
-    
+def get_maps(element):
+    map_array = []
+    maps = element.get('games')
+    for mapp in maps:
+        map_name = mapp.get('map_name')
+        if map_name == None:
+            map_name = "Unknown"
+        map_status = mapp.get('status')
+        full_map = f"Map name: {map_name} - Map status: {map_status}"
+        map_array.append(full_map)
+    return map_array
+
 def get_team_names(element):
     try:
         team_names = element.get('slug')
@@ -107,6 +118,10 @@ async def show_info_for_live_matches(channel):
         team2_score =element.get('team2_score')
         embedVar.add_field(name="**Teams**: ",value=team_name)
         embedVar.add_field(name="**Score**: ",value=f"{team1_score} - {team2_score} ")
+        maps = get_maps(element)
+        embedVar.add_field(name=f"",value="**Maps: **",inline=False)
+        for mapp in maps:
+            embedVar.add_field(name=f"",value=mapp,inline=False)
         await channel.send(embed=embedVar)
         
 async def show_info():
