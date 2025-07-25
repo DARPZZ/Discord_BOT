@@ -17,13 +17,13 @@ async def start_football_loop():
 async def twitch_loop():
     await twitch.get_live_twitch_streamer(['KmartPoker','shroud'])
 
-@tasks.loop(hours=1)
+@tasks.loop(minutes=20)
 async def start_counterstrike_loop():
     has_matches = await counter_strike.show_info()
     if not has_matches:
-         start_counterstrike_loop.change_interval(hours=2)
-    else:
          start_counterstrike_loop.change_interval(hours=1)
+    else:
+         start_counterstrike_loop.change_interval(minutes=20)
         
 @tasks.loop(hours=48)
 async def start_f1_loop():

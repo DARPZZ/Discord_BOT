@@ -27,16 +27,14 @@ async def scrape_matches():
             tbody = element.find('tbody')
             td = tbody.findChild()
             td_siblings = td.findNextSiblings()
+            print(len(td_siblings))
             if td and td_siblings:
                 embedVar.add_field(name="",value= f"**{racename.text.strip()}**",inline=False)
                 embedVar.add_field(name="",value= td.text.strip()+ "\n",inline=False)
-                embedVar.add_field(name="",value= td_siblings[0].text.strip()+ "\n",inline=False)
-                embedVar.add_field(name="",value= td_siblings[1].text.strip()+ "\n",inline=False)
-                embedVar.add_field(name="",value= td_siblings[2].text.strip()+ "\n",inline=False)
-                embedVar.add_field(name="",value= td_siblings[3].text.strip()+ "\n",inline=False)
+                for tdd in td_siblings:
+                    embedVar.add_field(name="",value= tdd.text.strip()+ "\n",inline=False)
                 await channel.send(embed=embedVar)
                 return
-            
 async def Driver_team_standing():
     L = await asyncio.gather(
         driver_standing.scrape_driver_standing(f1StartUrl,add_feilds),
