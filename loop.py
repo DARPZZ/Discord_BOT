@@ -21,7 +21,7 @@ async def twitch_loop():
 async def start_counterstrike_loop():
     has_matches = await counter_strike.show_info()
     if not has_matches:
-         start_counterstrike_loop.change_interval(hours=1)
+         start_counterstrike_loop.change_interval(minutes=20)
     else:
          start_counterstrike_loop.change_interval(minutes=20)
         
