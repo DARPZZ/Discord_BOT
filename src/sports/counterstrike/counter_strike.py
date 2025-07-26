@@ -2,43 +2,15 @@ import asyncio
 import re
 from tracemalloc import start
 import requests
+from src.sports.counterstrike.pro_counterstrike_api_calls import get_counter_strike_pro_info_live,get_counter_strike_pro_info_upcomming,get_counterr_strike_stream_coverage
 from datetime import datetime, timedelta
 from share import *
 ERROR_MESSAGE = f"Unable to get data for"
 DISCORDCHANNEL = 1235813854580179125
-def get_current_date():
-    return datetime.today().strftime('%Y-%m-%d')
 
 def eror_message(specific_error):
     return f"{ERROR_MESSAGE} {specific_error}"
 
-async def get_counter_strike_pro_info_upcomming():
-    url = f"https://api.bo3.gg/api/v2/matches/upcoming?date={get_current_date()}&utc_offset=7200&filter[discipline_id][eq]=1"
-    try:
-        response = requests.get(url)
-        if response.status_code == 200:
-            matches = response.json()
-            return matches
-        else:
-            print('Error:', response.status_code)
-            return None
-    except requests.exceptions.RequestException as e:
-        print('Error:', e)
-        return None
-    
-async def get_counter_strike_pro_info_live():
-    url = f"https://api.bo3.gg/api/v2/matches/live?date={get_current_date()}&utc_offset=7200&filter%5Bdiscipline_id%5D%5Beq%5D=1"
-    try:
-        response = requests.get(url)
-        if response.status_code == 200:
-            matches = response.json()
-            return matches
-        else:
-            print('Error:', response.status_code)
-            return None
-    except requests.exceptions.RequestException as e:
-        print('Error:', e)
-        return None
 def get_maps(element):
     map_array = []
     maps = element.get('games')
@@ -85,6 +57,23 @@ def get_start_date(element):
         return start_date_only
     except:
         return eror_message("start date")
+
+async def get_stream_coverage(slug):
+    try:
+        data = await get_counterr_strike_stream_coverage(slug)
+        stream_data = data['streams']
+        stream_dict= {}
+        stream_dict.clear()
+        for x in stream_data:
+            stream_url = x.get('raw_url')
+            official = x.get('official')
+            language = x.get('language')
+            viewers = x.get('viewers_number')
+            if(official and language == "en"):
+                stream_dict[stream_url] = viewers 
+        return stream_dict
+    except:
+        return "Could not get stream coverage"
     
 async def show_info_for_upcomming_matches(channel):
     try:
@@ -101,6 +90,11 @@ async def show_info_for_upcomming_matches(channel):
             embedVar.add_field(name="**Teams: **",value= team_name,inline=False)
             embedVar.add_field(name="**Odds: **",value= odds,inline=True)
             embedVar.add_field(name="**BO: **",value= bo_type,inline=True)
+            slug = element.get('slug')
+            streams = await get_stream_coverage(slug)
+            embedVar.add_field(name="**Streams** :",value=f" ",inline=False)
+            for url, viewer_count  in streams.items():
+                embedVar.add_field(name=f"<{url}>", value="This match is not live so no viewers",inline=False)
             await channel.send(embed=embedVar)
     except:
         await channel.send("We could not find any high tier matches")
@@ -122,6 +116,12 @@ async def show_info_for_live_matches(channel):
         embedVar.add_field(name=f"",value="**Maps: **",inline=False)
         for mapp in maps:
             embedVar.add_field(name=f"",value=mapp,inline=False)
+        slug = element.get('slug')
+        streams = await get_stream_coverage(slug)
+        embedVar.add_field(name="**Streams** :",value=f" ",inline=False)
+        for url, viewer_count in streams.items():
+            embedVar.add_field(name=f"<{url}>", value=viewer_count,inline=False)
+        
         await channel.send(embed=embedVar)
         
 async def show_info():
