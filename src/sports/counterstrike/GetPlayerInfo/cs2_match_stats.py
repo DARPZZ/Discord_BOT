@@ -128,16 +128,18 @@ async def get_info(PlayerID):
     if(user_stats_data == None):
         return show_no_data_embed("Only freinds can see stats")
     user_playtime_data = await user_playtime(PlayerID)
-    
+    if (user_profile_data != None):
+        total_playtime = user_playtime_data[0] / 60
+        two_weeks_playtime = user_playtime_data[1] / 60
+        two_weeks_playtime_round = round(two_weeks_playtime,2)
+        total_playtime_round = round(total_playtime,2)
+    else:
+        total_playtime_round = "Was not able to get playtime"
     stats_list = user_stats_data['playerstats']['stats']
     accuracy = calculate_accuracy(stats_list)
     kd_data = calculate_kd(stats_list)
     hs_pro = get_hs_procentage(kd_data.get("kills"),stats_list)
     winprocentage = calculate_map_win_procentage(stats_list)
-    total_playtime = user_playtime_data[0] / 60
-    two_weeks_playtime = user_playtime_data[1] / 60
-    two_weeks_playtime_round = round(two_weeks_playtime,2)
-    total_playtime_round = round(total_playtime,2)
     kills = kd_data.get("kills")
     deaths = kd_data.get("deaths")
     kd = kd_data.get("kd")
