@@ -2,6 +2,7 @@ import datetime
 import aiohttp
 from share import *
 from discord.ext import tasks
+from src.get_settings import read_settings_file as settings
 matches_for_the_day =[]
 date_string =''
 first_team_win_odss=""
@@ -43,7 +44,7 @@ async def calculate_odds(football_match,teams):
         
 async def scrape_matches():
     date_string =""
-    channel = client.get_channel(1234600317090529392)
+    channel = client.get_channel(settings("footballID"))
     await channel.purge()
     loop_bool = True
     url = "https://www.livescore.dk/fodbold-i-tv/"

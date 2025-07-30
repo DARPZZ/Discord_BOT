@@ -1,7 +1,7 @@
 from share import *
-async def scrape_driver_standing(f1StartUrl,add_feilds):
+async def scrape_driver_standing(f1StartUrl,add_feilds,channelID):
     url = f"{f1StartUrl}/standings"
-    channel = client.get_channel(1297902739698880573)
+    channel = client.get_channel(channelID)
     await channel.purge(limit=25)
     async with aiohttp.ClientSession() as session:
         async with session.get(url) as response:

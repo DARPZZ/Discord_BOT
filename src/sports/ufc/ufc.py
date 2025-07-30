@@ -5,7 +5,7 @@ import pytz
 from datetime import datetime
 from share import *
 matches_for_the_day = []
-
+from src.get_settings import read_settings_file as settings
 async def scrape_matches():
     matches_for_the_day.clear()
     url = "https://www.ufc.com/events"
@@ -36,7 +36,7 @@ async def scrape_matches():
         time += time_zone
         mma_kamp_edt = f" {month} {day} {time}"
         matches_for_the_day.append(f"**Date and time:** {mma_kamp_edt} CEST\n**Headline:** {fighters}\n{'-'*60}\n ")
-    channel = client.get_channel(1278765738345365504)
+    channel = client.get_channel(settings("uFCID"))
     await channel.purge(limit=5)
     if matches_for_the_day:
         matches_message = "\n".join( matches_for_the_day)
