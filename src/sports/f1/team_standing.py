@@ -1,6 +1,6 @@
 from share import *
-async def scrape_team_standing(f1StartUrl, add_feilds):
-    channel = client.get_channel(1381729288340111551)
+async def scrape_team_standing(f1StartUrl, add_feilds,channelID):
+    channel = client.get_channel(channelID)
     await channel.purge()
     url = f"{f1StartUrl}/standings"
     async with aiohttp.ClientSession() as session:

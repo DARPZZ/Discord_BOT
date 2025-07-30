@@ -4,13 +4,20 @@ import pytz
 from share import *
 from . import driver_standing
 from . import team_standing
+from src.get_settings import read_settings_file as settings
 f1StartUrl = 'https://www.skysports.com/f1/'
 def add_feilds(p_embedVar,p_name,p_value):
     p_embedVar.add_field(name=F"**{p_name}**",value=f"{p_value}",inline=False)
-    
+
+def get_channels(matchID):
+    f1ID = settings("f1ID")
+    for specificID in f1ID:
+        if(matchID in specificID.keys()):
+            return(specificID.get(matchID))
+        
 async def scrape_matches():
-    
-    channel = client.get_channel(1234600281854054482)
+
+    channel = client.get_channel(get_channels("RaceID"))
     await channel.purge()
     url = f"{f1StartUrl}schedule-results"
     async with aiohttp.ClientSession() as session:
@@ -37,6 +44,6 @@ async def scrape_matches():
                 return
 async def Driver_team_standing():
     L = await asyncio.gather(
-        driver_standing.scrape_driver_standing(f1StartUrl,add_feilds),
-        team_standing.scrape_team_standing(f1StartUrl,add_feilds),
+        driver_standing.scrape_driver_standing(f1StartUrl,add_feilds,get_channels("DriverID")),
+        team_standing.scrape_team_standing(f1StartUrl,add_feilds,get_channels("TeamID")),
     )

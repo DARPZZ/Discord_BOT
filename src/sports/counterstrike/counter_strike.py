@@ -5,9 +5,9 @@ import requests
 from src.sports.counterstrike.pro_counterstrike_api_calls import get_counter_strike_pro_info_live,get_counter_strike_pro_info_upcomming,get_counterr_strike_stream_coverage
 from datetime import datetime, timedelta
 from share import *
+from src.get_settings import read_settings_file as settings
 ERROR_MESSAGE = f"Unable to get data for"
 DISCORDCHANNEL = 1235813854580179125
-
 def eror_message(specific_error):
     return f"{ERROR_MESSAGE} {specific_error}"
 
@@ -125,7 +125,7 @@ async def show_info_for_live_matches(channel):
         await channel.send(embed=embedVar)
         
 async def show_info():
-    channel = client.get_channel(DISCORDCHANNEL)
+    channel = client.get_channel(settings("proPlayID"))
     await channel.purge(limit=25)
     await show_info_for_live_matches(channel)
     await show_info_for_upcomming_matches(channel)
