@@ -82,7 +82,7 @@ async def show_info_for_upcomming_matches(channel):
             match_data = data['data']['tiers']['high_tier']['matches']
             for element in match_data:
                 stars = element.get('stars')
-                if (stars < 1):
+                if (stars <= 2):
                     continue
                 embedVar = discord.Embed( color=0xFF9DFF,title=f"{get_start_date(element)}")
                 team_name = get_team_names(element)
@@ -106,7 +106,7 @@ async def show_info_for_live_matches(channel):
         match_data = data['data']
         for element in match_data:
             stars = element.get('stars',0)
-            if (stars <2):
+            if (stars <= 2):
                 continue
             embedVar = discord.Embed( color=0x9DFF00,title=f"**Live**")
             team_name = get_team_names(element)
