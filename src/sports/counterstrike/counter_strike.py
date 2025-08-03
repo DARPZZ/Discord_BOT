@@ -78,52 +78,53 @@ async def get_stream_coverage(slug):
 async def show_info_for_upcomming_matches(channel):
     try:
         data = await get_counter_strike_pro_info_upcomming()
-        match_data = data['data']['tiers']['high_tier']['matches']
-        for element in match_data:
-            stars = element.get('stars')
-            if (stars < 1):
-                continue
-            embedVar = discord.Embed( color=0xFF9DFF,title=f"{get_start_date(element)}")
-            team_name = get_team_names(element)
-            odds =  get_odds(element)
-            bo_type = element.get('bo_type')
-            embedVar.add_field(name="**Teams: **",value= team_name,inline=False)
-            embedVar.add_field(name="**Odds: **",value= odds,inline=True)
-            embedVar.add_field(name="**BO: **",value= bo_type,inline=True)
-            slug = element.get('slug')
-            streams = await get_stream_coverage(slug)
-            embedVar.add_field(name="**Streams** :",value=f" ",inline=False)
-            for url, viewer_count  in streams.items():
-                embedVar.add_field(name=f"<{url}>", value="This match is not live so no viewers",inline=False)
-            await channel.send(embed=embedVar)
+        if (data):
+            match_data = data['data']['tiers']['high_tier']['matches']
+            for element in match_data:
+                stars = element.get('stars')
+                if (stars <= 2):
+                    continue
+                embedVar = discord.Embed( color=0xFF9DFF,title=f"{get_start_date(element)}")
+                team_name = get_team_names(element)
+                odds =  get_odds(element)
+                bo_type = element.get('bo_type')
+                embedVar.add_field(name="**Teams: **",value= team_name,inline=False)
+                embedVar.add_field(name="**Odds: **",value= odds,inline=True)
+                embedVar.add_field(name="**BO: **",value= bo_type,inline=True)
+                slug = element.get('slug')
+                streams = await get_stream_coverage(slug)
+                embedVar.add_field(name="**Streams** :",value=f" ",inline=False)
+                for url, viewer_count  in streams.items():
+                    embedVar.add_field(name=f"<{url}>", value="This match is not live so no viewers",inline=False)
+                await channel.send(embed=embedVar)
     except:
         await channel.send("We could not find any high tier matches")
         
 async def show_info_for_live_matches(channel):
     data = await get_counter_strike_pro_info_live()
-    match_data = data['data']
-    for element in match_data:
-        stars = element.get('stars')
-        if stars <2:
-            continue
-        embedVar = discord.Embed( color=0x9DFF00,title=f"**Live**")
-        team_name = get_team_names(element)
-        team1_score = element.get('team1_score')
-        team2_score =element.get('team2_score')
-        embedVar.add_field(name="**Teams**: ",value=team_name)
-        embedVar.add_field(name="**Score**: ",value=f"{team1_score} - {team2_score} ")
-        maps = get_maps(element)
-        embedVar.add_field(name=f"",value="**Maps: **",inline=False)
-        for mapp in maps:
-            embedVar.add_field(name=f"",value=mapp,inline=False)
-        slug = element.get('slug')
-        streams = await get_stream_coverage(slug)
-        embedVar.add_field(name="**Streams** :",value=f" ",inline=False)
-        for url, viewer_count in streams.items():
-            embedVar.add_field(name=f"<{url}>", value=viewer_count,inline=False)
-        
-        await channel.send(embed=embedVar)
-        
+    if(data):
+        match_data = data['data']
+        for element in match_data:
+            stars = element.get('stars',0)
+            if (stars <= 2):
+                continue
+            embedVar = discord.Embed( color=0x9DFF00,title=f"**Live**")
+            team_name = get_team_names(element)
+            team1_score = element.get('team1_score')
+            team2_score =element.get('team2_score')
+            embedVar.add_field(name="**Teams**: ",value=team_name)
+            embedVar.add_field(name="**Score**: ",value=f"{team1_score} - {team2_score} ")
+            maps = get_maps(element)
+            embedVar.add_field(name=f"",value="**Maps: **",inline=False)
+            for mapp in maps:
+                embedVar.add_field(name=f"",value=mapp,inline=False)
+            slug = element.get('slug')
+            streams = await get_stream_coverage(slug)
+            embedVar.add_field(name="**Streams** :",value=f" ",inline=False)
+            for url, viewer_count in streams.items():
+                embedVar.add_field(name=f"<{url}>", value=viewer_count,inline=False)
+            await channel.send(embed=embedVar)
+            
 async def show_info():
     channel = client.get_channel(settings("proPlayID"))
     await channel.purge(limit=25)

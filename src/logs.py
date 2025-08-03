@@ -12,5 +12,3 @@ async def get_logs():
     else:
         print("Channel not found.")
     
-    await client.close()
-    
