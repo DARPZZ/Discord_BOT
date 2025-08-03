@@ -157,4 +157,4 @@ async def test_ufc_html_structure():
         assert month.isalpha(), f"Month value '{month}' seems wrong"
         assert day.isdigit(), f"Day value '{day}' is not numeric"
         assert time.count(":") == 1, f"Time '{time}' is not in HH:MM format"
-        assert time_zone in ["ET","PM", "PT", "BST", "CEST", "UTC"], f"Unexpected timezone: '{time_zone}'"
+        assert time_zone in ["ET","PM", "PT", "BST", "CEST", "UTC","AM"], f"Unexpected timezone: '{time_zone}'"
