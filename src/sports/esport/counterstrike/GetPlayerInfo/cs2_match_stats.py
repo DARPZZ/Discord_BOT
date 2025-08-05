@@ -1,4 +1,4 @@
-import src.sports.counterstrike.GetPlayerInfo.steam_api_call as steamAPI
+import src.sports.esport.counterstrike.GetPlayerInfo.steam_api_call as steamAPI
 #import steam_api_call as steamAPI
 import asyncio
 import discord

@@ -1,7 +1,8 @@
 from share import *
 from discord.ext import tasks
 import src.sports.football.football as Football
-import src.sports.counterstrike.counter_strike as counter_strike
+import src.sports.esport.counterstrike.counter_strike as counter_strike
+import src.sports.esport.valorant_folder.valorant as valorant
 import src.sports.ufc.ufc as ufc
 import src.sports.f1.f1 as F1
 import src.twitch.twitch as twitch
@@ -13,7 +14,11 @@ async def start_football_loop():
     else:
         start_football_loop.change_interval(hours=1)
         
-@tasks.loop(hours=1) 
+@tasks.loop(hours=20)
+async def start_valorant_loop():
+    await valorant.show_info()
+
+@tasks.loop(hours=1)
 async def twitch_loop():
     await twitch.get_live_twitch_streamer()
 

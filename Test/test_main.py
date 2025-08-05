@@ -1,7 +1,7 @@
 import pytest
 from datetime import datetime, timedelta
-from src.sports.counterstrike.counter_strike import get_start_date
-from src.sports.counterstrike.counter_strike import eror_message,get_team_names,get_odds
+from src.sports.esport.counterstrike.counter_strike import get_start_date
+from src.sports.esport.counterstrike.counter_strike import eror_message,get_team_names,get_odds
 from bs4 import BeautifulSoup
 import aiohttp
 

@@ -3,8 +3,8 @@ from src.sports.football import football
 import reaction_role
 from discord import app_commands
 from loop import *
-import src.sports.counterstrike.vani_link_chekcer as link_checker
-import src.sports.counterstrike.GetPlayerInfo.cs2_match_stats as cs2_match_stats
+import src.sports.esport.counterstrike.vani_link_chekcer as link_checker
+import src.sports.esport.counterstrike.GetPlayerInfo.cs2_match_stats as cs2_match_stats
 import src.sports.f1.f1 as formula1
 from src.logs import get_logs
 from src.get_settings import read_settings_file as settings
@@ -119,7 +119,8 @@ async def loop_start():
         start_f1_loop.start(),
         start_f1_driver_team_loop.start(),
         start_counterstrike_loop.start(),
-        twitch_loop.start()
+        twitch_loop.start(),
+        start_valorant_loop(),
     )
     
             
