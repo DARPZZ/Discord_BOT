@@ -14,7 +14,7 @@ async def start_football_loop():
     else:
         start_football_loop.change_interval(hours=1)
         
-@tasks.loop(hours=20)
+@tasks.loop(hours=6)
 async def start_valorant_loop():
     await valorant.show_info()
 

@@ -103,8 +103,6 @@ async def csstats(interaction: discord.Interaction, player_id: str):
             
             data = await cs2_match_stats.get_info(player_id_after_vanity)
             await interaction.followup.send(embed=data, ephemeral=True)
-
-    
 #endregion
 
 @client.event
@@ -120,9 +118,8 @@ async def loop_start():
         start_f1_driver_team_loop.start(),
         start_counterstrike_loop.start(),
         twitch_loop.start(),
-        start_valorant_loop(),
+        start_valorant_loop.start(),
     )
-    
             
 def main():
     client.run(discord_token,log_handler=handler, log_level=logging.ERROR)
