@@ -20,6 +20,7 @@ async def get_counter_strike_valorant_pro_info_upcomming(id):
     
 async def get_counter_strike_valorant_pro_info_live(id):
     url = f"https://api.bo3.gg/api/v2/matches/live?date={get_current_date()}&utc_offset=7200&filter%5Bdiscipline_id%5D%5Beq%5D={id}"
+    print(url)
     try:
         response = requests.get(url)
         if response.status_code == 200:

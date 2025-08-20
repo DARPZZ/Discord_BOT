@@ -42,13 +42,14 @@ async def show_info_for_live_matches(channel):
                 stars = element.get('stars',0)
                 if (stars < 2):
                     continue
+                maps = pro_esport.get_maps(element)
                 tournament_info = await pro_esport.place_tournament_info(element,data,tournament_dict)
                 embedVar = discord.Embed( color=0x9DFF00,title=f"**Live**")
                 team_name = pro_esport.get_team_names(element)
                 team1_score = element.get('team1_score')
                 team2_score =element.get('team2_score')
                 create_counter_strike_embeds.create_live_matches_enmed(embedVar,team_name,team1_score,team2_score,tournament_info[0],tournament_info[1])
-                maps = pro_esport.get_maps(element)
+               
                 embedVar.add_field(name=f"",value="**Maps: **",inline=False)
                 for mapp in maps:
                     embedVar.add_field(name=f"",value=mapp,inline=False)
@@ -56,6 +57,8 @@ async def show_info_for_live_matches(channel):
                 streams = await pro_esport.get_stream_coverage(slug,api_call)
                 await create_counter_strike_embeds.create_streams_embed(streams,embedVar)
                 await channel.send(embed=embedVar)
+        else:
+            print("No data")
     except Exception as e:
         print(f"Error in show_info_for_live_matches: {e}")
         await channel.send("We could not find any high tier matches")        

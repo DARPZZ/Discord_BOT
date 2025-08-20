@@ -7,6 +7,8 @@ def eror_message(specific_error):
 def get_maps(element):
     map_array = []
     maps = element.get('games')
+    if maps == None:
+        return ["We could not get any map data for this match"]
     for mapp in maps:
         map_name = mapp.get('map_name')
         if map_name == None:
