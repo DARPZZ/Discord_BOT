@@ -14,12 +14,12 @@ async def show_info_for_upcomming_matches(channel):
             for element in match_data:
                 tournament_info = await pro_esport.place_tournament_info(element, data,tournament_dict)
                 embedVar = discord.Embed(color=0xFF9DFF, title=f"{pro_esport.get_start_date(element)}")
-                team_name = pro_esport.get_team_names(element)
+                team_names = pro_esport.place_team_names_values(data,element)
                 odds = pro_esport.get_odds(element)
                 bo_type = element.get('bo_type')
                 slug = element.get('slug')
                 create_counter_strike_embeds.create_upcomming_matches_enmed(
-                    embedVar, team_name, odds, bo_type, tournament_info[0], tournament_info[1]
+                    embedVar, team_names, odds, bo_type, tournament_info[0], tournament_info[1]
                 )
                 streams = await pro_esport.get_stream_coverage(slug, api_call)
                 await create_counter_strike_embeds.create_streams_embed(streams, embedVar)
