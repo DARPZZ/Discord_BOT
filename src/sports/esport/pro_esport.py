@@ -1,6 +1,7 @@
 import re
 ERROR_MESSAGE = f"Unable to get data for"
 from datetime import datetime, timedelta
+team_name_dict = {}
 def eror_message(specific_error):
     return f"{ERROR_MESSAGE} {specific_error}"
 
@@ -18,6 +19,25 @@ def get_maps(element):
         map_array.append(full_map)
     return map_array
 
+def get_team_names(data):
+    try: 
+        team_name_data = data['included']['teams']
+        for team_id, team_info in team_name_data.items():
+            team_info_name = team_info.get('name')
+            team_name_dict[team_id]= team_info_name
+        return team_name_dict
+    except:
+        return None
+    
+def place_team_names_values(data,element):
+    data = get_team_names(data)
+    if(data is None):
+        return "Could not find the team names"
+    first_team_id = element.get('team1_id')
+    second_team_id = element.get('team2_id') 
+    team_names = f"{data.get(str(first_team_id))} VS {data.get(str(second_team_id))}"
+    return team_names
+
 async def get_tournament_info(data,tournament_dict):
     tournament_dict.clear()
     tournamentdata = data['included']['tournaments']
@@ -29,6 +49,7 @@ async def get_tournament_info(data,tournament_dict):
             "tournament_name" : tournament_name,
             "tournament_prize_pool": tournament_prize_pool
         }
+        
 async def place_tournament_info(element,data,tournament_dict):
     await get_tournament_info(data,tournament_dict)
     tournament_element = element.get('tournament')
@@ -37,19 +58,8 @@ async def place_tournament_info(element,data,tournament_dict):
         tournament_name = tournament_info.get('tournament_name')
         tournament_price_pool = tournament_info.get('tournament_prize_pool')
         return[tournament_name,tournament_price_pool]
-    
-def get_team_names(element):
-    try:
-        team_names = element.get('slug')
-        pattern = re.compile(r"^([a-z0-9\-_]+)-vs-([a-z0-9\-_]+?)(?:-\d{2}-\d{2}-\d{4})?$", re.IGNORECASE)
-        for line in team_names.strip().splitlines():
-            match = pattern.match(line)
-            if match:
-                team1 = match.group(1).replace("-", " ")
-                team2 = match.group(2).replace("-", " ")
-                return f"{team1} VS {team2}"
-    except:
-        return eror_message("the team names")   
+   
+
     
 def get_odds(element):
     try:
@@ -80,11 +90,14 @@ async def get_stream_coverage(slug, api_call):
         stream_dict = {}
         for x in stream_data:
             stream_url = x.get('raw_url')
-            official = x.get('official')
             language = x.get('language')
             viewers = x.get('viewers_number')
-            if official and language == "en":
-                stream_dict[stream_url] = viewers 
+            if language == "en":
+                stream_dict_len = len(stream_dict)
+                if (stream_dict_len > 5):
+                    return stream_dict
+                stream_dict[stream_url] = viewers
+         
         return stream_dict
     except Exception as e:
         print(f"get_stream_coverage error: {e}")
