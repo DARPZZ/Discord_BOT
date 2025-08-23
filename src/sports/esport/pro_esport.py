@@ -29,7 +29,7 @@ def get_team_names(data):
     except:
         return None
     
-def place_team_names_values(data,element):
+async def place_team_names_values(data,element):
     data = get_team_names(data)
     if(data is None):
         return "Could not find the team names"
@@ -61,7 +61,7 @@ async def place_tournament_info(element,data,tournament_dict):
    
 
     
-def get_odds(element):
+async def get_odds(element):
     try:
         bet_updates = element.get('bet_updates')
         if bet_updates:

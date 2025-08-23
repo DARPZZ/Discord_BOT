@@ -16,16 +16,20 @@ async def show_info_for_upcomming_matches(channel):
                 stars = element.get('stars')
                 if stars < 2:
                     continue
-                tournament_info = await pro_esport.place_tournament_info(element, data,tournament_dict)
+                tournament_info_task =  pro_esport.place_tournament_info(element, data,tournament_dict)
                 embedVar = discord.Embed(color=0xFF9DFF, title=f"{pro_esport.get_start_date(element)}")
-                team_names = pro_esport.place_team_names_values(data,element)
-                odds = pro_esport.get_odds(element)
+                team_names_task = pro_esport.place_team_names_values(data,element)
+                odds_task = pro_esport.get_odds(element)
                 bo_type = element.get('bo_type')
                 slug = element.get('slug')
+                streams_task = pro_esport.get_stream_coverage(slug, api_call)
+                tournament_info, streams,team_names,odds = await asyncio.gather(
+                    tournament_info_task, streams_task,team_names_task,odds_task
+                )
                 create_counter_strike_embeds.create_upcomming_matches_enmed(
                     embedVar, team_names, odds, bo_type, tournament_info[0], tournament_info[1]
                 )
-                streams = await pro_esport.get_stream_coverage(slug, api_call)
+                
                 await create_counter_strike_embeds.create_streams_embed(streams, embedVar)
                 await channel.send(embed=embedVar)
     except Exception as e:
@@ -45,12 +49,13 @@ async def show_info_for_live_matches(channel):
                 maps = pro_esport.get_maps(element)
                 tournament_info = await pro_esport.place_tournament_info(element,data,tournament_dict)
                 embedVar = discord.Embed( color=0x9DFF00,title=f"**Live**")
-                team_names = pro_esport.place_team_names_values(data,element)
+                team_names = await pro_esport.place_team_names_values(data,element)
                 team1_score = element.get('team1_score')
                 team2_score =element.get('team2_score')
                 create_counter_strike_embeds.create_live_matches_enmed(embedVar,team_names,team1_score,team2_score,tournament_info[0],tournament_info[1])
-                maps = pro_esport.get_maps(element)
+                
                 embedVar.add_field(name=f"",value="**Maps: **",inline=False)
+                maps =  pro_esport.get_maps(element)
                 for mapp in maps:
                     embedVar.add_field(name=f"",value=mapp,inline=False)
                 slug = element.get('slug')

@@ -14,8 +14,8 @@ async def show_info_for_upcomming_matches(channel):
             for element in match_data:
                 tournament_info = await pro_esport.place_tournament_info(element, data,tournament_dict)
                 embedVar = discord.Embed(color=0xFF9DFF, title=f"{pro_esport.get_start_date(element)}")
-                team_names = pro_esport.place_team_names_values(data,element)
-                odds = pro_esport.get_odds(element)
+                team_names =await pro_esport.place_team_names_values(data,element)
+                odds = await pro_esport.get_odds(element)
                 bo_type = element.get('bo_type')
                 slug = element.get('slug')
                 create_counter_strike_embeds.create_upcomming_matches_enmed(
