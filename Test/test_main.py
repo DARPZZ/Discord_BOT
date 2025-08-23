@@ -27,15 +27,15 @@ def test_missing_start_date():
 def test_invalid_start_date_format():
     element = {'start_date': 'invalid-date-string'}
     assert get_start_date(element) == eror_message("start date")
-
-def test_valid_cs_odds():
+@pytest.mark.asyncio
+async def test_valid_cs_odds():
     element = {
         "bet_updates": {
             "team_1": {"coeff": 1.55},
             "team_2": {"coeff": 2.35}   
         }
     }
-    result = get_odds(element)
+    result = await get_odds(element)
     assert result == "1.55 - 2.35"
 
 
@@ -74,21 +74,21 @@ async def test_f1_html_structure():
 """
 Test for football
 """
-# @pytest.mark.asyncio
-# async def test_livescore_html_structure():
-#     try:
-#         async with aiohttp.ClientSession() as session:
-#             async with session.get(FOOTBALLURL) as response:
-#                 assert response.status == 200, f"Failed to fetch page: {response.status}"
-#                 html = await response.text()
-#     except aiohttp.ClientError as e:
-#         pytest.skip(f"Skipping test due to network error: {e}")
-#         return
+@pytest.mark.asyncio
+async def test_livescore_html_structure():
+    try:
+        async with aiohttp.ClientSession() as session:
+            async with session.get(FOOTBALLURL) as response:
+                assert response.status == 200, f"Failed to fetch page: {response.status}"
+                html = await response.text()
+    except aiohttp.ClientError as e:
+        pytest.skip(f"Skipping test due to network error: {e}")
+        return
 
-#     soup = BeautifulSoup(html, 'html.parser')
+    soup = BeautifulSoup(html, 'html.parser')
 
-#     todays_matches = soup.find('div', class_='tv-table tv-table--football')
-#     assert todays_matches is not None, "Missing 'div.tv-table tv-table--football'"
+    todays_matches = soup.find('div', class_='tv-table tv-table--football')
+    assert todays_matches is not None, "Missing 'div.tv-table tv-table--football'"
 
 
 """
