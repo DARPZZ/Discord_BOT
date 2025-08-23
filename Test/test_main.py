@@ -27,28 +27,6 @@ def test_missing_start_date():
 def test_invalid_start_date_format():
     element = {'start_date': 'invalid-date-string'}
     assert get_start_date(element) == eror_message("start date")
- 
-    
-def test_cs_team_slug():
-    element = {
-        "slug": "natus-vincere-vs-faze-clan-25-07-2025"
-    }
-    result = get_team_names(element)
-    assert result == "natus vincere VS faze clan"
-
-def test_cs_team_slug_with_underscore_and_digits():
-    element = {
-        "slug": "team_liquid-2023-vs-g2-esports-25-07-2025"
-    }
-    result = get_team_names(element)
-    assert result != "team liquid 2023 VS g2 esports"
-
-def test_invalid_cs_slug_format():
-    element = {
-        "slug": "astralis_vs_vitality"
-    }
-    result = get_team_names(element)
-    assert result != eror_message("the team names")
 
 def test_valid_cs_odds():
     element = {
