@@ -12,6 +12,9 @@ async def show_info_for_upcomming_matches(channel):
         data = await api_call.get_counter_strike_valorant_pro_info_upcomming(APIID)
         if data:
             match_data = data['data']['tiers']['high_tier']['matches']
+            if(match_data is None):
+                await channel.send("We could not find any high tier matches")
+                return 
             for element in match_data:
                 stars = element.get('stars')
                 if stars < 2:
