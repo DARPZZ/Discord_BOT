@@ -8,6 +8,7 @@ from share import *
 
 async def show_info_for_upcomming_matches(channel):
     try:
+        NO_MATCHES = "We could not find any matches for Valorant"
         data = await api_call.get_counter_strike_valorant_pro_info_upcomming(APIID)
         if data:
             match_data = data['data']['tiers']['high_tier']['matches']
@@ -26,7 +27,7 @@ async def show_info_for_upcomming_matches(channel):
                 await channel.send(embed=embedVar)
     except Exception as e:
         print(f"Error in show_info_for_upcomming_matches: {e}")
-        await channel.send("We could not find any high tier matches")
+        await channel.send(NO_MATCHES)
 
 async def show_info():
     channel = client.get_channel(settings("proPlayIDValorant"))

@@ -34,7 +34,6 @@ async def scrape_matches():
             tbody = element.find('tbody')
             td = tbody.findChild()
             td_siblings = td.findNextSiblings()
-            print(len(td_siblings))
             if td and td_siblings:
                 embedVar.add_field(name="",value= f"**{racename.text.strip()}**",inline=False)
                 embedVar.add_field(name="",value= td.text.strip()+ "\n",inline=False)

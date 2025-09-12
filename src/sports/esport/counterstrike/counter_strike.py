@@ -6,14 +6,15 @@ import src.sports.esport.pro_esport as pro_esport
 from src.get_settings import read_settings_file as settings
 APIID = 1
 tournament_dict = {}
-
+ERROR_UPCOMMING_MATCHES = "We could not find any high tier matches, that are upcomming"
+ERROR_LIVE_MATCHES = "We could not find any high tier matches, that are live"
 async def show_info_for_upcomming_matches(channel):
     try:
         data = await api_call.get_counter_strike_valorant_pro_info_upcomming(APIID)
         if data:
             match_data = data['data']['tiers']['high_tier']['matches']
             if(match_data is None):
-                await channel.send("We could not find any high tier matches")
+                await channel.send(ERROR_UPCOMMING_MATCHES)
                 return 
             for element in match_data:
                 stars = element.get('stars')
@@ -37,7 +38,7 @@ async def show_info_for_upcomming_matches(channel):
                 await channel.send(embed=embedVar)
     except Exception as e:
         print(f"Error in show_info_for_upcomming_matches: {e}")
-        await channel.send("We could not find any high tier matches")
+        await channel.send(ERROR_UPCOMMING_MATCHES)
 
 
 async def show_info_for_live_matches(channel):
@@ -69,7 +70,7 @@ async def show_info_for_live_matches(channel):
             print("No data")
     except Exception as e:
         print(f"Error in show_info_for_live_matches: {e}")
-        await channel.send("We could not find any high tier matches")        
+        await channel.send(ERROR_LIVE_MATCHES)        
 
 async def show_info():
     
