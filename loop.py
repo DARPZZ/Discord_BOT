@@ -6,6 +6,7 @@ import src.sports.esport.valorant_folder.valorant as valorant
 import src.sports.ufc.ufc as ufc
 import src.sports.f1.f1 as F1
 import src.twitch.twitch as twitch
+import src.sports.esport.counterstrike.tournament_info_counterstrike as counter_strike_tournament
 @tasks.loop(hours=1) 
 async def start_football_loop():
     has_matches = await Football.scrape_matches()
@@ -29,6 +30,10 @@ async def start_counterstrike_loop():
          start_counterstrike_loop.change_interval(minutes=20)
     else:
          start_counterstrike_loop.change_interval(minutes=20)
+         
+@tasks.loop(hours=24)
+async def start_counterstrike_tournament_loop():
+    await counter_strike_tournament.get_upcomming_tournaments()
         
 @tasks.loop(hours=48)
 async def start_f1_loop():

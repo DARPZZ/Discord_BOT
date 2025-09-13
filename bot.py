@@ -119,10 +119,11 @@ async def loop_start():
         start_counterstrike_loop.start(),
         twitch_loop.start(),
         start_valorant_loop.start(),
+        start_counterstrike_tournament_loop.start(),
     )
             
 def main():
-    client.run(discord_token,log_handler=handler, log_level=logging.ERROR)
+    client.run(discord_token)
     
 if __name__=="__main__": 
     main() 
