@@ -35,12 +35,16 @@ async def get_upcomming_tournaments():
             status = element.get('status')
             tier = element.get('tier')
             tier = tier.lower()
-            if (status != "current" and tier == "s" or tier == "a"):
+            if (tier == "s" or tier == "a"):
                 name_of_tournament = element.get('name')
-                embedVar = discord.Embed(color=0xFF9DFF, title=f"{name_of_tournament}")
+                if status == "current":
+                    embedVar = discord.Embed(color=0x008000, title=f"{name_of_tournament}")
+                    embedVar.add_field(name="", value= f"Has started")
+                else:
+                    days_until_tournament = days_between(get_current_date(),start_date)
+                    embedVar = discord.Embed(color=0xFFFF00, title=f"{name_of_tournament}")
+                    embedVar.add_field(name="Starting in", value= f"{days_until_tournament} day(s)")
                 start_date = element.get('start_date')
-                days_until_tournament = days_between(get_current_date(),start_date)
-                embedVar.add_field(name="Starting in", value= f"{days_until_tournament} day(s)")
                 logos = get_attending_teams(element)
                 embedVar.add_field(name="", value="**Teams attending:**", inline=False)
                 for x in logos:
