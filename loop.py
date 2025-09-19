@@ -7,6 +7,10 @@ import src.sports.ufc.ufc as ufc
 import src.sports.f1.f1 as F1
 import src.twitch.twitch as twitch
 import src.sports.esport.counterstrike.tournament_info_counterstrike as counter_strike_tournament
+import src.sports.football.premiere_league_table as premiere_league_table
+@tasks.loop(hours=17)
+async def start_football_premierleague_table():
+    await premiere_league_table.scrape_matches()
 @tasks.loop(hours=1) 
 async def start_football_loop():
     has_matches = await Football.scrape_matches()
