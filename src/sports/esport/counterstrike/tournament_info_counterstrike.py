@@ -41,10 +41,11 @@ async def get_upcomming_tournaments():
                     embedVar = discord.Embed(color=0x008000, title=f"{name_of_tournament}")
                     embedVar.add_field(name="", value= f"Has started")
                 else:
+                    start_date = element.get('start_date')
                     days_until_tournament = days_between(get_current_date(),start_date)
                     embedVar = discord.Embed(color=0xFFFF00, title=f"{name_of_tournament}")
                     embedVar.add_field(name="Starting in", value= f"{days_until_tournament} day(s)")
-                start_date = element.get('start_date')
+                
                 logos = get_attending_teams(element)
                 embedVar.add_field(name="", value="**Teams attending:**", inline=False)
                 for x in logos:

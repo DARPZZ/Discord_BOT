@@ -46,6 +46,8 @@ async def show_info_for_live_matches(channel):
         data = await api_call.get_counter_strike_valorant_pro_info_live(APIID)
         if(data):
             match_data = data['data']
+            if(match_data is None):
+                await channel.send(ERROR_UPCOMMING_MATCHES) 
             for element in match_data:
                 stars = element.get('stars',0)
                 if (stars < 2):
@@ -66,8 +68,6 @@ async def show_info_for_live_matches(channel):
                 streams = await pro_esport.get_stream_coverage(slug,api_call)
                 await create_counter_strike_embeds.create_streams_embed(streams,embedVar)
                 await channel.send(embed=embedVar)
-        else:
-            print("No data")
     except Exception as e:
         print(f"Error in show_info_for_live_matches: {e}")
         await channel.send(ERROR_LIVE_MATCHES)        
