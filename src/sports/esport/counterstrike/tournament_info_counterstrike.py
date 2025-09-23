@@ -48,9 +48,11 @@ async def get_upcomming_tournaments():
                 
                 logos = get_attending_teams(element)
                 embedVar.add_field(name="", value="**Teams attending:**", inline=False)
+                message  =""
                 for x in logos:
                     logos_stripped = x.strip()
-                    embedVar.add_field (name="",value=f"{logos_stripped}", inline=True)
+                    message = f"{message}{logos_stripped}\u2003 "
+                embedVar.add_field (name="",value=f"{message}", inline=True)
                 await channel.send(embed=embedVar)
     else:
         await channel.send("We could not find any information about upcomming tournaments")

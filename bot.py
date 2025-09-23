@@ -119,7 +119,7 @@ async def loop_start():
         start_counterstrike_loop.start(),
         twitch_loop.start(),
         start_valorant_loop.start(),
-        #start_counterstrike_tournament_loop.start(),
+        start_counterstrike_tournament_loop.start(),
         start_football_premierleague_table.start()
     )
             
