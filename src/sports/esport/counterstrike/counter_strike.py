@@ -17,7 +17,7 @@ async def show_info_for_upcomming_matches(channel):
                 return 
             for element in match_data:
                 stars = element.get('stars')
-                if stars < 2:
+                if stars <= 2:
                     continue
                 tournament_info_task =  pro_esport.place_tournament_info(element, data,tournament_dict)
                 embedVar = discord.Embed(color=0xFF9DFF, title=f"{pro_esport.get_start_date(element)}")
@@ -49,7 +49,7 @@ async def show_info_for_live_matches(channel):
                 return
             for element in match_data:
                 stars = element.get('stars',0)
-                if (stars < 5):
+                if (stars <= 2):
                     continue
                 maps = pro_esport.get_maps(element)
                 tournament_info = await pro_esport.place_tournament_info(element,data,tournament_dict)
