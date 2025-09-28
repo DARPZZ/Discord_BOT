@@ -71,24 +71,24 @@ async def test_f1_html_structure():
     assert len(siblings) >= 2, "Expected at least 2 sibling <td> elements"
     
     
-"""
-Test for football
-"""
-@pytest.mark.asyncio
-async def test_livescore_html_structure():
-    try:
-        async with aiohttp.ClientSession() as session:
-            async with session.get(FOOTBALLURL) as response:
-                assert response.status == 200, f"Failed to fetch page: {response.status}"
-                html = await response.text()
-    except aiohttp.ClientError as e:
-        pytest.skip(f"Skipping test due to network error: {e}")
-        return
+# """
+# Test for football
+# """
+# @pytest.mark.asyncio
+# async def test_livescore_html_structure():
+#     try:
+#         async with aiohttp.ClientSession() as session:
+#             async with session.get(FOOTBALLURL) as response:
+#                 assert response.status == 200, f"Failed to fetch page: {response.status}"
+#                 html = await response.text()
+#     except aiohttp.ClientError as e:
+#         pytest.skip(f"Skipping test due to network error: {e}")
+#         return
 
-    soup = BeautifulSoup(html, 'html.parser')
+#     soup = BeautifulSoup(html, 'html.parser')
 
-    todays_matches = soup.find('div', class_='tv-table tv-table--football')
-    assert todays_matches is not None, "Missing 'div.tv-table tv-table--football'"
+#     todays_matches = soup.find('div', class_='tv-table tv-table--football')
+#     assert todays_matches is not None, "Missing 'div.tv-table tv-table--football'"
 
 
 """

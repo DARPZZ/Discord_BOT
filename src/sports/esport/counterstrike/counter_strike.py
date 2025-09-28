@@ -33,7 +33,6 @@ async def show_info_for_upcomming_matches(channel):
                     embedVar, team_names, odds, bo_type, tournament_info[0], tournament_info[1]
                 )
                 total_matches.append(embedVar)
-                
                 await create_counter_strike_embeds.create_streams_embed(streams, embedVar)
                 await channel.send(embed=embedVar)
     except Exception as e:
