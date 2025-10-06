@@ -33,7 +33,7 @@ async def football(interaction: discord.Interaction):
     if not has_owner_role(interaction):
         return
     await interaction.response.send_message("Scraping football matches...")
-    await Football.scrape_matches()
+    await start_football_loop.start()
 
 
 @client.tree.command(name="cs", description="Scrape Counter-Strike matches")
@@ -41,14 +41,14 @@ async def cs(interaction: discord.Interaction):
     if not has_owner_role(interaction):
         return
     await interaction.response.send_message("Scrape Counter-Strike matches...")
-    await counter_strike.show_info()
+    await start_counterstrike_loop.start()
 
 @client.tree.command(name="f1", description="Scrape F1 matches")
 async def f1(interaction: discord.Interaction):
     if not has_owner_role(interaction):
         return
     await interaction.response.send_message("Scraping F1 matches...")
-    await formula1.scrape_matches()
+    await start_f1_loop.start()
 
 @client.tree.command(name="clear", description="Clear a number of messages from the channel")
 @app_commands.describe(amount="Number of messages to delete (default 50)")
