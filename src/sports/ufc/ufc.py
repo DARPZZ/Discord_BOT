@@ -7,7 +7,9 @@ from share import *
 matches_for_the_day = []
 from src.get_settings import read_settings_file as settings
 async def scrape_matches():
-    matches_for_the_day.clear()
+    
+    channel = client.get_channel(settings("uFCID"))
+    await channel.purge()
     url = "https://www.ufc.com/events"
     
     headers = {
@@ -24,6 +26,7 @@ async def scrape_matches():
     matches = soup.find_all('div', class_='l-listing__item views-row')
     
     for match in matches:
+        embedVar = discord.Embed( color=0x00ff00 )
         head_line = match.find_all('h3', class_='c-card-event--result__headline')
         match_info = match.find_all('div', class_='c-card-event--result__date tz-change-data')
         fighters = head_line[0].text.strip()
@@ -35,18 +38,12 @@ async def scrape_matches():
         time_zone = split_match_info[5]
         time += time_zone
         mma_kamp_edt = f" {month} {day} {time}"
-        matches_for_the_day.append(f"**Date and time:** {mma_kamp_edt} CEST\n**Headline:** {fighters}\n{'-'*60}\n ")
-    channel = client.get_channel(settings("uFCID"))
-    await channel.purge(limit=5)
-    if matches_for_the_day:
-        matches_message = "\n".join( matches_for_the_day)
-        await channel.send("<@&1234890120029536297>")
-        await channel.send("**Todays matches:**")
-        for part in split_message(matches_message.split("\n")):
-            await channel.send(part)
-
-    else:
-        await channel.send("No matches for today.")
+        embedVar.add_field(name="**Date and time:**",value=mma_kamp_edt)
+        embedVar.add_field(name="**Headline:**", value=fighters)
+        
+        await channel.send(embed=embedVar)
+    
+    
 
 
 
