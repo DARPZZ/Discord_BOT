@@ -4,7 +4,6 @@ from bs4 import BeautifulSoup
 import pytz
 from datetime import datetime
 from share import *
-matches_for_the_day = []
 from src.get_settings import read_settings_file as settings
 async def scrape_matches():
     
@@ -42,8 +41,3 @@ async def scrape_matches():
         embedVar.add_field(name="**Headline:**", value=fighters)
         
         await channel.send(embed=embedVar)
-    
-    
-
-
-
