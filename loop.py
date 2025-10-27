@@ -10,12 +10,15 @@ import src.sports.esport.counterstrike.tournament_info_counterstrike as counter_
 import src.sports.football.premiere_league_table as premiere_league_table
 import src.sports.NFL.NFL as NFL
 from src.get_settings import read_settings_file as settings
+
 @tasks.loop(hours=17)
 async def start_football_premierleague_table():
-    await premiere_league_table.scrape_matches()
+    premiere_league_table_obj =premiere_league_table.premiere_league_table(settings)
+    await premiere_league_table_obj.scrape_matches()
 @tasks.loop(hours=1) 
 async def start_football_loop():
-    has_matches = await Football.scrape_matches()
+    football_obj = Football.football(settings)
+    has_matches = await football_obj.scrape_matches()
     if not has_matches:
         start_football_loop.change_interval(hours=3)
     else:
@@ -56,4 +59,5 @@ async def start_f1_driver_team_loop():
     
 @tasks.loop(hours=62)
 async def start_Ufc_loop():
-    await ufc.scrape_matches()
+    ufc_obj = ufc.ufc(settings)
+    await ufc_obj.scrape_matches()
