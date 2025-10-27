@@ -9,6 +9,7 @@ import src.twitch.twitch as twitch
 import src.sports.esport.counterstrike.tournament_info_counterstrike as counter_strike_tournament
 import src.sports.football.premiere_league_table as premiere_league_table
 import src.sports.NFL.NFL as NFL
+from src.get_settings import read_settings_file as settings
 @tasks.loop(hours=17)
 async def start_football_premierleague_table():
     await premiere_league_table.scrape_matches()
@@ -25,11 +26,13 @@ async def start_valorant_loop():
     await valorant.show_info()
 @tasks.loop(hours=12)
 async def start_nfl_loop():
-    await NFL.scrape_nfl_mathces()
+    nfl_obj = NFL.NFL(settings)
+    await nfl_obj.scrape_nfl_mathces()
 
 @tasks.loop(hours=1)
 async def twitch_loop():
-    await twitch.get_live_twitch_streamer()
+    twitch_obj = twitch.twitch(settings)
+    await twitch_obj.get_live_twitch_streamer()
 
 @tasks.loop(minutes=20)
 async def start_counterstrike_loop():
