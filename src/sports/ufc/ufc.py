@@ -1,10 +1,10 @@
 from share import *
-import src.helpers.connection as connection
-import src.helpers.feilds as feilds
+from src.helpers.connection import connection
+from src.helpers.feilds import feilds
 class ufc:
     def __init__(self,settings):
         self.embedVar = discord.Embed( color=0x00ff00 )
-        self.feilds_obj = feilds.feilds(self.embedVar)
+        self.feilds_obj = feilds(self.embedVar)
         self.settings = settings
         self.url = "https://www.ufc.com/events"
         self.headers= {
@@ -24,7 +24,7 @@ class ufc:
     async def scrape_matches(self):
         channel = client.get_channel(self.settings("uFCID"))
         await self.feilds_obj.clear_feilds(channel)
-        connection_obj =connection.connection(aiohttp,BeautifulSoup)
+        connection_obj =connection(aiohttp,BeautifulSoup)
         data = await connection_obj.create_connection(url=self.url, headers= self.headers)
         matches = data.find_all('div', class_='l-listing__item views-row')
         for match in matches:

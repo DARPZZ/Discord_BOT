@@ -17,7 +17,8 @@ async def start_football_premierleague_table():
     await premiere_league_table_obj.scrape_matches()
 @tasks.loop(hours=1) 
 async def start_football_loop():
-    has_matches = await Football.scrape_matches()
+    football_obj = Football.football(settings)
+    has_matches = await football_obj.scrape_matches()
     if not has_matches:
         start_football_loop.change_interval(hours=3)
     else:
