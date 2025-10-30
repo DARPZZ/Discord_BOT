@@ -51,7 +51,8 @@ async def start_counterstrike_tournament_loop():
         
 @tasks.loop(hours=48)
 async def start_f1_loop():
-    await F1.scrape_matches()
+    f1_obj =F1.f1()
+    await f1_obj.scrape_matches()
     
 @tasks.loop(hours=48)
 async def start_f1_driver_team_loop():

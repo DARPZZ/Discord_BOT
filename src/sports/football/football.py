@@ -37,9 +37,9 @@ class football:
                 self.all_odds = f"{first_team_win_odss}\u2003{draw_odss}\u2003{second_team_win_odss}"
 
             else:
-                all_odds ="No odds or the match is live"
+                self.all_odds ="No odds or the match is live"
         except:
-            all_odds = "Could not calculate all odds"
+            self.all_odds = "Could not calculate all odds"
             
     def get_channel(self,football_match):
         kanal = football_match.find('div', class_='chanels')
