@@ -2,13 +2,13 @@ from share import *
 from src.helpers.connection import connection
 class team_standing:
     def __init__(self):
-        self.connection = connection()
+        self.connection = connection(aiohttp,BeautifulSoup)
         
-    async def scrape_team_standing(self,f1StartUrl, add_feilds,channelID):
+    async def scrape_team_standing(self,f1StartUrl,add_feilds,channelID):
         channel = client.get_channel(channelID)
         await channel.purge()
         url = f"{f1StartUrl}/standings"
-        data  = self.connection.create_connection(url)
+        data  = await self.connection.create_connection(url)
         table = data.find_all('table', class_='standing-table__table')
         if table:
             team_table = table[1]

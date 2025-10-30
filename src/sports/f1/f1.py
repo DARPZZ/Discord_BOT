@@ -2,14 +2,15 @@
 from src.helpers.connection import connection
 from share import *
 from . import driver_standing
-from . import team_standing
+from src.sports.f1.team_standing import team_standing
 class f1:
     f1StartUrl = 'https://www.skysports.com/f1/'
     def __init__(self,settings):
         self.connection = connection(aiohttp,BeautifulSoup)
         self.settings = settings
+        self.team_standing = team_standing()
         
-    def add_feilds(p_embedVar,p_name,p_value):
+    def add_feilds(self,p_embedVar,p_name,p_value):
         p_embedVar.add_field(name=F"**{p_name}**",value=f"{p_value}",inline=False)
 
     def get_channels(self,matchID):
@@ -21,7 +22,7 @@ class f1:
         channel = client.get_channel(self.get_channels("RaceID"))
         await channel.purge()
         url = f"{self.f1StartUrl}schedule-results"
-        data = self.connection.create_connection(url)
+        data = await self.connection.create_connection(url)
         races_all = data.find('div', class_='f1-races')
         each_race = races_all.find_all('a', class_= 'f1-races__race')
         embedVar = discord.Embed( color=0x9D00FF,title="Important! all times are GMT+1")
@@ -41,6 +42,6 @@ class f1:
                     return
     async def Driver_team_standing(self):
         L = await asyncio.gather(
-            driver_standing.scrape_driver_standing(f1StartUrl,add_feilds,get_channels("DriverID")),
-            team_standing.scrape_team_standing(f1StartUrl,add_feilds,get_channels("TeamID")),
+            driver_standing.scrape_driver_standing(self.f1StartUrl,self.add_feilds,self.get_channels("DriverID")),
+            self.team_standing.scrape_team_standing(self.f1StartUrl,self.add_feilds,self.get_channels("TeamID")),
         )
