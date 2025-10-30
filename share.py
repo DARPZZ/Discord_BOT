@@ -9,15 +9,3 @@ import requests
 import asyncio
 import aiohttp
 import locale
-def split_message(lines, limit=2000):
-    """Splits a list of lines into chunks each of size less than limit."""
-    messages = []
-    current_message = ""
-    for line in lines:
-        if len(current_message) + len(line) + 1 > limit: 
-            messages.append(current_message)
-            current_message = line
-        else:
-            current_message += "\n" + line
-    messages.append(current_message) 
-    return messages
