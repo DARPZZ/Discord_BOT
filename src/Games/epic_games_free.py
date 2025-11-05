@@ -13,7 +13,7 @@ class epic_games:
     def convert_date(self,date):
         clean_date = date.rstrip('Z') 
         dt = datetime.datetime.fromisoformat(clean_date)
-        converted_date = dt.strftime("%d - %m")
+        converted_date = dt.strftime("%d - %B")
         return converted_date
     
     async def check_promo_data(self,elements):

@@ -11,7 +11,7 @@ import src.sports.football.premiere_league_table as premiere_league_table
 import src.sports.NFL.NFL as NFL
 from src.get_settings import read_settings_file as settings
 from src.Games.epic_games_free import epic_games
-@tasks.loop(hours=48)
+@tasks.loop(hours=24)
 async def start_epic_games_loop():
     epic_games_obj = epic_games(settings)
     await epic_games_obj.get_free_games_on_epic_games()
