@@ -6,3 +6,4 @@ def read_settings_file(id):
         data = json.load(file)
         channel_id = data['settings']['main'][id]
         return channel_id
+        
