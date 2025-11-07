@@ -1,10 +1,12 @@
+import discord
 import pytest
 from datetime import datetime, timedelta
 from src.sports.esport.pro_esport import get_start_date
 from src.sports.esport.pro_esport import eror_message,get_team_names,get_odds
 from bs4 import BeautifulSoup
 import aiohttp
-
+from unittest.mock import AsyncMock, MagicMock, patch
+from src.Games.epic_games_free import epic_games
 F1URL = "https://www.skysports.com/f1/schedule-results"
 FOOTBALLURL ="https://www.livescore.dk/fodbold-i-tv/"
 UFCURL = "https://www.ufc.com/events"
@@ -38,6 +40,46 @@ async def test_valid_cs_odds():
     result = await get_odds(element)
     assert result == "1.55 - 2.35"
 
+@pytest.mark.asyncio
+async def test_offers_filters_discount():
+    eg = epic_games(settings=lambda x: 123)
+    promo = {
+        "promotionalOffers": [{
+            "promotionalOffers": [{
+                "discountSetting": {"discountPercentage": 50},
+                "startDate": "2025-11-01T00:00:00Z",
+                "endDate": "2025-11-08T00:00:00Z"
+            }]
+        }]
+    }
+    result = await eg.offers(promo, "Test Game", "BASE", "http://image.url", "promotionalOffers", "**Live Games**")
+    assert result is None
+    
+@pytest.mark.asyncio
+async def test_create_discord_embed_structure():
+    eg = epic_games(settings=lambda x: 123)
+    embed = await eg.create_discord_embed(
+        "Test Game", "01 - 11", "08 - 11", "BASE", "**Live Games**", "http://image.url"
+    )
+    assert isinstance(embed, discord.Embed)
+    assert embed.title == "**Live Games**"
+    assert embed.fields[0].value == "Test Game"
+    
+@pytest.mark.asyncio
+async def test_check_promo_data_populates_lists():
+    eg = epic_games(settings=lambda x: 123)
+    eg.offers = AsyncMock(return_value="EMBED")
+    elements = [{
+        "title": "Test Game",
+        "promotions": {
+            "promotionalOffers": [{}]
+        },
+        "offerType": "BASE",
+        "keyImages": [{"url": "http://image.url"}]
+    }]
+    await eg.check_promo_data(elements)
+    assert eg.live_embds_list == ["EMBED"]
+    assert eg.upcomming_embds_list == []
 
 """
 Test for F1
