@@ -41,7 +41,8 @@ async def loop_start():
     )
             
 def main():
-    client.run(discord_token)
+    client.run(discord_token,log_handler=handler, log_level=logging.ERROR)
+    #client.run(discord_token)
     
 if __name__=="__main__": 
     main() 

@@ -30,7 +30,8 @@ async def start_football_loop():
     
 @tasks.loop(hours=6)
 async def start_valorant_loop():
-    await valorant.show_info()
+    valorant_obj = valorant.valorant()
+    await valorant_obj.show_info()
 @tasks.loop(hours=12)
 async def start_nfl_loop():
     nfl_obj = NFL.NFL(settings)
