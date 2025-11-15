@@ -1,7 +1,7 @@
 
 from src.helpers.connection import connection
 from share import *
-from . import driver_standing
+from src.sports.f1.driver_standing import driver_standing
 from src.sports.f1.team_standing import team_standing
 class f1:
     f1StartUrl = 'https://www.skysports.com/f1/'
@@ -9,6 +9,7 @@ class f1:
         self.connection = connection(aiohttp,BeautifulSoup)
         self.settings = settings
         self.team_standing = team_standing()
+        self.driver_standing = driver_standing()
         
     def add_feilds(self,p_embedVar,p_name,p_value):
         p_embedVar.add_field(name=F"**{p_name}**",value=f"{p_value}",inline=False)
@@ -42,6 +43,6 @@ class f1:
                     return
     async def Driver_team_standing(self):
         L = await asyncio.gather(
-            driver_standing.scrape_driver_standing(self.f1StartUrl,self.add_feilds,self.get_channels("DriverID")),
+            self.driver_standing.scrape_driver_standing(self.f1StartUrl,self.add_feilds,self.get_channels("DriverID")),
             self.team_standing.scrape_team_standing(self.f1StartUrl,self.add_feilds,self.get_channels("TeamID")),
         )
