@@ -14,7 +14,6 @@ def create_live_matches_enmed(embedVar,team_name,team1_score,team2_score,tournam
     embedVar.add_field(name="**Torunament price: **", value=tournament_price_pool,inline=True)  
          
 async def create_streams_embed(streams,embedVar):
-    
     embedVar.add_field(name="**Streams** :",value=f" ",inline=False)
     for url, viewer_count in streams.items():
         embedVar.add_field(name=f"<{url}>", value=viewer_count,inline=False)

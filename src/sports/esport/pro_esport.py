@@ -59,8 +59,6 @@ async def place_tournament_info(element,data,tournament_dict):
         tournament_price_pool = tournament_info.get('tournament_prize_pool')
         return[tournament_name,tournament_price_pool]
    
-
-    
 async def get_odds(element):
     try:
         bet_updates = element.get('bet_updates')
