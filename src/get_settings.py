@@ -1,5 +1,4 @@
 import json
-
 def read_settings_file(id):
     path = "src/settings.json"
     with open(path, 'r') as file:

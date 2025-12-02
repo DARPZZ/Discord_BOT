@@ -35,7 +35,6 @@ class football:
                 second_team_win_odss = second_team__name + " " + odss_value[2].text.strip()
                 
                 self.all_odds = f"{first_team_win_odss}\u2003{draw_odss}\u2003{second_team_win_odss}"
-
             else:
                 self.all_odds ="No odds or the match is live"
         except:
@@ -53,7 +52,6 @@ class football:
         return real_league
     
     async def scrape_matches(self):
-
         channel = client.get_channel(self.settings("footballID"))
         await channel.purge()
         loop_bool = True

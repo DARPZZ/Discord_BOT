@@ -3,6 +3,7 @@ from src.helpers.connection import connection
 class driver_standing:
     def __init__(self):
         self.connection = connection(aiohttp,BeautifulSoup)
+        
     async def scrape_driver_standing(self,f1StartUrl,add_feilds,channelID):
         url = f"{f1StartUrl}/standings"
         channel = client.get_channel(channelID)
@@ -12,7 +13,6 @@ class driver_standing:
                 text = await response.text()
         soup = BeautifulSoup(text, 'html.parser')
         table = soup.find('table', class_='standing-table__table')
-        table = soup.fi
         if table:
             rows = table.find_all('tr')[1:]
             for row in rows:
