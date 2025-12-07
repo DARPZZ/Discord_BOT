@@ -1,4 +1,3 @@
-
 from src.helpers.connection import connection
 from share import *
 from src.sports.f1.driver_standing import driver_standing
