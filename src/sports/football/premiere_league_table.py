@@ -11,7 +11,7 @@ class premiere_league_table:
     def __init__(self,settings):
         self.settings = settings
         self.url = "https://www.livescore.dk/premier-league/stilling/"
-        
+        self.connection = connection.connection(aiohttp,BeautifulSoup)
     def add_space(self,number_of_space):
         space = "\u2003" * number_of_space
         return space
@@ -46,10 +46,9 @@ class premiere_league_table:
         return embedVar
     
     async def scrape_matches(self):
-        connection_obj = connection.connection(aiohttp,BeautifulSoup)
         channel = client.get_channel(self.settings("footballl_premiere_league_table"))
         await channel.purge()
-        data = await connection_obj.create_connection(url= self.url)
+        data = await self.connection.create_connection(url= self.url)
         start_element = data.find('table', class_="generic-table")
         nextt = start_element.find('tbody')
         nextt_childs = nextt.find_all('tr')

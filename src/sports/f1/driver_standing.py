@@ -8,10 +8,7 @@ class driver_standing:
         url = f"{f1StartUrl}/standings"
         channel = client.get_channel(channelID)
         await channel.purge(limit=25)
-        async with aiohttp.ClientSession() as session:
-            async with session.get(url) as response:
-                text = await response.text()
-        soup = BeautifulSoup(text, 'html.parser')
+        soup = await self.connection.create_connection(url)
         table = soup.find('table', class_='standing-table__table')
         if table:
             rows = table.find_all('tr')[1:]
