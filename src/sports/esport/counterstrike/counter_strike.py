@@ -20,7 +20,7 @@ async def show_info_for_upcomming_matches(channel):
                 stars = element.get('stars')
                 tournament_info_task = await pro_esport.place_tournament_info(element, data,tournament_dict)
                 tournament_name,tournament_price = tournament_info_task
-                if stars <= 2 and "Major" not in tournament_name:
+                if stars < 2 and "Major" not in tournament_name:
                     continue
                 embedVar = discord.Embed(color=0xFF9DFF, title=f"{pro_esport.get_start_date(element)}")
                 team_names_task = pro_esport.place_team_names_values(data,element)
@@ -52,7 +52,7 @@ async def show_info_for_live_matches(channel):
                 tournament_info_task = await pro_esport.place_tournament_info(element,data,tournament_dict)
                 tournament_name,tournament_price = tournament_info_task
                 stars = element.get('stars',0)
-                if stars <= 2 and "Major" not in tournament_name:
+                if stars < 2  and "Major" not in tournament_name:
                     continue
                 maps = pro_esport.get_maps(element)
                 embedVar = discord.Embed( color=0x9DFF00,title=f"**Live**")
