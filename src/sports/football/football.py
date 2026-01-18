@@ -50,3 +50,4 @@ class football:
             teams = f"{home_team} VS {visiting_team}"
             await self.add_feilds(teams,time,league,channel_string,odds)
             await channel.send(embed=self.embedVar)
+        return True
