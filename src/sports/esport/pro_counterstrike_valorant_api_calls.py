@@ -58,4 +58,18 @@ async def get_counter_strike_upcomming_tournaments():
     except requests.exceptions.RequestException as e:
         print('Error:', e)
         return None
+    
+async def get_counter_strike_pro_info_finished():
+    url = f"https://api.bo3.gg/api/v2/matches/finished?date={get_current_date()}&filter[tier][in]=s,a&filter[discipline_id][eq]=1"
+    try:
+        response = requests.get(url)
+        if response.status_code == 200:
+            matches = response.json()
+            return matches
+        else:
+            print('Error:', response.status_code)
+            return None
+    except requests.exceptions.RequestException as e:
+        print('Error:', e)
+        return None
 

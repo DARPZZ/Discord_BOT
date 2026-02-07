@@ -38,11 +38,12 @@ async def loop_start():
         start_football_premierleague_table.start(),
         start_nfl_loop.start(),
         start_epic_games_loop.start(),
+        start_counterstrike_finsihed_loop.start(),
     )
             
 def main():
-    client.run(discord_token,log_handler=handler, log_level=logging.ERROR)
-    #client.run(discord_token)
+    # client.run(discord_token,log_handler=handler, log_level=logging.ERROR)
+    client.run(discord_token)
     
 if __name__=="__main__": 
     main() 
