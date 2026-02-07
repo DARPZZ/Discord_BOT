@@ -4,7 +4,13 @@
             "serverID" : 968019954597261332,
             "footballID": 1234600317090529392,
             "footballl_premiere_league_table": 1418655053979582464,
-            
+            "fotball_allowed_channels":[
+                "Viaplay DK",
+                "See",
+                "TV3 Max",
+                "TV 2 Sport X",
+                "TV3 Plus"
+            ],
             "f1ID": [
                 {
                     "RaceID" : 1234600281854054482

@@ -15,10 +15,12 @@ from src.Games.epic_games_free import epic_games
 async def start_epic_games_loop():
     epic_games_obj = epic_games(settings)
     await epic_games_obj.get_free_games_on_epic_games()
+    
 @tasks.loop(hours=17)
 async def start_football_premierleague_table():
     premiere_league_table_obj =premiere_league_table.premiere_league_table(settings)
     await premiere_league_table_obj.scrape_matches()
+    
 @tasks.loop(hours=1) 
 async def start_football_loop():
     football_obj = Football.football(settings)
@@ -32,6 +34,7 @@ async def start_football_loop():
 async def start_valorant_loop():
     valorant_obj = valorant.valorant()
     await valorant_obj.show_info()
+    
 @tasks.loop(hours=12)
 async def start_nfl_loop():
     nfl_obj = NFL.NFL(settings)

@@ -26,11 +26,13 @@ class football:
         
     
     async def scrape_matches(self):
+        allowed_channels = self.settings("fotball_allowed_channels")
         channel = client.get_channel(self.settings("footballID"))
         await channel.purge()
         data = await get_football_info()
         newFixtures = data[0]['newFixtures']
         for fixure in newFixtures:
+            allow_send_message = False
             self.embedVar.clear_fields()
             date = fixure['date']
             home_team = fixure['home_team']
@@ -43,11 +45,14 @@ class football:
             channel_string = ""
             for x in channels:
                 channel_name = x['name']
-                channel_string = f"{channel_string}  {channel_name} \n"
+                if channel_name in allowed_channels:
+                    allow_send_message = True
+                    channel_string = f"{channel_string}  {channel_name} \n"
             dt = datetime.fromisoformat(date.replace("Z", "+00:00"))
             time = dt.strftime("%H:%M")
             odds = f"{odds_1}x - {odds_x}x - {odds_2}x"
             teams = f"{home_team} VS {visiting_team}"
-            await self.add_feilds(teams,time,league,channel_string,odds)
-            await channel.send(embed=self.embedVar)
+            if (allow_send_message):
+                await self.add_feilds(teams,time,league,channel_string,odds)
+                await channel.send(embed=self.embedVar)
         return True

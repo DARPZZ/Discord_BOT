@@ -71,7 +71,8 @@ async def show_info_for_live_matches(channel):
                 await channel.send(embed=embedVar)
     except Exception as e:
         print(f"Error in show_info_for_live_matches: {e}")
-   
+        
+        
 
 async def show_info():
     channel = client.get_channel(settings("proPlayIDCs"))
