@@ -57,7 +57,7 @@ async def start_counterstrike_loop():
 async def start_counterstrike_tournament_loop():
     await counter_strike_tournament.get_upcomming_tournaments()
 
-@tasks.loop(hours=2)
+@tasks.loop(hours=1)
 async def start_counterstrike_finsihed_loop():
     await counter_strike.show_info_for_finished_matches()
         
