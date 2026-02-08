@@ -83,7 +83,6 @@ async def test_check_promo_data_populates_lists():
         if key == "epicGames":
             return {"epicGamesID": 999999999999999999}
         return None
-
     eg = epic_games(settings=fake_settings)
     eg.offers = AsyncMock(return_value="EMBED")
     elements = [{
