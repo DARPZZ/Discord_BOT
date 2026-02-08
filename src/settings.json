@@ -2,26 +2,36 @@
     "settings": {
         "main":{
             "serverID" : 968019954597261332,
-            "footballID": 1234600317090529392,
-            "footballl_premiere_league_table": 1418655053979582464,
-            "fotball_allowed_channels":[
-                "Viaplay DK",
-                "See",
-                "TV3 Max",
-                "TV 2 Sport X",
-                "TV3 Plus"
-            ],
-            "f1ID": [
-                {
-                    "RaceID" : 1234600281854054482
-                },
-                {
-                    "DriverID" : 1297902739698880573
-                },
-                {
-                    "TeamID" : 1381729288340111551
-                }
-            ],
+            "football":{
+                "footballID": 1234600317090529392,
+                "footballl_premiere_league_table": 1418655053979582464,
+                "fotball_allowed_channels":[
+                    "Viaplay DK",
+                    "See",
+                    "TV3 Max",
+                    "TV 2 Sport X",
+                    "TV3 Plus"
+                ],
+                "football_allowed_leagues":[
+                    "Premier League",
+                    "La Liga"
+                ]
+            },
+            "f1":{
+                "f1ID": [
+                    {
+                        "RaceID" : 1234600281854054482
+                    },
+                    {
+                        "DriverID" : 1297902739698880573
+                    },
+                    {
+                        "TeamID" : 1381729288340111551
+                    }
+                ]
+            },
+            
+           
             "uFCID": 1278765738345365504,
             "twitch":{
                 "twitchID" : 1283139724990480485,

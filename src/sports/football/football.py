@@ -26,8 +26,10 @@ class football:
         
     
     async def scrape_matches(self):
-        allowed_channels = self.settings("fotball_allowed_channels")
-        channel = client.get_channel(self.settings("footballID"))
+        football_settings = self.settings("football")
+        allowed_channels = football_settings["fotball_allowed_channels"]
+        allowed_leagues = football_settings["football_allowed_leagues"]
+        channel = client.get_channel(football_settings["footballID"])
         await channel.purge()
         data = await get_football_info()
         newFixtures = data[0]['newFixtures']
@@ -45,7 +47,7 @@ class football:
             channel_string = ""
             for x in channels:
                 channel_name = x['name']
-                if channel_name in allowed_channels:
+                if channel_name in allowed_channels and league in allowed_leagues:
                     allow_send_message = True
                     channel_string = f"{channel_string}  {channel_name} \n"
             dt = datetime.fromisoformat(date.replace("Z", "+00:00"))
