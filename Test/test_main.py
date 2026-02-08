@@ -42,7 +42,12 @@ async def test_valid_cs_odds():
 
 @pytest.mark.asyncio
 async def test_offers_filters_discount():
-    eg = epic_games(settings=lambda x: 123)
+    def fake_settings(key):
+        if key == "epicGames":
+            return {"epicGamesID": 999999999999999999}
+        return None
+
+    eg = epic_games(settings=fake_settings)
     promo = {
         "promotionalOffers": [{
             "promotionalOffers": [{
@@ -57,17 +62,29 @@ async def test_offers_filters_discount():
     
 @pytest.mark.asyncio
 async def test_create_discord_embed_structure():
-    eg = epic_games(settings=lambda x: 123)
+    def fake_settings(key):
+        if key == "epicGames":
+            return {"epicGamesID": 999999999999999999}
+        return None
+
+    eg = epic_games(settings=fake_settings)
+
     embed = await eg.create_discord_embed(
         "Test Game", "01 - 11", "08 - 11", "BASE", "**Live Games**", "http://image.url"
     )
+
     assert isinstance(embed, discord.Embed)
     assert embed.title == "**Live Games**"
     assert embed.fields[0].value == "Test Game"
     
 @pytest.mark.asyncio
 async def test_check_promo_data_populates_lists():
-    eg = epic_games(settings=lambda x: 123)
+    def fake_settings(key):
+        if key == "epicGames":
+            return {"epicGamesID": 999999999999999999}
+        return None
+
+    eg = epic_games(settings=fake_settings)
     eg.offers = AsyncMock(return_value="EMBED")
     elements = [{
         "title": "Test Game",
