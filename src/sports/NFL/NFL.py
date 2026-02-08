@@ -15,7 +15,8 @@ class NFL:
         return newelement 
 
     async def scrape_nfl_mathces(self):
-        channel = client.get_channel(self.settings("NFLID"))
+        nfl_settings = self.settings("nfl")
+        channel = client.get_channel(nfl_settings['NFLID'])
         await self.feilds_obj.clear_feilds(channel)
         connection_obj = connection(aiohttp,BeautifulSoup)
         data = await connection_obj.create_connection(self.url)

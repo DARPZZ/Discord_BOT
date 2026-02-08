@@ -46,7 +46,8 @@ class premiere_league_table:
         return embedVar
     
     async def scrape_matches(self):
-        channel = client.get_channel(self.settings("footballl_premiere_league_table"))
+        football_settings = self.settings("football")
+        channel = client.get_channel(football_settings["footballl_premiere_league_table"])
         await channel.purge()
         data = await self.connection.create_connection(url= self.url)
         start_element = data.find('table', class_="generic-table")

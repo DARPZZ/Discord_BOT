@@ -33,6 +33,7 @@ class valorant:
             await channel.send(NO_MATCHES)
 
     async def show_info(self):
-        channel = client.get_channel(settings("proPlayIDValorant"))
+        valorant_settings = settings("valorant")
+        channel = client.get_channel(valorant_settings['proPlayIDValorant'])
         await channel.purge(limit=50)
         await self.show_info_for_upcomming_matches(channel)

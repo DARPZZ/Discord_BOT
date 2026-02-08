@@ -14,10 +14,14 @@ class f1:
         p_embedVar.add_field(name=F"**{p_name}**",value=f"{p_value}",inline=False)
 
     def get_channels(self,matchID):
-        f1ID = self.settings("f1ID")
+        f1ID = self.get_f1_settings_id()['f1ID']
         for specificID in f1ID:
             if(matchID in specificID.keys()):
                 return(specificID.get(matchID))
+            
+    def get_f1_settings_id(self):
+        return self.settings("f1")
+    
     async def scrape_matches(self):
         channel = client.get_channel(self.get_channels("RaceID"))
         await channel.purge()

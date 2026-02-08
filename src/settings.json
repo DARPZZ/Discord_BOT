@@ -2,27 +2,40 @@
     "settings": {
         "main":{
             "serverID" : 968019954597261332,
-            "footballID": 1234600317090529392,
-            "footballl_premiere_league_table": 1418655053979582464,
-            "fotball_allowed_channels":[
-                "Viaplay DK",
-                "See",
-                "TV3 Max",
-                "TV 2 Sport X",
-                "TV3 Plus"
-            ],
-            "f1ID": [
-                {
-                    "RaceID" : 1234600281854054482
-                },
-                {
-                    "DriverID" : 1297902739698880573
-                },
-                {
-                    "TeamID" : 1381729288340111551
-                }
-            ],
-            "uFCID": 1278765738345365504,
+            "logsID": 1238435126824796160,
+            "football":{
+                "footballID": 1234600317090529392,
+                "footballl_premiere_league_table": 1418655053979582464,
+                "fotball_allowed_channels":[
+                    "Viaplay DK",
+                    "See",
+                    "TV3 Max",
+                    "TV 2 Sport X",
+                    "TV3 Plus"
+                ],
+                "football_allowed_leagues":[
+                    "Premier League",
+                    "La Liga"
+                ]
+            },
+            "f1":{
+                "f1ID": [
+                    {
+                        "RaceID" : 1234600281854054482
+                    },
+                    {
+                        "DriverID" : 1297902739698880573
+                    },
+                    {
+                        "TeamID" : 1381729288340111551
+                    }
+                ]
+            },
+            "ufc":
+            {
+                "ufcID": 1278765738345365504
+            },
+            
             "twitch":{
                 "twitchID" : 1283139724990480485,
                 "streamers":[
@@ -30,16 +43,28 @@
                     "KmartPoker"
                 ]
             },
-            "proPlayIDCs" : 1235813854580179125,
-            "proPlaIDCsTournament" : 1416329043392991262,
-            "proPlayIDValorant": 1402090226322636890,
-            "finsihed_counterstrike_matches": 1469711065062314189,
-            "epic_games": 1435426596478648360,
-
-            "playerLookUpID": 1393994288462823615,
-            "logsID": 1238435126824796160,
-            "NFLID": 1425086852854976617
+            "cs":
+            {
+                "proPlayIDCs" : 1235813854580179125,
+                "proPlaIDCsTournament" : 1416329043392991262,
+                "finsihed_counterstrike_matches": 1469711065062314189,
+                "playerLookUpID": 1393994288462823615
+                
+            },
             
+
+            "valorant":
+            {
+                "proPlayIDValorant": 1402090226322636890
+            },
+            "epicGames":
+            {
+                "epicGamesID": 1435426596478648360
+            },
+            "nfl":
+            {
+                "NFLID": 1425086852854976617
+            }
         },
         "Other servers":[
 

@@ -94,7 +94,8 @@ def convert_time(start_date,end_date):
 async def show_info_for_finished_matches():
     try:
         no_matches_today = "No matches has finsihed today"
-        channel = client.get_channel(settings("finsihed_counterstrike_matches"))
+        finsihed_counterstrike_matches_settings = settings("cs")
+        channel = client.get_channel(finsihed_counterstrike_matches_settings['finsihed_counterstrike_matches'])
         await channel.purge()
         data = await api_call.get_counter_strike_pro_info_finished()
         if(data):
@@ -127,7 +128,8 @@ async def show_info_for_finished_matches():
         await channel.send(no_matches_today)            
 
 async def show_info():
-    channel = client.get_channel(settings("proPlayIDCs"))
+    proPlayIDCs_settings = settings("cs")
+    channel = client.get_channel(proPlayIDCs_settings['proPlayIDCs'])
     await channel.purge(limit=50)
     await show_info_for_live_matches(channel)
     await show_info_for_upcomming_matches(channel)
