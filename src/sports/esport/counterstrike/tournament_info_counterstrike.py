@@ -25,8 +25,8 @@ def get_attending_teams(element):
     return names_array
 
 async def get_upcomming_tournaments():
-    
-    channel = client.get_channel(settings("proPlaIDCsTournament"))
+    tournament_settings = settings("cs")
+    channel = client.get_channel(tournament_settings['proPlaIDCsTournament'])
     await channel.purge(limit=50)
     data = await pro_counterstrike_valorant_api_calls.get_counter_strike_upcomming_tournaments()
     if data:

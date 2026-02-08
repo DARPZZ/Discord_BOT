@@ -6,7 +6,8 @@ class epic_games:
     
     def __init__(self,settings):
         self.settings = settings
-        self.channel = client.get_channel(self.settings("epic_games"))
+        epic_games_settings = self.settings("epicGames")
+        self.channel = client.get_channel(epic_games_settings['epicGamesID'])
         self.live_embds_list =[]
         self.upcomming_embds_list=[]
         

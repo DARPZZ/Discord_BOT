@@ -7,7 +7,9 @@ from discord import app_commands
 @client.tree.command(name="csstats", description="Get information about cs2 players")
 @app_commands.describe(player_id="Players id")
 async def csstats(interaction: discord.Interaction, player_id: str):
-    allowed_channel_id = settings("playerLookUpID")  
+    normal_player_settings = settings("cs")
+    allowed_channel_id = normal_player_settings["playerLookUpID"]
+    
     
     if interaction.channel.id != allowed_channel_id:
         await interaction.response.send_message(

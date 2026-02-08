@@ -22,7 +22,8 @@ class ufc:
         return mma_kamp_edt
     
     async def scrape_matches(self):
-        channel = client.get_channel(self.settings("uFCID"))
+        ufc_settings = self.settings('ufc')
+        channel = client.get_channel(ufc_settings['ufcID'])
         await self.feilds_obj.clear_feilds(channel)
         connection_obj =connection(aiohttp,BeautifulSoup)
         data = await connection_obj.create_connection(url=self.url, headers= self.headers)
