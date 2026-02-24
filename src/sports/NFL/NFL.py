@@ -20,7 +20,10 @@ class NFL:
         await self.feilds_obj.clear_feilds(channel)
         connection_obj = connection(aiohttp,BeautifulSoup)
         data = await connection_obj.create_connection(self.url)
+        
         grid_gutter = data.find('section',class_='tc_tvlisting__group')
+        if (not grid_gutter):
+            return
         tc_tvlistings = grid_gutter.find_all('article',class_="tc_tvlisting")
         for element in tc_tvlistings:
             self.embed_var.clear_fields()
