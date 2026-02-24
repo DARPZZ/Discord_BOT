@@ -2,6 +2,7 @@ from src.helpers.connection import connection
 from share import *
 from src.sports.f1.driver_standing import driver_standing
 from src.sports.f1.team_standing import team_standing
+from src.sports.f1.f1_api import get_f1_info
 class f1:
     f1StartUrl = 'https://www.skysports.com/f1/'
     def __init__(self,settings):
@@ -25,25 +26,29 @@ class f1:
     async def scrape_matches(self):
         channel = client.get_channel(self.get_channels("RaceID"))
         await channel.purge()
-        url = f"{self.f1StartUrl}schedule-results"
-        data = await self.connection.create_connection(url)
-        races_all = data.find('div', class_='f1-races')
-        each_race = races_all.find_all('a', class_= 'f1-races__race')
-        embedVar = discord.Embed( color=0x9D00FF,title="Important! all times are GMT+1")
-        for element in each_race:
-            sponsor = element.find('div',class_='f1-races__sponsor')
-            if not sponsor:
-                racename = element.find('h2',class_='f1-races__race-name')
-                tbody = element.find('tbody')
-                td = tbody.findChild()
-                td_siblings = td.findNextSiblings()
-                if td and td_siblings:
-                    embedVar.add_field(name="",value= f"**{racename.text.strip()}**",inline=False)
-                    embedVar.add_field(name="",value= td.text.strip()+ "\n",inline=False)
-                    for tdd in td_siblings:
-                        embedVar.add_field(name="",value= tdd.text.strip()+ "\n",inline=False)
-                    await channel.send(embed=embedVar)
-                    return
+        data = await get_f1_info()
+        if not data:
+            return
+        races = data['races']
+        first_race = races[0]
+        raceName = first_race['raceName']
+        schedule = first_race['schedule']
+        embedvar  = discord.Embed( color=0x00ff00,title=raceName)
+        events = [
+            {"type": "race", "data": schedule["race"]},
+            {"type": "qualy", "data": schedule["qualy"]},
+            {"type": "fp1", "data": schedule["fp1"]},
+            {"type": "fp2", "data": schedule["fp2"]},
+            {"type": "fp3", "data": schedule["fp3"]},
+            {"type": "sprintQualy", "data": schedule["sprintQualy"]},
+            {"type": "sprintRace", "data": schedule["sprintRace"]},
+        ]
+        for event in events:
+            if (event['data']['date'] == None):
+                continue
+            date_and_time = f"{event['data']['date']} -  {event['data']['time']}"
+            embedvar.add_field(name= event["type"], value= date_and_time, inline= False)
+        await channel.send(embed=embedvar)
     async def Driver_team_standing(self):
         L = await asyncio.gather(
             self.driver_standing.scrape_driver_standing(self.f1StartUrl,self.add_feilds,self.get_channels("DriverID")),

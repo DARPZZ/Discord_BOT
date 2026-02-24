@@ -57,6 +57,9 @@ async def place_tournament_info(element,data,tournament_dict):
         tournament_info = tournament_dict.get(int(tournament_element))
         tournament_name = tournament_info.get('tournament_name')
         tournament_price_pool = tournament_info.get('tournament_prize_pool')
+        if (tournament_price_pool != None ):
+            format_type = "{:,}"
+            tournament_price_pool = format_type.format(tournament_price_pool).replace(",",".")
         return[tournament_name,tournament_price_pool]
    
 async def get_odds(element):
