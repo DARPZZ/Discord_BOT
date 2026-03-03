@@ -33,6 +33,8 @@ class football:
         await channel.purge()
         data = await get_football_info()
         newFixtures = data[0]['newFixtures']
+        if len(newFixtures)<1:
+            await channel.send("Could not find any upcomming matches for football")
         for fixure in newFixtures:
             allow_send_message = False
             self.embedVar.clear_fields()
