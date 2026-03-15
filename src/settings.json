@@ -37,7 +37,6 @@
             {
                 "ufcID": 1278765738345365504
             },
-            
             "twitch":{
                 "twitchID" : 1283139724990480485,
                 "streamers":[
@@ -51,10 +50,8 @@
                 "proPlaIDCsTournament" : 1416329043392991262,
                 "finsihed_counterstrike_matches": 1469711065062314189,
                 "playerLookUpID": 1393994288462823615
-                
             },
             
-
             "valorant":
             {
                 "proPlayIDValorant": 1402090226322636890
