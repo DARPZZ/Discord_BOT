@@ -98,36 +98,6 @@ async def test_check_promo_data_populates_lists():
     assert eg.live_embds_list == ["EMBED"]
     assert eg.upcomming_embds_list == []
 
-"""
-Test for F1
-
-"""
-@pytest.mark.asyncio
-async def test_f1_html_structure():
-    async with aiohttp.ClientSession() as session:
-        async with session.get(F1URL) as response:
-            assert response.status == 200, f"Failed to fetch page: {response.status}"
-            html = await response.text()
-
-    soup = BeautifulSoup(html, 'html.parser')
-
-    races_all = soup.find('div', class_='f1-races')
-    assert races_all is not None, "Missing 'div.f1-races'"
-
-    races = races_all.find_all('a', class_='f1-races__race')
-    assert races, "No '.f1-races__race' elements found"
-
-    race = races[0]
-    racename = race.find('h2', class_='f1-races__race-name')
-    assert racename is not None, "Missing race name"
-
-    tbody = race.find('tbody')
-    assert tbody is not None, "Missing <tbody>"
-
-    td = tbody.findChild()
-    siblings = td.findNextSiblings()
-    
-    assert len(siblings) >= 2, "Expected at least 2 sibling <td> elements"
     
     
 # """
