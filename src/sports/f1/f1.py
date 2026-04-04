@@ -31,18 +31,17 @@ class f1:
             return
         races = data['races']
         for first_race in races:
-            
             raceName = first_race['raceName']
             schedule = first_race['schedule']
             embedvar  = discord.Embed( color=0x00ff00,title=raceName)
             events = [
-                {"type": "race", "data": schedule["race"]},
-                {"type": "qualy", "data": schedule["qualy"]},
                 {"type": "fp1", "data": schedule["fp1"]},
                 {"type": "fp2", "data": schedule["fp2"]},
                 {"type": "fp3", "data": schedule["fp3"]},
                 {"type": "sprintQualy", "data": schedule["sprintQualy"]},
                 {"type": "sprintRace", "data": schedule["sprintRace"]},
+                {"type": "qualy", "data": schedule["qualy"]},
+                {"type": "race", "data": schedule["race"]},
             ]
             
             format_code = "%Y-%m-%d"
