@@ -43,8 +43,8 @@ async def test_valid_cs_odds():
 @pytest.mark.asyncio
 async def test_offers_filters_discount():
     def fake_settings(key):
-        if key == "epicGames":
-            return {"epicGamesID": 999999999999999999}
+        if key == "freeGames":
+            return {"freeGamesID": 999999999999999999}
         return None
 
     eg = epic_games(settings=fake_settings)
@@ -63,8 +63,8 @@ async def test_offers_filters_discount():
 @pytest.mark.asyncio
 async def test_create_discord_embed_structure():
     def fake_settings(key):
-        if key == "epicGames":
-            return {"epicGamesID": 999999999999999999}
+        if key == "freeGames":
+            return {"freeGamesID": 999999999999999999}
         return None
 
     eg = epic_games(settings=fake_settings)
@@ -80,8 +80,8 @@ async def test_create_discord_embed_structure():
 @pytest.mark.asyncio
 async def test_check_promo_data_populates_lists():
     def fake_settings(key):
-        if key == "epicGames":
-            return {"epicGamesID": 999999999999999999}
+        if key == "freeGames":
+            return {"freeGamesID": 999999999999999999}
         return None
     eg = epic_games(settings=fake_settings)
     eg.offers = AsyncMock(return_value="EMBED")
