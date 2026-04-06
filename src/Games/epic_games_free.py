@@ -6,8 +6,8 @@ class epic_games:
     
     def __init__(self,settings):
         self.settings = settings
-        epic_games_settings = self.settings("epicGames")
-        self.channel = client.get_channel(epic_games_settings['epicGamesID'])
+        epic_games_settings = self.settings("freeGames")
+        self.channel = client.get_channel(epic_games_settings['freeGamesID'])
         self.live_embds_list =[]
         self.upcomming_embds_list=[]
         
@@ -89,5 +89,6 @@ class epic_games:
                 .get("elements", [])
         )
         await self.check_promo_data(elements)
+        await self.channel.send(content="**Free gamees on Epic store**")
         await self.channel.send(embeds=self.live_embds_list)
         await self.channel.send(embeds=self.upcomming_embds_list)
