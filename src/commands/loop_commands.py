@@ -29,7 +29,7 @@ async def epicgames(interaction: discord.Interaction):
     if not has_owner_role(interaction):
         return
     await interaction.response.send_message("Scrapeing free epic games...")
-    await start_epic_games_loop.start()
+    await start_free_games_loop.start()
 
 @client.tree.command(name="ufc", description="Start ufc loop",)
 async def epicgames(interaction: discord.Interaction):
