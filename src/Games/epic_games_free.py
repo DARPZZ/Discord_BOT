@@ -91,4 +91,5 @@ class epic_games:
         await self.check_promo_data(elements)
         await self.channel.send(content="**Free gamees on Epic store**")
         await self.channel.send(embeds=self.live_embds_list)
-        await self.channel.send(embeds=self.upcomming_embds_list)
+        if(len(self.upcomming_embds_list) > 0):
+            await self.channel.send(embeds=self.upcomming_embds_list)
