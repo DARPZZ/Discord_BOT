@@ -10,6 +10,9 @@ class steam_free_games:
     async def getFreeGames(self):
         await self.channel.send(content="**Free games on Steam**")
         data = await get_data()
+        if not data:
+            await self.channel.send(content= "Could not find any free games")
+            return
         for item in data:
             self.embedVar = discord.Embed(color=0x00ff00)
             title = item['title'].split('(Steam)')[0]
