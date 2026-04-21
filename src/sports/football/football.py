@@ -1,7 +1,7 @@
 from src.sports.football.football_api import get_football_info
 from src.helpers.feilds import feilds
 from share import *
-from datetime import datetime
+from datetime import datetime,timedelta
 matches_for_the_day =[]
 date_string =''
 first_team_win_odss=""
@@ -68,7 +68,7 @@ class football:
                 if channel_name in allowed_channels and league in self.allowed_leagues:
                     allow_send_message = True
                     channel_string = f"{channel_string}  {channel_name} \n"
-            dt = datetime.fromisoformat(date.replace("Z", "+00:00"))
+            dt = datetime.fromisoformat(date.replace("Z", "+00:00"))+ timedelta(hours=2)
             time = dt.strftime("%H:%M")
             odds = f"{odds_1}x - {odds_x}x - {odds_2}x"
             teams = f"{home_team} VS {visiting_team}"
