@@ -1,6 +1,6 @@
 import requests
-async def get_data():
-    url = f"https://store-site-backend-static-ipv4.ak.epicgames.com/freeGamesPromotions?locale=en-US"
+async def get_data(platform):
+    url = f"https://www.gamerpower.com/api/giveaways?platform={platform}&type=game"
     try:
         response = requests.get(url)
         if response.status_code == 200:
