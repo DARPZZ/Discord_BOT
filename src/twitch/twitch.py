@@ -9,7 +9,7 @@ class twitch:
         twitch_settings_id = twitch_settings.get("twitchID")
         twitch_streamers = twitch_settings.get("streamers")
         channel = client.get_channel(twitch_settings_id)
-        await channel.purge()
+        await channel.purge(limit=100)
         await channel.send("Streamers that are live")
         for x in twitch_streamers:
             contents = requests.get('https://www.twitch.tv/' +x).content.decode('utf-8')

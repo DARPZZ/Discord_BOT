@@ -6,7 +6,7 @@ class team_standing:
         
     async def scrape_team_standing(self,f1StartUrl,add_feilds,channelID):
         channel = client.get_channel(channelID)
-        await channel.purge()
+        await channel.purge(limit=100)
         url = f"{f1StartUrl}/standings"
         data  = await self.connection.create_connection(url)
         table = data.find_all('table', class_='standing-table__table')

@@ -27,7 +27,7 @@ class football:
         embed_old = discord.Embed( color=0x00ff00 )
         
         channel = client.get_channel(self.football_settings["footballIdFinsished"])
-        await channel.purge()  
+        await channel.purge(limit=100)  
         oldFixtures = data[0]['oldFixtures']
         for x in oldFixtures:
             embed_old.clear_fields()
@@ -46,7 +46,7 @@ class football:
     async def scrape_matches(self):
         allowed_channels = self.football_settings["fotball_allowed_channels"]
         channel = client.get_channel(self.football_settings["footballID"])
-        await channel.purge()
+        await channel.purge(limit=100)
         data = await get_football_info()
         newFixtures = data[0]['newFixtures']
         if len(newFixtures)<1:

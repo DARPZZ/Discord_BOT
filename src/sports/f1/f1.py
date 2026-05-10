@@ -25,7 +25,7 @@ class f1:
     
     async def scrape_matches(self):
         channel = client.get_channel(self.get_channels("RaceID"))
-        await channel.purge()
+        await channel.purge(limit=100)
         data = await get_f1_info()
         if not data:
             return

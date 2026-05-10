@@ -48,7 +48,7 @@ class premiere_league_table:
     async def scrape_matches(self):
         football_settings = self.settings("football")
         channel = client.get_channel(football_settings["footballl_premiere_league_table"])
-        await channel.purge()
+        await channel.purge(limit=100)
         data = await self.connection.create_connection(url= self.url)
         start_element = data.find('table', class_="generic-table")
         nextt = start_element.find('tbody')

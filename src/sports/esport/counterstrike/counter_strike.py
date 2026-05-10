@@ -95,7 +95,7 @@ async def show_info_for_finished_matches():
         no_matches_today = "No matches has finsihed today"
         finsihed_counterstrike_matches_settings = settings("cs")
         channel = client.get_channel(finsihed_counterstrike_matches_settings['finsihed_counterstrike_matches'])
-        await channel.purge()
+        await channel.purge(limit=100)
         data = await api_call.get_counter_strike_pro_info_finished()
         if(data):
             team_map = await translate_team_id_to_team_name(data=data)
