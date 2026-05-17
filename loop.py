@@ -10,7 +10,7 @@ import src.sports.esport.counterstrike.tournament_info_counterstrike as counter_
 import src.sports.football.premiere_league_table as premiere_league_table
 import src.sports.NFL.NFL as NFL
 from src.get_settings import read_settings_file as settings
-from src.Games.steam_free_games import free_games
+from src.Games.free_games import free_games
 @tasks.loop(hours=24)
 async def start_free_games_loop():
     free_games_obj = free_games(settings)

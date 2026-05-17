@@ -1,4 +1,4 @@
-from src.Games.free_games_api import get_data
+from src.Games.free_games_api import get_data,get_app_id
 from share import *
 class free_games:
     def __init__(self,settings):
@@ -10,15 +10,22 @@ class free_games:
     async def get_free_games_platform(self,platform,platform_text):
         await self.channel.send(content=f"**Free games on {platform_text}**")
         data = await get_data(platform)
+        
         if not data:
             await self.channel.send(content= f"Could not find any free games for {platform}")
             return
         for item in data:
+            store_link = None
             self.embedVar = discord.Embed(color=0x00ff00)
             if (platform =="steam"):
                 title = item['title'].split('(Steam)')[0]
+                app_id = await get_app_id(title)
+                first_item = app_id['items'][0]
+                id = first_item['id']
+                store_link = f"https://store.steampowered.com/app/{id}/{title}/".strip().replace(" ","-")
             elif (platform =="epic-games-store"):
                 title = item['title'].split('(Epic Games)')[0]
+                
             original_price = item['worth']
             image = item['image']
             end_date = item['end_date']
@@ -26,6 +33,8 @@ class free_games:
             self.embedVar.add_field(name="Original price",value=original_price,inline=False)
             self.embedVar.set_image(url=image)
             self.embedVar.add_field(name="Offer end at ", value=end_date,inline=False)
+            if store_link != None:
+                self.embedVar.add_field(name="Store link", value=store_link, inline=False)
             await self.channel.send(embed= self.embedVar)
             
     async def get_free_games(self):
