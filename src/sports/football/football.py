@@ -19,7 +19,7 @@ class football:
         self.feilds_obj.generate_feilds("Teams:",teams)
         self.feilds_obj.generate_feilds("Tid:",tid)
         self.feilds_obj.generate_feilds("Liga:",real_league)
-        self.feilds_obj.generate_feilds("Odds:",odds)
+        # self.feilds_obj.generate_feilds("Odds:",odds)
         self.feilds_obj.generate_feilds("Kanal(er):",kanal)
         self.feilds_obj.generate_feilds("",f"\n{'-'*60}\n")
         

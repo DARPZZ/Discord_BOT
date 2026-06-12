@@ -11,7 +11,7 @@ import src.sports.football.premiere_league_table as premiere_league_table
 import src.sports.NFL.NFL as NFL
 from src.get_settings import read_settings_file as settings
 from src.Games.free_games import free_games
-@tasks.loop(hours=24)
+@tasks.loop(hours=12)
 async def start_free_games_loop():
     free_games_obj = free_games(settings)
     await free_games_obj.get_free_games()
@@ -45,19 +45,19 @@ async def twitch_loop():
     twitch_obj = twitch.twitch(settings)
     await twitch_obj.get_live_twitch_streamer()
 
-@tasks.loop(minutes=20)
+@tasks.loop(minutes=10)
 async def start_counterstrike_loop():
     has_matches = await counter_strike.show_info()
     if not has_matches:
-         start_counterstrike_loop.change_interval(minutes=20)
+         start_counterstrike_loop.change_interval(minutes=10)
     else:
-         start_counterstrike_loop.change_interval(minutes=20)
+         start_counterstrike_loop.change_interval(minutes=10)
          
 @tasks.loop(hours=24)
 async def start_counterstrike_tournament_loop():
     await counter_strike_tournament.get_upcomming_tournaments()
 
-@tasks.loop(hours=1)
+@tasks.loop(minutes=15)
 async def start_counterstrike_finsihed_loop():
     await counter_strike.show_info_for_finished_matches()
         

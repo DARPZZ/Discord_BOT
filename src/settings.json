@@ -12,12 +12,15 @@
                     "See",
                     "TV3 Max",
                     "TV 2 Sport X",
-                    "TV3 Plus"
+                    "TV3 Plus",
+                    "DR1"
                 ],
                 "football_allowed_leagues":[
                     "Premier League",
                     "La Liga",
-                    "Champions League"
+                    "Champions League", 
+                    "VM i fodbold"
+                    
                 ]
             },
             "f1":{
