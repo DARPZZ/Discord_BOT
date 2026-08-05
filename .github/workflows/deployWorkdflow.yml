@@ -4,11 +4,9 @@ on:
   pull_request:
     branches:
       - main
-
   push:
     branches:
       - main
-  pull_request:
 
 permissions:
   contents: read
@@ -28,20 +26,20 @@ jobs:
         with:
           python-version: "3.11"
 
-    - name: Install dependencies
-      run: pip install -r requirements.txt pytest aioresponses pytest-asyncio pytest-cov
+      - name: Install dependencies
+        run: pip install -r requirements.txt pytest aioresponses pytest-asyncio pytest-cov
 
-    - name: Run tests
-      run: python -m pytest Test/test_main.py --junitxml=pytest.xml --cov=src --cov-branch --cov-report=term-missing:skip-covered | tee pytest-coverage.txt
+      - name: Run tests
+        run: python -m pytest Test/test_main.py --junitxml=pytest.xml --cov=src --cov-branch --cov-report=term-missing:skip-covered | tee pytest-coverage.txt
 
-    - name: Add test results to pull request
-      if: github.event_name == 'pull_request' && always()
-      uses: MishaKav/pytest-coverage-comment@v1.7.2
-      with:
-        pytest-coverage-path: pytest-coverage.txt
-        junitxml-path: pytest.xml
-        title: Test results and coverage
-        hide-report: true
+      - name: Add test results to pull request
+        if: ${{ always() && github.event_name == 'pull_request' }}
+        uses: MishaKav/pytest-coverage-comment@v1.7.2
+        with:
+          pytest-coverage-path: pytest-coverage.txt
+          junitxml-path: pytest.xml
+          title: Test results and coverage
+          hide-report: true
 
   remove_container:
     name: Remove Old Discord Bot Container
