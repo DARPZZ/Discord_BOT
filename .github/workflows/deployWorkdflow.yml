@@ -1,6 +1,10 @@
 name: Deploy to Virtual Server
 
 on:
+  pull_request:
+    branches:
+      - main
+
   push:
     branches:
       - main
@@ -14,14 +18,15 @@ jobs:
   run_tests:
     name: Run Discord Bot Tests
     runs-on: ubuntu-latest
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
 
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: "3.11"
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
 
     - name: Install dependencies
       run: pip install -r requirements.txt pytest aioresponses pytest-asyncio pytest-cov
@@ -44,57 +49,64 @@ jobs:
     needs: run_tests
     if: github.event_name == 'push'
     steps:
-    - name: Remove old container
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ secrets.HOST }}
-        username: ${{ secrets.USER_NAME }}
-        key: ${{ secrets.DISCORD_SECRET }}
-        port: 22
-        passphrase: ${{ secrets.SSH_PASSPHRASE }}
-        script: |
-          echo "Stopping and removing existing Discord bot container (if it exists)..."
-          docker stop discord-bot || true
-          docker rm discord-bot || true
+      - name: Remove old container
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USER_NAME }}
+          key: ${{ secrets.DISCORD_SECRET }}
+          port: 22
+          passphrase: ${{ secrets.SSH_PASSPHRASE }}
+          script: |
+            echo "Stopping and removing existing Discord bot container..."
+            docker stop discord-bot || true
+            docker rm discord-bot || true
 
-          echo "Removing old Docker image for Discord bot..."
-          docker rmi my-discord-bot:latest || true
+            echo "Removing old Docker image..."
+            docker rmi my-discord-bot:latest || true
 
   build_image:
     name: Build Discord Bot Image
     runs-on: ubuntu-latest
     needs: remove_container
-    steps:
-    - name: Build new Docker image
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ secrets.HOST }}
-        username: ${{ secrets.USER_NAME }}
-        key: ${{ secrets.DISCORD_SECRET }}
-        port: 22
-        passphrase: ${{ secrets.SSH_PASSPHRASE }}
-        script: |
-          echo "Building new Docker image..."
-          cd /root/Discord_BOT
-          git pull
-          docker build -t my-discord-bot:latest .
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
 
-          echo "Running new Discord bot container..."
-          docker run --restart=unless-stopped -d --name discord-bot my-discord-bot:latest
+    steps:
+      - name: Build and run new Docker image
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USER_NAME }}
+          key: ${{ secrets.DISCORD_SECRET }}
+          port: 22
+          passphrase: ${{ secrets.SSH_PASSPHRASE }}
+          script: |
+            set -e
+
+            cd /root/Discord_BOT
+            git pull --ff-only
+            docker build -t my-discord-bot:latest .
+            docker run \
+              --restart=unless-stopped \
+              -d \
+              --name discord-bot \
+              my-discord-bot:latest
 
   check_logs:
     name: Check Discord Bot Logs
     runs-on: ubuntu-latest
     needs: build_image
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+
     steps:
-    - name: Check Docker logs
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ secrets.HOST }}
-        username: ${{ secrets.USER_NAME }}
-        key: ${{ secrets.DISCORD_SECRET }}
-        port: 22
-        passphrase: ${{ secrets.SSH_PASSPHRASE }}
-        script: |
-          docker ps | grep discord-bot
-          docker logs discord-bot
+      - name: Check Docker logs
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USER_NAME }}
+          key: ${{ secrets.DISCORD_SECRET }}
+          port: 22
+          passphrase: ${{ secrets.SSH_PASSPHRASE }}
+          script: |
+            docker ps --filter name=discord-bot
+            docker logs --tail 100 discord-bot
