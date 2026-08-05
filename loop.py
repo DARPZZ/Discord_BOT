@@ -9,6 +9,7 @@ import src.twitch.twitch as twitch
 import src.sports.esport.counterstrike.tournament_info_counterstrike as counter_strike_tournament
 import src.sports.football.premiere_league_table as premiere_league_table
 import src.sports.NFL.NFL as NFL
+import src.hyundai_updates as hyndaui_update
 from src.get_settings import read_settings_file as settings
 from src.Games.free_games import free_games
 @tasks.loop(hours=12)
@@ -29,7 +30,10 @@ async def start_football_loop():
         start_football_loop.change_interval(hours=3)
     else:
         start_football_loop.change_interval(hours=1)
-    
+@tasks.loop(hours=24)
+async def start_hyndaui_loop():
+    hyndaui_update_obj = hyndaui_update.hyundai_updater()
+    await hyndaui_update_obj.show_info_to_user()
 @tasks.loop(hours=6)
 async def start_valorant_loop():
     valorant_obj = valorant.valorant()
